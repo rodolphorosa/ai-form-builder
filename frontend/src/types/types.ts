@@ -13,20 +13,20 @@ export const InputTypes = {
     CHECKBOX: "checkbox"
 }
 
-type InputType = typeof InputTypes[keyof typeof InputTypes]
+export type InputType = typeof InputTypes[keyof typeof InputTypes]
 
-interface Ui {
+export interface Ui {
     placeholder?: string,
 }
 
-interface Validation {
+export interface Validation {
     minValue?: number,
     maxValue?: number,
     minLength?: number,
     maxLength?: number
 }
 
-interface Field {
+export interface Field {
     id: string,
     label: string,
     type: InputType,
@@ -37,7 +37,7 @@ interface Field {
     ui?: Ui
 }
 
-interface Section {
+export interface Section {
     id: string,
     label: string,
     fields: Field[]
