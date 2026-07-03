@@ -11,16 +11,6 @@ export const Builder: FC<BuilderProps> = ({}) => {
     const [schema, setSchema] = useState<FormSchema | null>(null)
     const [description, setDescription] = useState<string>("")
 
-    useEffect(() => {
-        fetch("/api/schema", {
-            method: "GET",
-
-        })
-        .then((response) => response.json())
-        .then((data) => setSchema(data?.data??{}))
-
-    }, [])
-
     const parseOptions = (options: string[]) => {
         return options.map((option, index) => {
             return { value: snakeCase(option), label: option }
@@ -54,8 +44,8 @@ export const Builder: FC<BuilderProps> = ({}) => {
                 return (
                     <textarea 
                         title={field.label} 
-                        minLength={field.validation.minLength} 
-                        maxLength={field.validation.maxLength}
+                        minLength={field.validation?.minLength} 
+                        maxLength={field.validation?.maxLength}
                         placeholder={field.ui?.placeholder}
                     />
                 )
@@ -64,8 +54,8 @@ export const Builder: FC<BuilderProps> = ({}) => {
                     <input 
                         title={field.label} 
                         type="number" 
-                        min={field.validation.minValue} 
-                        max={field.validation.maxValue}
+                        min={field.validation?.minValue} 
+                        max={field.validation?.maxValue}
                         placeholder={field.ui?.placeholder}
                     />
                 )
@@ -74,8 +64,8 @@ export const Builder: FC<BuilderProps> = ({}) => {
                     <input 
                         title={field.label} 
                         type="date" 
-                        min={field.validation.minValue} 
-                        max={field.validation.maxValue}
+                        min={field.validation?.minValue} 
+                        max={field.validation?.maxValue}
                     />
                 )
             case InputTypes.DATETIME:
@@ -83,8 +73,8 @@ export const Builder: FC<BuilderProps> = ({}) => {
                     <input 
                         title={field.label} 
                         type="datetime-local" 
-                        min={field.validation.minValue} 
-                        max={field.validation.maxValue}
+                        min={field.validation?.minValue} 
+                        max={field.validation?.maxValue}
                     />
                 )
             case InputTypes.SELECT:
@@ -119,6 +109,7 @@ export const Builder: FC<BuilderProps> = ({}) => {
             },
             body: JSON.stringify({
                 prompt: description,
+                provider: "openai"
             }),
             }
         );

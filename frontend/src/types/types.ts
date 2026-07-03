@@ -32,7 +32,7 @@ export interface Field {
     type: InputType,
     required: boolean,
     readonly: boolean,
-    validation: Validation,
+    validation?: Validation,
     options?: string[]
     ui?: Ui
 }
