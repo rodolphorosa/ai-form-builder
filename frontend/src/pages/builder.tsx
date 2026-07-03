@@ -9,6 +9,7 @@ interface BuilderProps {
 
 export const Builder: FC<BuilderProps> = ({}) => {
     const [schema, setSchema] = useState<FormSchema | null>(null)
+    const [description, setDescription] = useState<string>("")
 
     useEffect(() => {
         fetch("/api/schema", {
@@ -108,8 +109,50 @@ export const Builder: FC<BuilderProps> = ({}) => {
         )
     }
 
+    async function generateForm() {
+        const response = await fetch(
+            "http://127.0.0.1:8000/generate-form",
+            {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                prompt: description,
+            }),
+            }
+        );
+
+        const data = await response.json();
+
+        setSchema(data?.data??{});
+    }
+
+    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+
+        generateForm()
+    }
+
 
     return (
-        <div>{ schema?.sections.map(section => renderSection(section)) }</div>
+        <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+            <div>{ schema?.sections.map(section => renderSection(section)) }</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                <div>Describe your form</div>
+                <form onSubmit={handleSubmit}>
+                    <textarea 
+                        minLength={20} 
+                        maxLength={200} 
+                        placeholder="Form description..." 
+                        onChange={(event) => setDescription(event.target.value)}
+                    />
+                    <button type="submit">
+                        Submit
+                    </button>
+                </form>
+            </div>
+        </div>
+        
     )
 }
