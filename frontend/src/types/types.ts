@@ -15,16 +15,20 @@ export const InputTypes = {
 
 export type InputType = typeof InputTypes[keyof typeof InputTypes]
 
-export interface Ui {
-    placeholder?: string,
+interface UiRules {
+    placeholder: string,
 }
 
-export interface Validation {
-    minValue?: number,
-    maxValue?: number,
-    minLength?: number,
-    maxLength?: number
+export type Ui = Partial<UiRules>
+
+interface ValidationRules {
+    minValue: number,
+    maxValue: number,
+    minLength: number,
+    maxLength: number
 }
+
+export type Validation = Partial<ValidationRules>
 
 export interface Field {
     id: string,

@@ -1,7 +1,6 @@
 import json
 
 from src.llm.providers.base import BaseProvider
-from src.llm.providers.openai import OpenaiProvider
 
 system_prompt = """
 You are a structured form builder. 
