@@ -4,8 +4,13 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
+from enum import Enum
+
 from src.mock import *
-from src.services import generate
+from src.services import generate_form_schema
+from src.llm.providers.openai import OpenaiProvider
+from src.llm.providers.ollama import OllamaProvider
+from src.llm.providers.gemini import GeminiProvider
 
 app = FastAPI(
     title="Smart FormBuilder",
@@ -25,27 +30,33 @@ app.add_middleware(
     allow_headers=["*"], 
 )
 
+class ProviderType(str, Enum):
+    OPENAI = "openai"
+    GEMINI = "gemini"
+    OLLAMA = 'ollama'
+
+PROVIDERS = {
+    ProviderType.OPENAI: OpenaiProvider,
+    ProviderType.GEMINI: GeminiProvider,
+    ProviderType.OLLAMA: OllamaProvider,
+}
+
 class FormRequest(BaseModel):
     prompt: str
+    provider: ProviderType
 
 
 @app.get('/')
 def home():
     return { "message": "Hello, form builder!" }
 
-
-@app.get('/schema')
-def get_schema():
-    return { "data": schema }
-
-
 @app.post('/generate-form')
 def generate_form(data: FormRequest):
-    form = generate(data.prompt)
+    provider_cls = PROVIDERS.get(data.provider)
+    provider = provider_cls()
+    form = generate_form_schema(data.prompt, provider)
 
     return { "data": form }
-
-
 
 
 if __name__ == "__main__":
