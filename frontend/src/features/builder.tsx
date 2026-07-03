@@ -1,7 +1,11 @@
+"use client"
+
 import React, {FC, useEffect, useState} from "react"
-import { Field, FormSchema, InputTypes, Section } from "../types/types"
+import { Field, FormSchema, InputTypes, Section } from "../types/form"
 import Select from "react-select"
 import { snakeCase } from "lodash"
+import { TextInput } from "./inputs/text"
+// import { Section } from "./section"
 
 interface BuilderProps {
     // schema: FormSchema
@@ -21,24 +25,16 @@ export const Builder: FC<BuilderProps> = ({}) => {
 
         switch (field.type) {
             case InputTypes.TEXT:
-                return (
-                    <input title={field.label} type="text" placeholder={field.ui?.placeholder}></input>
-                )
             case InputTypes.EMAIL:
-                return (
-                    <input title={field.label} type="email" placeholder={field.ui?.placeholder}></input>
-                )
             case InputTypes.PASSWORD:
-                return (
-                    <input title={field.label} type="password" placeholder={field.ui?.placeholder}></input>
-                )
             case InputTypes.PHONE:
-                return (
-                    <input title={field.label} type="tel"></input>
-                )
             case InputTypes.URL:
                 return (
-                    <input title={field.label} type="url" placeholder={field.ui?.placeholder}></input>
+                    <TextInput 
+                        label={field.label} 
+                        required={field.required} 
+                        placeholder={field.ui?.placeholder} 
+                    />
                 )
             case InputTypes.TEXTAREA:
                 return (
@@ -94,14 +90,13 @@ export const Builder: FC<BuilderProps> = ({}) => {
                 <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                     { section.fields.map(field => renderField(field)) }
                 </div>
-                
             </div>
         )
     }
 
     async function generateForm() {
         const response = await fetch(
-            "http://127.0.0.1:8000/generate-form",
+            "/api/generate-form",
             {
             method: "POST",
             headers: {
