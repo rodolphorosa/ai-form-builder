@@ -8,7 +8,7 @@ interface SectionProps {
     fields: React.ReactNode
 }
 
-export const Section: FC<SectionProps> = ({label, fields}) => {
+export const FormSection: FC<SectionProps> = ({label, fields}) => {
     return (
         <div className="rounded-lg border border-gray-200 p-4">
             <div className="text-left text-base font-semibold mb-4">{label}</div>

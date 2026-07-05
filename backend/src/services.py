@@ -19,8 +19,9 @@ The schema is as follows:
                     id: Field id,
                     label: Field label,
                     type: Type of the field. Can be any of the valid input types,
+                    description: Description of the fied,
                     required: Whether the field is required or not,
-                    readonly: Whether the field can have its value edited or not,
+                    disabled: Whether the field can have its value edited or not,
                     validation: {
                         minValue: Minumum value,
                         maxValue: Maximum value,
@@ -32,6 +33,7 @@ The schema is as follows:
                     ],
                     ui: {
                         placeholder: Field placeholder,
+                        helpText; Field helptext,
                     }
                 },
             ]
@@ -57,6 +59,7 @@ Rules:
 - Return only valid JSON.
 - All ids must be unique.
 - All ids must be in snake_case
+- Omit properties that are not applicable to the field type.
 
 """
 

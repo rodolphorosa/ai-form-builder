@@ -1,17 +1,15 @@
-import { InputBaseProps } from "@/src/types/inputs";
+import { InputProps } from "@/src/types/inputs";
 import React, {FC} from "react"
+import { InputLabel } from "./common";
 
-interface TextProps extends InputBaseProps {
-    placeholder?: string
-}
+export const TextInput: FC<InputProps> = ({field}) => {
+    const label = field.label
+    const required = field.required
+    const placeholder = field.ui?.placeholder
 
-export const TextInput: FC<TextProps> = ({ label, required, placeholder }) => {
     return (
         <div className="flex flex-col gap-1">
-            <div className="flex gap-1">
-                <div>{label}</div>
-                <div>{required? "*" : ""}</div>
-            </div>
+            <InputLabel label={label} required={required} />
             <input 
                 type="text"
                 placeholder={placeholder}

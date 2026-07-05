@@ -1,10 +1,13 @@
 "use client"
 
 import React, {FC, useEffect, useState} from "react"
-import { Field, FormSchema, InputTypes, Section } from "../types/form"
-import Select from "react-select"
-import { snakeCase } from "lodash"
+import { Field, FormSchema, InputType, InputTypes, Section } from "../types/form"
 import { TextInput } from "./inputs/text"
+import { NumberInput } from "./inputs/number"
+import { TextareaInput } from "./inputs/textarea"
+import { DateInput } from "./inputs/date"
+import { DatetimeInput } from "./inputs/datetime"
+import { SelectInput } from "./inputs/select"
 // import { Section } from "./section"
 
 interface BuilderProps {
@@ -15,71 +18,28 @@ export const Builder: FC<BuilderProps> = ({}) => {
     const [schema, setSchema] = useState<FormSchema | null>(null)
     const [description, setDescription] = useState<string>("")
 
-    const parseOptions = (options: string[]) => {
-        return options.map((option, index) => {
-            return { value: snakeCase(option), label: option }
-        })
+    const fieldStrategies: Record<InputType, React.ComponentType<{field: Field}>> = {
+        text: TextInput,
+        email: TextInput,
+        password: TextInput,
+        phone: TextInput,
+        url: TextInput,
+        textarea: TextareaInput,
+        number: NumberInput,
+        date: DateInput,
+        datetime: DatetimeInput,
+        select: SelectInput,
     }
 
     const renderField = (field: Field) => {
 
-        switch (field.type) {
-            case InputTypes.TEXT:
-            case InputTypes.EMAIL:
-            case InputTypes.PASSWORD:
-            case InputTypes.PHONE:
-            case InputTypes.URL:
-                return (
-                    <TextInput 
-                        label={field.label} 
-                        required={field.required} 
-                        placeholder={field.ui?.placeholder} 
-                    />
-                )
-            case InputTypes.TEXTAREA:
-                return (
-                    <textarea 
-                        title={field.label} 
-                        minLength={field.validation?.minLength} 
-                        maxLength={field.validation?.maxLength}
-                        placeholder={field.ui?.placeholder}
-                    />
-                )
-            case InputTypes.NUMBER:
-                return (
-                    <input 
-                        title={field.label} 
-                        type="number" 
-                        min={field.validation?.minValue} 
-                        max={field.validation?.maxValue}
-                        placeholder={field.ui?.placeholder}
-                    />
-                )
-            case InputTypes.DATE:
-                return (
-                    <input 
-                        title={field.label} 
-                        type="date" 
-                        min={field.validation?.minValue} 
-                        max={field.validation?.maxValue}
-                    />
-                )
-            case InputTypes.DATETIME:
-                return (
-                    <input 
-                        title={field.label} 
-                        type="datetime-local" 
-                        min={field.validation?.minValue} 
-                        max={field.validation?.maxValue}
-                    />
-                )
-            case InputTypes.SELECT:
-                return (
-                    <Select options={parseOptions(field.options??[])}></Select>
-                )
-            default:
-                <></>
+        const Component = fieldStrategies[field.type]
+
+        if(!Component) {
+            return (<div>Unsupported input type</div>)
         }
+
+        return <Component field={field} />
 
     }
 
@@ -139,6 +99,5 @@ export const Builder: FC<BuilderProps> = ({}) => {
                 </form>
             </div>
         </div>
-        
     )
 }
