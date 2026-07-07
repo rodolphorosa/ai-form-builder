@@ -16,38 +16,40 @@ export const InputTypes = {
 export type InputType = typeof InputTypes[keyof typeof InputTypes]
 
 interface UiRules {
-    placeholder: string,
+    placeholder: string
+    helpText: string
 }
 
 export type Ui = Partial<UiRules>
 
 interface ValidationRules {
-    minValue: number,
-    maxValue: number,
-    minLength: number,
+    minValue: number
+    maxValue: number
+    minLength: number
     maxLength: number
 }
 
 export type Validation = Partial<ValidationRules>
 
 export interface Field {
-    id: string,
-    label: string,
-    type: InputType,
-    required: boolean,
-    readonly: boolean,
-    validation?: Validation,
+    id: string
+    label: string
+    type: InputType
+    required: boolean
+    disabled: boolean
+    description: string
+    validation?: Validation
     options?: string[]
     ui?: Ui
 }
 
 export interface Section {
-    id: string,
-    label: string,
+    id: string
+    label: string
     fields: Field[]
 }
 
 export interface FormSchema {
-    title: string,
+    title: string
     sections: Section[]
 }
