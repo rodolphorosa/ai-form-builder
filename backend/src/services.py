@@ -14,7 +14,7 @@ The schema is as follows:
         {
             id: Unique identifier of the section,
             label: Section label,
-            fields: [
+            items: [
                 {
                     id: Field id,
                     label: Field label,
@@ -29,7 +29,7 @@ The schema is as follows:
                         maxLength: Maximum number of characters
                     },
                     options: [
-                        List of possible values
+                        { value: Unique value, label: Label to be displayed }
                     ],
                     ui: {
                         placeholder: Field placeholder,
@@ -54,12 +54,12 @@ Valid input types:
 - select
 - radio
 - checkbox
+- group
 
 Rules:
 - Return only valid JSON.
 - All ids must be unique.
 - All ids must be in snake_case
-- Omit properties that are not applicable to the field type.
 
 """
 

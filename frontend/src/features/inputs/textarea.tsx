@@ -1,32 +1,21 @@
-import { InputProps } from "@/src/types/inputs"
 import React, {FC} from "react"
+import { InputProps } from "@/src/types/inputs"
 import { InputLabel } from "./common"
+import { Field } from "@/components/ui/field"
+import { Textarea } from "@/components/ui/textarea"
 
-export const TextareaInput: FC<InputProps> = ({field}) => {
-    const label = field.label
-    const required = field.required
-    const placeholder = field.ui?.placeholder
-    const minLength = field.validation?.minLength
-    const maxLength = field.validation?.maxLength
+export const TextareaInput: FC<InputProps> = ({item: field}) => {
+    const { label, required, description, validation, ui } = field
 
     return (
-        <div className="flex flex-col gap-1">
-            <InputLabel label={label} required={required} />
-            <textarea 
-                placeholder={placeholder}
-                minLength={minLength}
-                maxLength={maxLength}
-                className="
-                    w-full
-                    h-10
-                    px-3
-                    border border-gray-300
-                    rounded-md
-                    text-sm
-                    focus:outline-none
-                    focus:ring-2 focus:ring-blue-500
-                "
+        <Field className="col-span-2">
+            <InputLabel label={label} description={description} required={required} />
+            <Textarea 
+                id="textarea-message" 
+                placeholder={ui?.placeholder}
+                minLength={validation?.minLength}
+                maxLength={validation?.maxLength}
             />
-        </div>
+        </Field>
     )
 }

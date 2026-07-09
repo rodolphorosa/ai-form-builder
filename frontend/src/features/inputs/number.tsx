@@ -1,31 +1,24 @@
-import { InputProps } from "@/src/types/inputs"
 import React, {FC} from "react"
+import { InputProps } from "@/src/types/inputs"
 import { InputLabel } from "./common"
+import { Field } from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
 
-export const NumberInput: FC<InputProps> = ({field}) => {
-    const label = field.label
-    const required = field.required
-    const minValue = field.validation?.minValue
-    const maxValue = field.validation?.maxValue
+export const NumberInput: FC<InputProps> = ({item: field}) => {
+    const { id, label, required, description, validation } = field
 
     return (
         <div className="flex flex-col gap-1">
-            <InputLabel label={label} required={required} />
-            <input 
-                type="number"
-                min={minValue}
-                max={maxValue}
-                className="
-                    w-full
-                    h-10
-                    px-3
-                    border border-gray-300
-                    rounded-md
-                    text-sm
-                    focus:outline-none
-                    focus:ring-2 focus:ring-blue-500
-                "
-            />
+            <Field>
+                <InputLabel label={label} description={description} required={required}/>
+                <Input
+                    id={id}
+                    type="number"
+                    required={required}
+                    min={validation?.minValue}
+                    max={validation?.maxValue}
+                />
+            </Field>
         </div>
     )
 }

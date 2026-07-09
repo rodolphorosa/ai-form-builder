@@ -1,10 +1,11 @@
-import { Field } from "./form";
+import { Item } from "./form";
 
 export interface InputProps {
-    field: Field
+    item: Item
 }
 
 export interface LabelProps {
     label: string,
-    required: boolean
+    description?: string,
+    required?: boolean
 }

@@ -1,13 +1,20 @@
-import { InputProps } from "@/src/types/inputs"
 import React, {FC} from "react"
-import Select from "react-select"
+import { InputProps } from "@/src/types/inputs"
 import { snakeCase } from "lodash"
 import { InputLabel } from "./common"
 
-export const SelectInput: FC<InputProps> = ({field}) => {
-    const label = field.label
-    const required = field.required
-    const options = field.options
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Field } from "@/components/ui/field"
+
+export const SelectInput: FC<InputProps> = ({item: field}) => {
+    const { label, description, required, options } = field
 
     const parseOptions = (options: string[]) => { 
         return options.map((option, index) => {
@@ -16,9 +23,22 @@ export const SelectInput: FC<InputProps> = ({field}) => {
     }
 
     return (
-        <div className="flex flex-col gap-1">
-            <InputLabel label={label} required={required} />
-            <Select options={parseOptions(options??[])}/>
-        </div>
+        <Field>
+            <InputLabel label={label} description={description} required={required} />
+            <Select items={options}>
+                <SelectTrigger className="w-full max-w-48">
+                    <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-white">
+                    <SelectGroup>
+                        {options?.map((item) => (
+                            <SelectItem key={item.value} value={item.value}>
+                            {item.label}
+                            </SelectItem>
+                        ))}
+                    </SelectGroup>
+                </SelectContent>
+            </Select>
+        </Field>
     )
 }

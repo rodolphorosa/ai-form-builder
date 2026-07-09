@@ -1,31 +1,49 @@
-import { InputProps } from "@/src/types/inputs"
-import React, {FC} from "react"
-import { InputLabel } from "./common"
+"use client"
 
-export const DateInput: FC<InputProps> = ({field}) => {
-    const label = field.label
-    const required = field.required
-    const minValue = field.validation?.minValue
-    const maxValue = field.validation?.maxValue
+import React, {FC} from "react"
+import { InputProps } from "@/src/types/inputs"
+
+import { InputLabel } from "./common"
+import { format } from "date-fns"
+import { ChevronDownIcon } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { Field } from "@/components/ui/field"
+
+export const DateInput: FC<InputProps> = ({item: item}) => {
+    const label = item.label
+    const required = item.required
+
+    const [date, setDate] = React.useState<Date>()
     
     return (
-        <div className="flex flex-col gap-1">
-            <InputLabel label={label} required={required} />
-            <input 
-                type="date"
-                min={minValue}
-                max={maxValue}
-                className="
-                    w-full
-                    h-10
-                    px-3
-                    border border-gray-300
-                    rounded-md
-                    text-sm
-                    focus:outline-none
-                    focus:ring-2 focus:ring-blue-500
-                "
-            />
+        <div>
+            <Popover>
+                <PopoverTrigger 
+                    render={
+                        <Button 
+                            variant={"outline"} 
+                            data-empty={!date} 
+                            className="w-[212px] justify-between text-left font-normal data-[empty=true]:text-muted-foreground">
+                                {date ? format(date, "PPP") : label}<ChevronDownIcon data-icon="inline-end" />
+                        </Button>
+                    } />
+                <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                        mode="single"
+                        selected={date}
+                        onSelect={setDate}
+                        defaultMonth={date}
+                    />
+                </PopoverContent>
+            </Popover>
         </div>
     )
 }
+

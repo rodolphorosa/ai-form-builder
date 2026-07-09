@@ -31,22 +31,39 @@ interface ValidationRules {
 
 export type Validation = Partial<ValidationRules>
 
-export interface Field {
+type OptionValue = string | number | boolean
+
+export interface Option<T extends OptionValue = string> {
+    value: T
+    label: string
+}
+
+interface ComponentBase {
     id: string
     label: string
+    description?: string
+    ui?: Ui
+}
+
+export interface Item extends ComponentBase {
     type: InputType
     required: boolean
     disabled: boolean
-    description: string
     validation?: Validation
-    options?: string[]
-    ui?: Ui
+    options?: Option[]
 }
+
+export interface Group extends ComponentBase {
+    type: "group"
+    items: Item[]
+}
+
+export type SectionItem = Item | Group
 
 export interface Section {
     id: string
     label: string
-    fields: Field[]
+    items: SectionItem[]
 }
 
 export interface FormSchema {
