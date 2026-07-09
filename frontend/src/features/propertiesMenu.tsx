@@ -65,19 +65,19 @@ export const PropertiesMenu: FC<PropertiesMenuProps> = ({ item }) => {
                 <div className="grid grid-cols-2 gap-4">
                     <div>
                         <div>Minimum value</div>
-                        <Input type="number" defaultValue={(item as Item).validation?.minValue} />
+                        <Input type="number" defaultValue={(item as Item)?.validation?.minValue} />
                     </div>
                     <div>
                         <div>Maximum value</div>
-                        <Input type="number" defaultValue={(item as Item).validation?.maxValue} />
+                        <Input type="number" defaultValue={(item as Item)?.validation?.maxValue} />
                     </div>
                     <div>
                         <div>Minimum length</div>
-                        <Input type="number" defaultValue={(item as Item).validation?.minLength} />
+                        <Input type="number" defaultValue={(item as Item)?.validation?.minLength} />
                     </div>
                     <div>
                         <div>Maximum length</div>
-                        <Input type="number" defaultValue={(item as Item).validation?.maxLength} />
+                        <Input type="number" defaultValue={(item as Item)?.validation?.maxLength} />
                     </div>
                 </div>
                 
