@@ -12,6 +12,7 @@ import { Header } from "./header"
 import { PropertiesMenu } from "./propertiesMenu"
 import { StructureMenu } from "./structureMenu"
 import { cn } from "@/lib/utils"
+import { Chat } from "./chat"
 
 interface BuilderProps {
     // schema: FormSchema
@@ -170,22 +171,23 @@ export const Builder: FC<BuilderProps> = ({}) => {
             <div className="h-full grid grid-cols-[1fr_2fr_1fr] min-h-0 flex-1 overflow-hidden">
                 <StructureMenu schema={schema} selectItem={setSelectedItem} />
                 <div className="h-full flex flex-col px-8 py-4 overflow-hidden">
-                    {/* <div className="p-8  overflow-y-auto h-full">
+                    <div className="p-8  overflow-y-auto h-full">
                         {<Renderer schema={schema} selectedItem={selectedItem } onCreate={focusPrompt}/>}
                         {loading && <Thinking />}
-                    </div> */}
-                    {schema && (
+                    </div>
+                    {/* {schema && (
                         <div className="p-4 overflow-y-auto h-full">
                             {<Renderer schema={schema} selectedItem={selectedItem } onCreate={focusPrompt}/>}
                             {loading && <Thinking />}
                         </div>
-                    )}
-                    <div className="m-auto w-full text-center">
+                    )} */}
+                    {/* <div className="m-auto w-full text-center">
                         {(!loading && !schema) && <div className="text-3xl p-4">Describe your form</div>}
                         {renderPromptArea()}
-                    </div>
+                    </div> */}
                 </div>
-                <PropertiesMenu item={selectedItem} />
+                {/* <PropertiesMenu item={selectedItem} /> */}
+                <Chat schema={schema} onSchemaChange={(schema) => setSchema(schema)} />
             </div>
         </div>
     )

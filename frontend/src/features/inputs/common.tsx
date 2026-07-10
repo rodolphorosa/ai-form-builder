@@ -14,11 +14,15 @@ export const InputLabel: FC<LabelProps> = ({label, description, required}) => {
     )
 }
 
-export const Thinking = () => {
+interface ThinkingProps {
+    step?: string
+}
+
+export const Thinking = ({ step }: ThinkingProps) => {
     return (
         <div className="sticky flex flex-row gap-2 self-end">
             <Spinner />
-            <div>Thinking...</div>
+            <div>{step ?? "Thinking..."}</div>
         </div>
     )
 }

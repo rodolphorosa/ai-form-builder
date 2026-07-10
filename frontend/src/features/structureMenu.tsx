@@ -48,9 +48,9 @@ export const StructureMenu: FC<StructureMenuProps> = ({ schema, selectItem }) =>
                     <TableOfContents />
                     <div>Form structure</div>
                 </div>
-                <Button variant="ghost">
+                {/* <Button variant="ghost">
                     <Plus />
-                </Button>
+                </Button> */}
             </div>
             <Separator />
             <div className="flex-1 overflow-y-auto p-4">

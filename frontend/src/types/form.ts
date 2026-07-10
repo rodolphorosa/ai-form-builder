@@ -70,3 +70,9 @@ export interface FormSchema {
     title: string
     sections: Section[]
 }
+
+export interface AssistentResponse {
+    message: string
+    changes: Record<string,string>[]
+    schema: FormSchema
+}
