@@ -1,14 +1,22 @@
-import React, { FC } from "react"
+"use client"
+
+import React, { FC, useEffect, useRef } from "react"
 import { FormSchema, Group, Section, SectionItem } from "../types/form"
 import { ItemGroup } from "./inputs/group"
 import { itemStrategies } from "./registry"
+import { cn } from "@/lib/utils"
+import { EmptyRenderer } from "./emptyRenderer"
 
 interface RendererProps {
-    schema: FormSchema
+    schema: FormSchema | null
+    selectedItem: SectionItem | null
+    onCreate: () => void
 
 }
 
-export const Renderer: FC<RendererProps> = ({schema}) => {
+export const Renderer: FC<RendererProps> = ({ schema, selectedItem, onCreate }) => {
+
+    const refs = useRef<Record<string, HTMLDivElement | null>>({})
 
     const isGroup = (item: SectionItem): item is Group => {
         return "items" in item
@@ -28,7 +36,22 @@ export const Renderer: FC<RendererProps> = ({schema}) => {
             return (<div>Unsupported input type</div>)
         }
 
-        return <Component item={item} />
+        return (
+            <div 
+                style={{ padding: "4px" }}
+                ref={(el) => {
+                    refs.current[item.id] = el
+                }}
+                className={cn(
+                    "rounded-lg border-l-2 border-transparent pl-3 transition-all p-1",
+                    selectedItem?.id === item.id &&
+                        "border-primary bg-muted/40",
+                    item.type === "textarea" && "col-span-2"
+                )}
+            >
+                <Component item={item} />
+            </div>
+        )
 
     }
 
@@ -37,15 +60,30 @@ export const Renderer: FC<RendererProps> = ({schema}) => {
             <div className="flex flex-col gap-4">
                 <div className="text-left text-base font-semibold">{section.label}</div>
                 <div className="grid grid-cols-2 gap-3">
-                    { section.items.map(field => renderSectionItem(field)) }
+                    { section.items.map(item => renderSectionItem(item)) }
                 </div>
             </div>
         )
     }
+
+    useEffect(() => {
+        if (!selectedItem) return
+
+        refs.current[selectedItem.id]?.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+        })
+    }, [selectedItem])
+
+    if(!schema) {
+        return <EmptyRenderer onCreate={onCreate} />
+    }
     
     return (
-        <div className="flex flex-col gap-4 overflow-auto">
-            <div className="text-center text-lg font-semibold">{schema.title}</div>
+        <div className="flex flex-col gap-4 p-1 min-h-0 h-full">
+            <div className="text-center text-lg font-semibold">
+                {schema.title}
+            </div>
             <div className="flex flex-col gap-5">
                 { schema.sections.map(section => renderSection(section)) }
             </div>

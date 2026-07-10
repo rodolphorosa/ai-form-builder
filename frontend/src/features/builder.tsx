@@ -1,17 +1,17 @@
 "use client"
 
-import React, {FC, useEffect, useState} from "react"
+import React, {FC, useEffect, useRef, useState} from "react"
 import { FormSchema, SectionItem } from "../types/form"
 import { Renderer } from "./renderer"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 
-import { Send, Sparkles } from "lucide-react"
-import { Spinner } from "@/components/ui/spinner"
+import { ArrowUp, Paperclip, Send, Sparkles } from "lucide-react"
 import { Thinking } from "./inputs/common"
 import { Header } from "./header"
 import { PropertiesMenu } from "./propertiesMenu"
 import { StructureMenu } from "./structureMenu"
+import { cn } from "@/lib/utils"
 
 interface BuilderProps {
     // schema: FormSchema
@@ -25,6 +25,24 @@ export const Builder: FC<BuilderProps> = ({}) => {
 
     const [selectedItem, setSelectedItem] = useState<SectionItem|null>(null)
 
+    const [provider, setProvider] = useState()
+    const [model, setModel] = useState()
+
+    const promptRef = useRef<HTMLTextAreaElement>(null)
+
+    useEffect(() => {
+        const settings = localStorage.getItem("settings")
+
+        if(!settings) return
+
+        const parsedSettings = JSON.parse(settings)
+
+        setProvider(parsedSettings["provider"])
+        setModel(parsedSettings["model"])
+    
+    }, [])
+
+
     const generateForm = async () => {
         setLoading(true)
 
@@ -32,14 +50,15 @@ export const Builder: FC<BuilderProps> = ({}) => {
             const response = await fetch(
                 "/api/generate-form",
                 {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    prompt: description,
-                    provider: "openai"
-                }),
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        prompt: description,
+                        provider: provider ?? "openai",
+                        model: model ?? "gpt-4.1-nano"
+                    }),
                 }
             );
 
@@ -53,49 +72,117 @@ export const Builder: FC<BuilderProps> = ({}) => {
         }
     }
 
+    const editForm = async () => {
+        setLoading(true)
+        
+        try {
+            const response = await fetch("/api/edit-form", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    prompt: description,
+                    schema: JSON.stringify(schema),
+                    provider: provider ?? "openai",
+                    model: model ?? "gpt-4.1-nano"
+                })
+            })
 
-    return (
-        <div className="h-screen flex flex-col">
-            <Header />
-            <div className="h-full grid grid-cols-[1fr_2fr_1fr] min-h-0 flex-1">
-                <StructureMenu schema={schema} selectItem={setSelectedItem} />
-                <div className="h-full flex flex-col gap-6 px-8 py-4">
-                    <div className="p-8 rounded-xl border border-border bg-background shadow-sm overflow-y-auto">
-                        {schema && <Renderer schema={schema} />}
-                        {loading && <Thinking />}
-                    </div>
-                    <div className="flex flex-row items-start gap-3 p-4 w-full rounded-xl border border-border bg-background shadow-sm">
-                        <Sparkles />
-                        <div className="flex flex-col flex-1 min-h-0">
-                            <div>Describe the form you want...</div>
-                            <Textarea 
-                                className="
-                                    h-16
-                                    resize-none 
-                                    overflow-y-auto 
-                                    border-0 
-                                    shadow-none 
-                                    focus-visible:ring-0 
-                                    focus-visible:border-0 
-                                    px-0"
-                                id="form-description-prompt"
-                                minLength={50}
-                                maxLength={2000}
-                                value={description}
-                                onChange={e => setDescription(e.target.value)}
-                                placeholder="Example: Create a customer registration form with name, email, phone and address."
-                            />
-                        </div>
+            const data = await response.json();
+            setSchema(data?.data?? null);
+        
+        } catch (error) {
+            console.log("Failed to edit form", error)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const focusPrompt = () => {
+        const promptArea = promptRef.current 
+
+        if (!promptArea) return 
+
+        promptArea.focus()
+
+        promptArea.setSelectionRange(
+            promptArea.value.length,
+            promptArea.value.length
+        )
+    }
+
+    const renderPromptArea = () => {
+        return (
+            <div className="
+                flex flex-col 
+                items-start gap-1 p-4 w-full 
+                rounded-xl border border-border shadow-sm"
+            >
+                <div className="w-full self-end">
+                    <Textarea 
+                        className={cn(
+                            "!bg-transparent min-h-12 max-h-48 resize-none overflow-y-auto border-0 shadow-none focus-visible:ring-0 focus-visible:border-0 px-0",
+                            description.length === 0
+                            ? "h-12"
+                            : "min-h-12 max-h-48"
+                        )}
+                        id="form-description-prompt"
+                        ref={promptRef}
+                        minLength={50}
+                        maxLength={2000}
+                        value={description}
+                        onChange={e => setDescription(e.target.value)}
+                        placeholder="Describe the form you want"
+                    />
+                </div>
+                <div className="w-full flex flex-row justify-between self-end">
+                    <Button variant="ghost" size="icon">
+                        <Paperclip />
+                    </Button>
+                    <div className="flex flex-row gap-2">
                         <div className="mt-1 flex justify-end text-xs text-muted-foreground self-end">
                             {description.length}/2000
                         </div>
                         <Button 
-                            className="self-end" type="button"
-                            onClick={generateForm}
+                            className="self-end rounded-full" 
+                            size="icon"
+                            onClick={() => {
+                                if(schema) {
+                                    editForm()
+                                } else {
+                                    generateForm()
+                                }
+                            }}
                         >
-                            <Send />
-                            Generate
+                            <ArrowUp />
                         </Button>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+
+    return (
+        <div className="h-screen flex flex-col overflow-hidden">
+            <Header />
+            <div className="h-full grid grid-cols-[1fr_2fr_1fr] min-h-0 flex-1 overflow-hidden">
+                <StructureMenu schema={schema} selectItem={setSelectedItem} />
+                <div className="h-full flex flex-col px-8 py-4 overflow-hidden">
+                    {/* <div className="p-8  overflow-y-auto h-full">
+                        {<Renderer schema={schema} selectedItem={selectedItem } onCreate={focusPrompt}/>}
+                        {loading && <Thinking />}
+                    </div> */}
+                    {schema && (
+                        <div className="p-4 overflow-y-auto h-full">
+                            {<Renderer schema={schema} selectedItem={selectedItem } onCreate={focusPrompt}/>}
+                            {loading && <Thinking />}
+                        </div>
+                    )}
+                    <div className="m-auto w-full text-center">
+                        {(!loading && !schema) && <div className="text-3xl p-4">Describe your form</div>}
+                        {renderPromptArea()}
                     </div>
                 </div>
                 <PropertiesMenu item={selectedItem} />

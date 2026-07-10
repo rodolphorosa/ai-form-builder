@@ -9,15 +9,17 @@ load_dotenv(override=True)
 
 class OllamaProvider(BaseProvider):
 
-    def __init__(self):
+    def __init__(self, model):
         self.client = OpenAI(
             base_url="http://localhost:11434/v1",
             api_key="ollama"
         )
 
+        self.model = model
+
     def chat(self, messages: list[dict]):
         response = self.client.chat.completions.create(
-            model="llama3.2",
+            model=self.model,
             messages=messages,
             response_format={"type": "json_object"}
         )

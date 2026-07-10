@@ -46,6 +46,14 @@ PROVIDERS = {
 class FormRequest(BaseModel):
     prompt: str
     provider: ProviderType
+    model: str
+
+
+class EditRequest(BaseModel):
+    prompt: str
+    schema: str
+    provider: ProviderType
+    model: str
 
 
 @app.get('/')
@@ -55,8 +63,21 @@ def home():
 @app.post('/generate-form')
 def generate_form(data: FormRequest):
     provider_cls = PROVIDERS.get(data.provider)
-    provider = provider_cls()
+    provider = provider_cls(model=data.model)
     form = generate_form_schema(data.prompt, provider)
+
+    return { "data": form }
+
+
+@app.post('/edit-form')
+def edit_form(data: EditRequest):
+    provider_cls = PROVIDERS.get(data.provider)
+    provider = provider_cls(model=data.model)
+    
+    form = generate_form_schema(
+        f"{data.prompt}\n\n Current schema:\n {data.schema}",
+        provider
+    )
 
     return { "data": form }
 
@@ -67,4 +88,4 @@ if __name__ == "__main__":
         host="0.0.0.0",
         port=8000,
         reload=True
-    )
+    )   

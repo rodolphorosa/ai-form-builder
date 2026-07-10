@@ -26,70 +26,74 @@ export const PropertiesMenu: FC<PropertiesMenuProps> = ({ item }) => {
 
 
     return (
-        <div className="flex flex-col border-l">
+        <div className="flex h-full min-h-0 flex-col border-l">
             <div className="flex flex-row gap-2 p-4">
                 {item && renderTypeIcon(item)}
                 <div className="text-base font-normal">{item && typesNames[item.type]}</div>
             </div>
             <Separator />
-            <div className="flex flex-col gap-4 px-4 py-2">
-                <div>
-                    <div>Name</div>
-                    <Input type="text" defaultValue={item?.label}/>
+            <div className="flex-1 overflow-y-auto">
+                <div className="flex flex-col gap-4 px-4 py-2">
+                    <div>
+                        <div>Name</div>
+                        <Input type="text" defaultValue={item?.label}/>
+                    </div>
+                    
+                    <div>
+                        <div>Placeholder</div>
+                        <Input type="text" defaultValue={item?.ui?.placeholder}/>
+                    </div>
+                    <div>
+                        <div>Description</div>
+                        <Input type="text" defaultValue={item?.description}/>
+                    </div>
+                    {item && !isGroup(item) && (
+                        <>
+                            <div className="flex flex-row justify-between">
+                                <div>Required</div>
+                                <Switch id="item-required" checked={item.required} />
+                            </div>
+                            <div className="flex flex-row justify-between">
+                                <div>Disabled</div>
+                                <Switch id="item-disabled" checked={item.disabled} />
+                            </div>
+                        </>
+                    )}
                 </div>
-                
-                <div>
-                    <div>Placeholder</div>
-                    <Input type="text" defaultValue={item?.ui?.placeholder}/>
-                </div>
-                <div>
-                    <div>Description</div>
-                    <Input type="text" defaultValue={item?.description}/>
-                </div>
-                {item && !isGroup(item) && (
-                    <>
-                        <div className="flex flex-row justify-between">
-                            <div>Required</div>
-                            <Switch id="item-required" checked={item.required} />
+                <Separator />
+                <div className="flex flex-col gap-4 px-4 py-2">
+                    <div className="text-base font-semibold">Validation</div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <div>Minimum value</div>
+                            <Input type="number" defaultValue={(item as Item)?.validation?.minValue} />
                         </div>
-                        <div className="flex flex-row justify-between">
-                            <div>Disabled</div>
-                            <Switch id="item-disabled" checked={item.disabled} />
+                        <div>
+                            <div>Maximum value</div>
+                            <Input type="number" defaultValue={(item as Item)?.validation?.maxValue} />
                         </div>
-                    </>
-                )}
-            </div>
-            <Separator />
-            <div className="flex flex-col gap-4 px-4 py-2">
-                <div className="text-base font-semibold">Validation</div>
-                <div className="grid grid-cols-2 gap-4">
-                    <div>
-                        <div>Minimum value</div>
-                        <Input type="number" defaultValue={(item as Item)?.validation?.minValue} />
+                        <div>
+                            <div>Minimum length</div>
+                            <Input type="number" defaultValue={(item as Item)?.validation?.minLength} />
+                        </div>
+                        <div>
+                            <div>Maximum length</div>
+                            <Input type="number" defaultValue={(item as Item)?.validation?.maxLength} />
+                        </div>
                     </div>
+                    
+                </div>
+                <Separator />
+                <div className="flex flex-col gap-4 px-4 py-2">
+                    <div className="text-base font-semibold">UI</div>
                     <div>
-                        <div>Maximum value</div>
-                        <Input type="number" defaultValue={(item as Item)?.validation?.maxValue} />
-                    </div>
-                    <div>
-                        <div>Minimum length</div>
-                        <Input type="number" defaultValue={(item as Item)?.validation?.minLength} />
-                    </div>
-                    <div>
-                        <div>Maximum length</div>
-                        <Input type="number" defaultValue={(item as Item)?.validation?.maxLength} />
+                        <div>Help text</div>
+                        <Input type="text" defaultValue={item?.ui?.helpText}/>
                     </div>
                 </div>
-                
+
             </div>
-            <Separator />
-            <div className="flex flex-col gap-4 px-4 py-2">
-                <div className="text-base font-semibold">UI</div>
-                <div>
-                    <div>Help text</div>
-                    <Input type="text" defaultValue={item?.ui?.helpText}/>
-                </div>
-            </div>
+            
         </div>
     )
 }

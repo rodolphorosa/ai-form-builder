@@ -25,6 +25,7 @@ export const Settings: FC<{}> = ({}) => {
     const [open, setOpen] = useState<boolean>(false)
     const [provider, setProvider] = useState<Provider>("openai")
     const [model, setModel] = useState<string>("gpt-4.1-nano")
+    const [apiKey, setApiKey] = useState<string>("")
 
     const providers = [
         { value: "ollama", label: "Ollama" },
@@ -44,6 +45,16 @@ export const Settings: FC<{}> = ({}) => {
         "gemini": [
             { value: "gemini-2.5-flash", label: "gemini-2.5-flash" }
         ]
+    }
+
+    const saveSettings = () => {
+        const settings = {
+            provider,
+            model,
+            apiKey
+        }
+
+        localStorage.setItem("settings", JSON.stringify(settings))
     }
     
     return (
@@ -101,7 +112,7 @@ export const Settings: FC<{}> = ({}) => {
                                     value={model} 
                                     onValueChange={(value) => {
                                         if (value) {
-                                            setModel(model)
+                                            setModel(value)
                                         } else {
                                             if (provider) {
                                                 setModel(models[provider][0].value)
@@ -130,13 +141,18 @@ export const Settings: FC<{}> = ({}) => {
                             <div className="text-base font-normal">
                                 API Key
                             </div>
-                            <Input type="password" placeholder="sk-proj-..." disabled={provider === "ollama"} />
+                            <Input 
+                                type="password" 
+                                placeholder="sk-proj-..." 
+                                disabled={provider === "ollama"} 
+                                onChange={(e) => setApiKey(e.target.value)} 
+                            />
                         </div>
                     </div>
                 </div>
                 <DrawerFooter className="flex flex-row gap-2 justify-end border-t pt-4">
-                    <Button>Save</Button>
-                    <Button>Cancel</Button>
+                    <Button variant="outline" onClick={saveSettings}>Save</Button>
+                    <Button variant="outline">Cancel</Button>
                 </DrawerFooter>
             </DrawerContent>
         </Drawer>

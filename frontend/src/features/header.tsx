@@ -14,16 +14,19 @@ import {
     DrawerTrigger 
 } from "@/components/ui/drawer"
 import { Settings } from "./settings"
+import { useTheme } from "next-themes"
 
 export const Header: FC<{}> = ({}) => {
-    const [theme, settheme] = useState<"light" | "dark">("light")
+    // const [theme, setTheme] = useState<"light" | "dark">("light")
     const [open, setOpen] = useState<boolean>(false)
+
+    const { theme, setTheme } = useTheme()
 
     const toggleTheme = () => {
         if (theme === "dark") {
-            settheme("light")
+            setTheme("light")
         } else {
-            settheme("dark")
+            setTheme("dark")
         }
     }
 
@@ -34,8 +37,8 @@ export const Header: FC<{}> = ({}) => {
                 <div className="text-lg font-bold">Smart Form Builder</div>
             </div>
             <div className="flex flex-row gap-1 self-end">
-                <Button>Save</Button>
-                <Button>Export JSON</Button>
+                <Button variant="outline">Save</Button>
+                <Button variant="outline">Export JSON</Button>
                 <Button variant="ghost" onClick={toggleTheme}>
                     { theme === "light" ? <Sun /> : <Moon /> }
                 </Button>

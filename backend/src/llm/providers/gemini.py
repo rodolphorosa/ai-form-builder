@@ -12,9 +12,9 @@ class GeminiProvider(BaseProvider):
 
     GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/openai/"
 
-    def __init__(self):
+    def __init__(self, model):
         api_key = os.getenv('GEMINI_API_KEY')
-        model = os.getenv('GEMINI_MODEL', 'gemini-2.5-flash')
+        # model = os.getenv('GEMINI_MODEL', 'gemini-2.5-flash')
 
         if not api_key:
             raise Exception("GEMINAI_API_KEY not found")

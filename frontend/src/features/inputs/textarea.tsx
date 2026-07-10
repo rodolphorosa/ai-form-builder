@@ -8,13 +8,14 @@ export const TextareaInput: FC<InputProps> = ({item: field}) => {
     const { label, required, description, validation, ui } = field
 
     return (
-        <Field className="col-span-2">
+        <Field>
             <InputLabel label={label} description={description} required={required} />
             <Textarea 
                 id="textarea-message" 
                 placeholder={ui?.placeholder}
                 minLength={validation?.minLength}
                 maxLength={validation?.maxLength}
+                className="resize-none"
             />
         </Field>
     )
