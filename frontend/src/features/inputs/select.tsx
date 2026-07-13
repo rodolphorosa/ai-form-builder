@@ -26,7 +26,7 @@ export const SelectInput: FC<InputProps> = ({item: field}) => {
         <Field>
             <InputLabel label={label} description={description} required={required} />
             <Select items={options}>
-                <SelectTrigger className="w-full max-w-48">
+                <SelectTrigger className="w-full">
                     <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="bg-white">

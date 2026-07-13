@@ -76,3 +76,11 @@ export interface AssistentResponse {
     changes: Record<string,string>[]
     schema: FormSchema
 }
+
+export const ProviderTypes = {
+    GEMINI: "gemini",
+    OLLAMA: "ollama",
+    OPENAI: "openai"
+} as const
+
+export type ProviderType = typeof ProviderTypes[keyof typeof ProviderTypes]

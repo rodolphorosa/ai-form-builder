@@ -39,7 +39,7 @@ export const strategyIcons: Record<InputType, React.ComponentType> = {
     select: List,
     radio: CircleDot,
     checkbox: SquareCheck,
-    group: Container
+    // group: Container
 }
 
 export const typesNames: Record<InputType, string> = {

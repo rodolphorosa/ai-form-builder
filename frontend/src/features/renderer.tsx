@@ -38,14 +38,13 @@ export const Renderer: FC<RendererProps> = ({ schema, selectedItem, onCreate }) 
 
         return (
             <div 
-                style={{ padding: "4px" }}
                 ref={(el) => {
                     refs.current[item.id] = el
                 }}
                 className={cn(
-                    "rounded-lg border-l-2 border-transparent pl-3 transition-all p-1",
+                    "rounded-lg border-transparent transition-all p-1",
                     selectedItem?.id === item.id &&
-                        "border-primary bg-muted/40",
+                        "shadow-sm bg-muted/80",
                     item.type === "textarea" && "col-span-2"
                 )}
             >

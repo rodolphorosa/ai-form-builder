@@ -9,7 +9,7 @@ export const InputLabel: FC<LabelProps> = ({label, description, required}) => {
             <FieldLabel>
                 {label} <span className="text-destructive">{ required ? "*":""}</span>
             </FieldLabel>
-            <FieldDescription>{description}</FieldDescription>
+            {/* <FieldDescription>{description}</FieldDescription> */}
         </>
     )
 }

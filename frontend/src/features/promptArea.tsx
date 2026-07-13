@@ -20,7 +20,7 @@ export const PromptArea = ({
         <div className="
             flex flex-col 
             items-start gap-1 p-4 w-full 
-            rounded-xl border border-border shadow-sm"
+            rounded-xl border border-border"
         >
             <div className="w-full self-end">
                 <Textarea 

@@ -51,7 +51,7 @@ class FormRequest(BaseModel):
 
 class EditRequest(BaseModel):
     prompt: str
-    schema: str
+    schema: dict
     provider: ProviderType
     model: str
 

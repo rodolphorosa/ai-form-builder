@@ -1,14 +1,17 @@
 import { Bubble, BubbleContent } from "@/components/ui/bubble"
 import { Separator } from "@/components/ui/separator"
 import { Astroid, Bot } from "lucide-react"
-import { useEffect, useRef, useState } from "react"
+import { RefObject, useEffect, useRef, useState } from "react"
 import { PromptArea } from "./promptArea"
 import { FormSchema } from "../types/form"
 import { Thinking } from "./inputs/common"
+import { formService } from "../api/form"
+import { ApiFormResponse } from "../api/types"
 
 interface ChatProps {
     schema: FormSchema | null
     onSchemaChange: (schema: FormSchema | null) => void
+    promptRef?: RefObject<HTMLTextAreaElement | null> | null
 }
 
 interface Message {
@@ -17,7 +20,7 @@ interface Message {
 }
 
 
-export const Chat = ({ schema, onSchemaChange }: ChatProps) => {
+export const Chat = ({ schema, onSchemaChange, promptRef }: ChatProps) => {
     const [messages, setMessages] = useState<Message[]>([])
     const [loading, setLoading] = useState<boolean>(false)
     
@@ -43,37 +46,27 @@ export const Chat = ({ schema, onSchemaChange }: ChatProps) => {
         )
     }
 
-    const generateForm = async (prompt: string) => {
-        setLoading(true)
-
-        try {
-            const response = await fetch(
-                "/api/generate-form",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        prompt: prompt,
-                        provider: "openai",
-                        model: "gpt-4.1-nano"
-                    }),
-                }
-            );
-
-            const data = await response.json();
-            onSchemaChange(data?.data?.schema?? null);
-
-            const message: Message = {
+    const handleResponseData = (data: ApiFormResponse["data"]) => {
+        onSchemaChange(data.schema)
+        setMessages(prev => [
+            ...prev, 
+            {
                 user: "model",
-                content: data?.data?.message ?? "Schema created"
+                content: data.message
             }
+        ])
+    }
 
-            setMessages(prev => [
-                ...prev, message
-            ])
-
+    const createForm = async (prompt: string) => {
+        setLoading(true)
+        
+        try {
+            const { data } = await formService.createForm({
+                prompt: prompt,
+                provider: "gemini",
+                model: "gemini-2.5-flash"
+            })
+            handleResponseData(data)
         } catch (error) {
             console.error("Failed to generate form", error)
         } finally {
@@ -82,34 +75,18 @@ export const Chat = ({ schema, onSchemaChange }: ChatProps) => {
     }
 
     const editForm = async (prompt: string) => {
+        if(!schema) return
+
         setLoading(true)
         
         try {
-            const response = await fetch("/api/edit-form", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    prompt: prompt,
-                    schema: JSON.stringify(schema),
-                    provider: "openai",
-                    model: "gpt-4.1-nano"
-                })
+            const { data } = await formService.editForm({
+                prompt: prompt,
+                schema: schema,
+                provider: "gemini",
+                model: "gemini-2.5-flash"
             })
-
-            const data = await response.json();
-            onSchemaChange(data?.data?.schema?? null);
-
-            const message: Message = {
-                user: "model",
-                content: data?.data?.message ?? "Schema edited"
-            }
-
-            setMessages(prev => [
-                ...prev, message
-            ])
-        
+            handleResponseData(data)
         } catch (error) {
             console.log("Failed to edit form", error)
         } finally {
@@ -145,10 +122,10 @@ export const Chat = ({ schema, onSchemaChange }: ChatProps) => {
                         if (schema) {
                             editForm(message)
                         } else {
-                            generateForm(message)
+                            createForm(message)
                         }
                     }} 
-                    promptRef={null}
+                    promptRef={promptRef ?? null}
                 />
             </div>
         </div>
