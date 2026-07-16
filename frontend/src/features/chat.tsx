@@ -47,11 +47,13 @@ export const Chat = ({ schema, onSchemaChange, promptRef }: ChatProps) => {
     }
 
     const handleResponseData = (data: ApiFormResponse["data"]) => {
+        // @ts-ignore
         onSchemaChange(data.schema)
         setMessages(prev => [
             ...prev, 
             {
                 user: "model",
+                // @ts-ignore
                 content: data.message
             }
         ])
@@ -63,8 +65,8 @@ export const Chat = ({ schema, onSchemaChange, promptRef }: ChatProps) => {
         try {
             const { data } = await formService.createForm({
                 prompt: prompt,
-                provider: "gemini",
-                model: "gemini-2.5-flash"
+                provider: "openai",
+                model: "gpt-4.1-nano"
             })
             handleResponseData(data)
         } catch (error) {
@@ -83,8 +85,8 @@ export const Chat = ({ schema, onSchemaChange, promptRef }: ChatProps) => {
             const { data } = await formService.editForm({
                 prompt: prompt,
                 schema: schema,
-                provider: "gemini",
-                model: "gemini-2.5-flash"
+                provider: "openai",
+                model: "gpt-4.1-nano"
             })
             handleResponseData(data)
         } catch (error) {
@@ -96,9 +98,11 @@ export const Chat = ({ schema, onSchemaChange, promptRef }: ChatProps) => {
 
     return (
         <div className="h-full flex flex-col overflow-hidden border-l">
-            <div className="flex flex-row gap-2 p-4">
-                <Astroid />
-                <div className="text-base font-normal">AI Assistant</div>
+            <div className="flex flex-row items-center justify-between p-4 h-14">
+                <div className="flex flex-row items-center gap-2 text-sm font-medium">
+                    <Astroid className="h-4 w-4"/>
+                    <div>AI Assistant</div>
+                </div>
             </div>
             <Separator />
             <div className="flex-1 overflow-y-auto p-4">

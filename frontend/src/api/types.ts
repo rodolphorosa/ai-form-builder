@@ -1,4 +1,5 @@
-import { FormSchema, ProviderType } from "../types/form"
+import { Suggestion } from "../types/ai"
+import { FormSchema, Item, ProviderType, Section } from "../types/form"
 
 interface BaseRequest {
     prompt: string
@@ -9,6 +10,18 @@ interface BaseRequest {
 export type CreateRequest = BaseRequest
 export interface EditRequest extends BaseRequest {
     schema: FormSchema
+}
+
+export interface SuggestionRequest {
+    schema: FormSchema
+    subject: Section | Item
+    context: "properties" | "options" | "validation" | "logic"
+    provider: ProviderType
+    model: string
+}
+
+interface SuggestionResponse {
+    suggestions: Suggestion[]
 }
 
 interface FormResponse {
@@ -22,3 +35,5 @@ interface ApiResponse<T> {
 }
 
 export type ApiFormResponse = ApiResponse<FormResponse>
+
+export type ApiSuggestionResponse = ApiResponse<SuggestionResponse>

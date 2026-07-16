@@ -1,3 +1,5 @@
+import { LogicRule } from "./logic"
+
 export const InputTypes = {
     TEXT: "text", 
     EMAIL: "email", 
@@ -27,6 +29,7 @@ interface ValidationRules {
     maxValue: number
     minLength: number
     maxLength: number
+    regex: string
 }
 
 export type Validation = Partial<ValidationRules>
@@ -51,6 +54,7 @@ export interface Item extends ComponentBase {
     disabled: boolean
     validation?: Validation
     options?: Option[]
+    logicRules?: LogicRule[]
 }
 
 export interface Group extends ComponentBase {
@@ -63,7 +67,7 @@ export type SectionItem = Item | Group
 export interface Section {
     id: string
     label: string
-    items: SectionItem[]
+    items: Item[]
 }
 
 export interface FormSchema {

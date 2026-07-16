@@ -22,9 +22,9 @@ export const DatetimeInput: FC<InputProps> = ({item}) => {
   const { label, required } = item
 
   return (
-    <FieldGroup className="max-w-xs flex-row">
+    <FieldGroup className="w-full flex-row gap-1">
       <Field>
-        <FieldLabel htmlFor="date-picker-optional">Date</FieldLabel>
+        <FieldLabel htmlFor="date-picker-optional">{label}</FieldLabel>
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger 
             render={
@@ -49,8 +49,8 @@ export const DatetimeInput: FC<InputProps> = ({item}) => {
           </PopoverContent>
         </Popover>
       </Field>
-      <Field className="w-32">
-        <FieldLabel htmlFor="time-picker-optional">Time</FieldLabel>
+      <Field>
+        <FieldLabel htmlFor="time-picker-optional"><br/></FieldLabel>
         <Input
           type="time"
           id="time-picker-optional"

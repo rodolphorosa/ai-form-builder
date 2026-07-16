@@ -1,5 +1,3 @@
-import * as React from "react"
-
 import {
   Empty,
   EmptyContent,
@@ -11,12 +9,15 @@ import {
 
 import { FilePlusCorner } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { CreateDialog } from "./dialogs/create"
+import { FormSchema } from "../types/form"
 
 interface EmptyRendererProps {
     onCreate: () => void
+    onSchemaCreate: (schema: FormSchema) => void
 }
 
-export const EmptyRenderer = ({onCreate}: EmptyRendererProps) => {
+export const EmptyRenderer = ({onCreate, onSchemaCreate}: EmptyRendererProps) => {
 
     return (
         <Empty className="h-full">
@@ -32,7 +33,7 @@ export const EmptyRenderer = ({onCreate}: EmptyRendererProps) => {
                 </EmptyDescription>
             </EmptyHeader>
             <EmptyContent className="flex-row justify-center gap-2">
-                <Button onClick={onCreate}>Create Form</Button>
+                <CreateDialog onSchemaCreate={onSchemaCreate} />
                 <Button variant="outline">Import Schema</Button>
             </EmptyContent>
         </Empty>

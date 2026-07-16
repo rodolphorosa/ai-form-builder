@@ -9,3 +9,5 @@ export interface LabelProps {
     description?: string,
     required?: boolean
 }
+
+export type State = "visible" | "required" | "disabled"

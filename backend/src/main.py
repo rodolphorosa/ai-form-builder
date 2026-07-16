@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from enum import Enum
 
 from src.mock import *
-from src.services import generate_form_schema
+from src.services import generate_form_schema, request_suggestion
 from src.llm.providers.openai import OpenaiProvider
 from src.llm.providers.ollama import OllamaProvider
 from src.llm.providers.gemini import GeminiProvider
@@ -43,6 +43,12 @@ PROVIDERS = {
     ProviderType.OLLAMA: OllamaProvider,
 }
 
+CONTEXTS = {
+    "properties": ["label", "description", "ui.placeholder", "ui.helpText", "required", "disabled"],
+    "options": ["options"],
+    "validation": ["minValue", "maxValue", "minLength", "maxLength", "regex"]
+}
+
 class FormRequest(BaseModel):
     prompt: str
     provider: ProviderType
@@ -55,6 +61,13 @@ class EditRequest(BaseModel):
     provider: ProviderType
     model: str
 
+
+class SuggestionRequest(BaseModel):
+    schema: dict
+    subject: dict
+    context: str
+    provider: ProviderType
+    model: str
 
 @app.get('/')
 def home():
@@ -80,6 +93,33 @@ def edit_form(data: EditRequest):
     )
 
     return { "data": form }
+
+@app.post('/suggestion')
+def suggest(data: SuggestionRequest):
+    provider_cls = PROVIDERS.get(data.provider)
+    provider = provider_cls(model=data.model)
+
+    print(CONTEXTS[data.context])
+
+    prompt = f"""
+        Suggest improvements to {data.subject["label"]}.
+        Your task is NOT to improve the whole field.
+
+        Your task is to inspect ONLY the following properties:
+
+        {CONTEXTS[data.context]}
+
+        Ignore every other property of the field, even if it could be improved.
+
+        Treat every other property as read-only.
+
+        Current field: \n\n {data.subject}
+        \n\n
+    """
+
+    suggestions = request_suggestion(prompt, provider)
+
+    return {"data": suggestions}
 
 
 if __name__ == "__main__":

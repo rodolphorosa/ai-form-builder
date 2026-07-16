@@ -9,14 +9,12 @@ import { Button } from "@/components/ui/button"
 import { ArrowUp, Paperclip, Send, Sparkles } from "lucide-react"
 import { Thinking } from "./inputs/common"
 import { Header } from "./header"
-import { PropertiesMenu } from "./propertiesMenu"
-import { StructureMenu } from "./menus/structureMenu"
+import { PropertiesTab } from "./menus/props"
+import { TreeMenu } from "./menus/tree"
 import { cn } from "@/lib/utils"
 import { Chat } from "./chat"
 
-interface BuilderProps {
-    // schema: FormSchema
-}
+interface BuilderProps {}
 
 export const Builder: FC<BuilderProps> = ({}) => {
     const [schema, setSchema] = useState<FormSchema | null>(null)
@@ -42,13 +40,12 @@ export const Builder: FC<BuilderProps> = ({}) => {
         <div className="h-screen flex flex-col overflow-hidden">
             <Header />
             <div className="h-full grid grid-cols-[1fr_2fr_1fr] min-h-0 flex-1 overflow-hidden">
-                <StructureMenu schema={schema} selectItem={setSelectedItem} />
+                <TreeMenu schema={schema} selectItem={setSelectedItem} selectedItem={selectedItem}/>
                 <div className="h-full flex flex-col px-8 py-4 overflow-hidden">
                     <div className="p-8  overflow-y-auto h-full">
-                        <Renderer schema={schema} selectedItem={selectedItem } onCreate={focusPrompt}/>
+                        <Renderer schema={schema} selectedItem={selectedItem } onCreate={focusPrompt} onSchemaCreate={setSchema}/>
                     </div>
                 </div>
-                {/* <PropertiesMenu item={selectedItem} /> */}
                 <Chat schema={schema} onSchemaChange={(schema) => setSchema(schema)} promptRef={promptRef} />
             </div>
         </div>

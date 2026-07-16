@@ -1,6 +1,6 @@
 "use client"
 
-import React, { FC, useEffect, useRef } from "react"
+import { FC, useEffect, useRef } from "react"
 import { FormSchema, Group, Section, SectionItem } from "../types/form"
 import { ItemGroup } from "./inputs/group"
 import { itemStrategies } from "./registry"
@@ -11,10 +11,15 @@ interface RendererProps {
     schema: FormSchema | null
     selectedItem: SectionItem | null
     onCreate: () => void
-
+    onSchemaCreate: (schema: FormSchema) => void
 }
 
-export const Renderer: FC<RendererProps> = ({ schema, selectedItem, onCreate }) => {
+export const Renderer: FC<RendererProps> = ({ 
+    schema, 
+    selectedItem, 
+    onCreate, 
+    onSchemaCreate 
+}) => {
 
     const refs = useRef<Record<string, HTMLDivElement | null>>({})
 
@@ -75,7 +80,7 @@ export const Renderer: FC<RendererProps> = ({ schema, selectedItem, onCreate }) 
     }, [selectedItem])
 
     if(!schema) {
-        return <EmptyRenderer onCreate={onCreate} />
+        return <EmptyRenderer onCreate={onCreate} onSchemaCreate={onSchemaCreate}/>
     }
     
     return (
