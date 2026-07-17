@@ -1,4 +1,3 @@
-import { FormSchema, InputTypes, Item, SectionItem } from "@/src/types/form"
 import {
   Card,
   CardContent,
@@ -22,6 +21,7 @@ import { PropertiesTab } from "./props"
 import { AdvancedTab } from "./logic"
 import { ValidationMenu } from "./validation"
 import { OptionsTab } from "./options"
+import { FormSchema, Item, InputTypes } from "@/types/form"
 
 interface EditMenuProps {
     schema: FormSchema

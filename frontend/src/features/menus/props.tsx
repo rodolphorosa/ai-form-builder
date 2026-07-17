@@ -4,8 +4,6 @@ import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
 import { Separator } from "@/components/ui/separator"
 import { Textarea } from "@/components/ui/textarea"
-import { formService } from "@/src/api/form"
-import { Change, Suggestion } from "@/src/types/ai"
 import { SuggestionCard } from "./suggestions/card"
 import { Suggestions } from "./suggestions/suggestions"
 

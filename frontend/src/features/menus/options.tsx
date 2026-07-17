@@ -1,17 +1,14 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Popover, PopoverContent, PopoverHeader, PopoverTitle, PopoverTrigger } from "@/components/ui/popover"
-import { FormSchema, Item, Option } from "@/src/types/form"
 import { GripVertical, Pencil, Plus, Trash, Trash2, X } from "lucide-react"
 import { useEffect, useState } from "react"
 
 import { useSortable, isSortable } from '@dnd-kit/react/sortable'
 import { DragDropProvider } from "@dnd-kit/react"
-import { formService } from "@/src/api/form"
 import { SuggestionCard } from "./suggestions/card"
-import { Change, Suggestion } from "@/src/types/ai"
-import { SuggestionRequest } from "@/src/api/types"
 import { Suggestions } from "./suggestions/suggestions"
+import { Item, FormSchema, Option } from "@/types/form"
 
 interface OptionsTabProps {
     item: Item | null

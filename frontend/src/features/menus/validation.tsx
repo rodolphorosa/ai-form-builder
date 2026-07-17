@@ -1,10 +1,8 @@
 import { Input } from "@/components/ui/input";
-import { formService } from "@/src/api/form";
-import { Change, Suggestion } from "@/src/types/ai";
-import { FormSchema, Item } from "@/src/types/form";
 import { useEffect, useState } from "react";
 import { SuggestionCard } from "./suggestions/card";
 import { Suggestions } from "./suggestions/suggestions";
+import { Item, FormSchema } from "@/types/form";
 
 interface ValidationMenuProps {
     item: Item | null

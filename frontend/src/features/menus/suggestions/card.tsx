@@ -1,11 +1,12 @@
-import { Change, Suggestion } from "@/src/types/ai";
-import { Option } from "@/src/types/form";
+
 import { Separator } from "@/components/ui/separator";
 import { ChevronLeft, CircleMinus, CirclePlus, Pencil, Plus, Replace, Sparkle, Sparkles } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { propertyNames } from "../../registry";
 import { Button } from "@/components/ui/button";
+import { Suggestion, Change } from "@/types/ai";
+import { Option } from "@/types/form"
 
 interface SuggestionProps {
     suggestion: Suggestion

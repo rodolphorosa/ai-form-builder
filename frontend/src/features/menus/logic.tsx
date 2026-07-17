@@ -3,15 +3,15 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { FormSchema, Item } from "@/src/types/form";
 import { itemStates, operations, operationsNames } from "../registry";
 import { Eye, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import React, { useState } from "react";
-import { LogicRule, Condition, ConditionGroup } from "@/src/types/logic";
-import { State } from "@/src/types/inputs";
+import { Item, FormSchema } from "@/types/form";
+import { State } from "@/types/inputs";
+import { LogicRule, Condition, ConditionGroup } from "@/types/logic";
 
 interface AdvancedTabProps {
     item: Item | null

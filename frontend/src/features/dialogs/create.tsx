@@ -15,11 +15,11 @@ import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { formService } from "@/src/api/form"
-import { FormSchema } from "@/src/types/form"
 import { Sparkles } from "lucide-react"
 import { useState } from "react"
 import { Thinking } from "../inputs/common"
+import { formService } from "@/api/form"
+import { FormSchema } from "@/types/form"
 
 interface DialogProps {
     onSchemaCreate: (schema: FormSchema) => void

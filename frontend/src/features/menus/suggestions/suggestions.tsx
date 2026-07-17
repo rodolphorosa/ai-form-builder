@@ -1,13 +1,13 @@
 import { Button } from "@/components/ui/button"
-import { formService } from "@/src/api/form"
-import { Suggestion } from "@/src/types/ai"
-import { FormSchema, Item } from "@/src/types/form"
 import { ChevronRight, RefreshCcw, Sparkles, Trash2 } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Thinking } from "../../inputs/common"
 import { Progress } from "@/components/ui/progress"
 import { SuggestionCard } from "./card"
 import { Separator } from "@/components/ui/separator"
+import { formService } from "@/api/form"
+import { Suggestion } from "@/types/ai"
+import { Item, FormSchema } from "@/types/form"
 
 interface SuggestionsProps {
     item: Item
