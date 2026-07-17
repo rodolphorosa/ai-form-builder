@@ -1,18 +1,20 @@
 import { Change, Suggestion } from "@/src/types/ai";
 import { Option } from "@/src/types/form";
 import { Separator } from "@/components/ui/separator";
-import { CircleMinus, CirclePlus, Pencil, Plus, Replace, Sparkle, Sparkles } from "lucide-react";
+import { ChevronLeft, CircleMinus, CirclePlus, Pencil, Plus, Replace, Sparkle, Sparkles } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { propertyNames } from "../registry";
+import { propertyNames } from "../../registry";
 import { Button } from "@/components/ui/button";
 
 interface SuggestionProps {
     suggestion: Suggestion
     applyChanges: (changes: Change[]) => void
+    backToSuggestions?: boolean
+    navigateBack?: () => void
 }
 
-export const SuggestionCard = ({ suggestion }: SuggestionProps) => {
+export const SuggestionCard = ({ suggestion, applyChanges, backToSuggestions, navigateBack }: SuggestionProps) => {
     const parseValue = (value: string | number | boolean | Option) => {
         if (typeof value === "string" || typeof value === "number") {
             return value
@@ -70,38 +72,37 @@ export const SuggestionCard = ({ suggestion }: SuggestionProps) => {
     }
 
     return (
-        <Popover>
-            <PopoverTrigger 
-                render={
-                    <div className="flex flex-row gap-2 p-2 items-center text-sm text-indigo-800 border border-border rounded-lg shadow-sm">
-                        <div className="rounded-lg p-2 bg-indigo-800/10"><Sparkles className="h-4 w-4" /></div>
-                        <div className="font-semibold">{suggestion.title}</div>
-                    </div>
-                }
-            />
-            <PopoverContent align="start" className="w-auto">
-                <CardHeader>
-                    <CardTitle className="flex flex-row gap-2 items-center text-xs text-indigo-800">
-                        <div className="rounded-lg p-2 bg-indigo-800/10"><Pencil className="h-4 w-4" /></div>
+        <div className="flex flex-col p-4 gap-4 rounded-lg shadow-lg">
+            <div className="flex flex-col gap-2">
+                <div className="flex flex-row gap-2 justify-between items-center text-xs">
+                    <div className="flex flex-row gap-2 items-center">
+                        <Pencil className="h-4 w-4" />
                         <div className="font-semibold">Proposed changes</div>
-                    </CardTitle>
-                    <CardDescription className="items-center text-xs font-normal">
-                        {suggestion.description}
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="flex flex-col gap-1">
-                    {suggestion.changes.map(change => renderChange(change))}
-                </CardContent>
-                <Separator />
-                <CardFooter className="flex flex-row gap-1 bg-white border-none justify-end">
-                    <Button variant="ghost">Discard</Button>
-                    <Button variant="default" className="bg-indigo-800 hover:bg-indigo-400">
-                        <Sparkles />
-                        Apply
-                    </Button>
-                </CardFooter>
-            </PopoverContent>
-        </Popover>
-        
+                    </div>
+                    { backToSuggestions && (
+                        <div 
+                            className="flex flex-row gap-1 cursor-pointer p-2"
+                            onClick={() => navigateBack?.()}
+                        >
+                            <ChevronLeft className="h-4 w-4"/>
+                            <span>Back to suggestions</span>
+                        </div>
+                    )}
+                </div>
+                <div className="items-center text-xs font-normal text-muted-foreground">
+                    {suggestion.description}
+                </div>
+            </div>
+            <div className="flex flex-col gap-2 w-full">
+                {suggestion.changes.map(change => renderChange(change))}
+            </div>
+            <div className="flex flex-row gap-1 border-none justify-end">
+                <Button variant="ghost">Discard</Button>
+                <Button variant="default">
+                    <Sparkles />
+                    Apply
+                </Button>
+            </div>
+        </div>
     )
 }

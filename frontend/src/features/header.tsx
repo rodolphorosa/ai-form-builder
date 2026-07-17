@@ -3,7 +3,7 @@
 import React, { FC, useState } from "react"
 
 import { Button } from "@/components/ui/button"
-import { Form, Moon, Settings as SettingsIcon, Sun } from "lucide-react"
+import { Archive, Download, EllipsisVertical, Form, Moon, Pencil, Pin, Settings as SettingsIcon, Sun, Trash } from "lucide-react"
 import { 
     Drawer, 
     DrawerContent, 
@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/drawer"
 import { Settings } from "./settings"
 import { useTheme } from "next-themes"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 export const Header: FC<{}> = ({}) => {
     // const [theme, setTheme] = useState<"light" | "dark">("light")
@@ -43,8 +44,50 @@ export const Header: FC<{}> = ({}) => {
                     { theme === "light" ? <Sun /> : <Moon /> }
                 </Button>
                 <Settings />
+                <DropdownMenu>
+                    <DropdownMenuTrigger 
+                        render={
+                            <Button variant="ghost" size="icon">
+                                <EllipsisVertical />
+                            </Button>
+                        }
+                    />
+                    <DropdownMenuContent>
+                        <DropdownMenuGroup className="gap-2 p-1">
+                            <DropdownMenuItem>
+                                <Pencil />
+                                <div className="text-sm font-medium truncate">
+                                    Rename
+                                </div>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                                <Download />
+                                <div className="text-sm font-medium truncate">
+                                    Export
+                                </div>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                                <Pin />
+                                <div className="text-sm font-medium truncate">
+                                    Fix
+                                </div>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                                <Archive />
+                                <div className="text-sm font-medium truncate">
+                                    Archive
+                                </div>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem variant="destructive">
+                                <Trash />
+                                <div className="text-sm font-medium truncate">
+                                    Delete
+                                </div>
+                            </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </div>
-            
         </div>
     )
 }

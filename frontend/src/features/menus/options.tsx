@@ -8,9 +8,10 @@ import { useEffect, useState } from "react"
 import { useSortable, isSortable } from '@dnd-kit/react/sortable'
 import { DragDropProvider } from "@dnd-kit/react"
 import { formService } from "@/src/api/form"
-import { SuggestionCard } from "./suggestion"
+import { SuggestionCard } from "./suggestions/card"
 import { Change, Suggestion } from "@/src/types/ai"
 import { SuggestionRequest } from "@/src/api/types"
+import { Suggestions } from "./suggestions/suggestions"
 
 interface OptionsTabProps {
     item: Item | null
@@ -31,7 +32,7 @@ const SortableOption = ({ option, index, removeOption }: SortableOptionProps) =>
             <Popover>
                 <PopoverTrigger
                     render={
-                        <div className="flex items-center gap-0.5 text-xs font-medium border border-border w-auto p-1 rounded-lg cursor-pointer">
+                        <div className="flex items-center gap-0.5 text-xs font-medium shadow-sm w-auto p-1 rounded-lg cursor-pointer">
                             <Button ref={handleRef} variant="secondary" size="xs">
                                 <GripVertical className="h-3 w-3" />
                             </Button>
@@ -82,8 +83,6 @@ export const OptionsTab = ({ item, schema }: OptionsTabProps) => {
     const [value, setValue] = useState<string>("")
     const [label, setLabel] = useState<string>("")
 
-    const [suggestions, setSuggestions] = useState<Suggestion[]>([])
-
     const addOption = () => {
         if (value.trim().length == 0 || label.trim().length == 0) return
 
@@ -124,46 +123,13 @@ export const OptionsTab = ({ item, schema }: OptionsTabProps) => {
         }
     }
 
-    const suggest = async () => {
-        if (!item || !schema) return
-
-        try {
-            const { data } = await formService.suggest({
-                schema: schema,
-                subject: item,
-                context: "options",
-                provider: "openai",
-                model: "gpt-4.1-nano"
-            })
-
-            setSuggestions(data.suggestions)
-        
-        } catch (error) {
-            console.error("Failed to generate form", error)
-        } finally {
-            //
-        }
-    }
-
-    useEffect(() => {
-        if (!item || !schema) return
-
-        suggest()
-    }, [item, schema])
-
-    
-    const applyChanges = (changes: Change[]) => {
-        
-    }
-
-
     return (
         <div className="flex flex-1 flex-col gap-4">
             <div className="flex flex-col gap-4 px-4 py-2">
                 <div className="text-sm font-medium">Options</div>
                 <div className="flex flex-col gap-2">
                     <DragDropProvider onDragEnd={onDragEnd}>
-                        <div className="flex flex-wrap items-start content-start gap-1 border border-border p-2 rounded-lg min-h-42">
+                        <div className="flex flex-wrap items-start content-start gap-1 p-2 rounded-lg min-h-42 shadow-sm">
                             {localOptions.map((option, index) => (
                                 <SortableOption
                                     key={option.value}
@@ -189,17 +155,13 @@ export const OptionsTab = ({ item, schema }: OptionsTabProps) => {
                         </div>
                         <div className="flex flex-col gap-1">
                             <span className="text-xs font-medium invisible">Action</span>
-                            <Button size="icon" onClick={() => addOption()}>
+                            <Button className="rounded-full shadow-xs" variant="outline" size="icon" onClick={() => addOption()}>
                                 <Plus />
                             </Button>
                         </div>
                     </div>
                 </div>
-                <div className="grid grid-cols-4 gap-1">
-                    {suggestions.map(suggestion => (
-                        <SuggestionCard suggestion={suggestion} applyChanges={applyChanges} />
-                    ))}
-                </div>
+                { (item && schema) && <Suggestions item={item} schema={schema} context="options" />}
             </div>
         </div>
     )

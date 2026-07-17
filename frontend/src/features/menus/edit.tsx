@@ -45,7 +45,7 @@ export const EditMenu = ({ schema, item, open, setOpen }: EditMenuProps) => {
     
     return (
         <Drawer open={open} onOpenChange={setOpen} swipeDirection="left">
-            <DrawerContent className="w-1/2 max-h-screen">
+            <DrawerContent className="w-[40%] max-h-screen">
                 <div className="flex h-full min-h-0 flex-col border-l py-2">
                     <div className="flex flex-row gap-2 p-4">
                         {item && renderTypeIcon(item)}

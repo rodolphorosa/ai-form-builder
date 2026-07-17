@@ -4,6 +4,8 @@ import "./globals.css";
 
 import { ThemeProvider } from "../features/theme-provider";
 import { cn } from "@/lib/utils";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "../features/menus/sidebar";
 
 const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
@@ -40,6 +42,13 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          {/* <SidebarProvider>
+            <AppSidebar />
+            <main>
+              <SidebarTrigger />
+              {children}
+            </main>
+          </SidebarProvider> */}
           {children}
         </ThemeProvider>
       </body>

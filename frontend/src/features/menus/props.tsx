@@ -6,7 +6,8 @@ import { Separator } from "@/components/ui/separator"
 import { Textarea } from "@/components/ui/textarea"
 import { formService } from "@/src/api/form"
 import { Change, Suggestion } from "@/src/types/ai"
-import { SuggestionCard } from "./suggestion"
+import { SuggestionCard } from "./suggestions/card"
+import { Suggestions } from "./suggestions/suggestions"
 
 interface PropertiesTabProps {
     item: Item | null
@@ -14,40 +15,6 @@ interface PropertiesTabProps {
 }
 
 export const PropertiesTab: FC<PropertiesTabProps> = ({ item, schema }) => {
-    const [suggestions, setSuggestions] = useState<Suggestion[]>([])
-
-    const suggest = async () => {
-        if (!item || !schema) return
-
-        try {
-            const { data } = await formService.suggest({
-                schema: schema,
-                subject: item,
-                context: "properties",
-                provider: "openai",
-                model: "gpt-4.1-nano"
-            })
-
-            setSuggestions(data.suggestions)
-        
-        } catch (error) {
-            console.error("Failed to generate form", error)
-        } finally {
-            //
-        }
-    }
-
-    useEffect(() => {
-        if (!item || !schema) return
-
-        suggest()
-    }, [item, schema])
-
-    const applyChanges = (changes: Change[]) => {
-        
-    }
-
-
     return (
         <div className="flex flex-1 flex-col gap-4">
             <div className="flex flex-col gap-4 px-4 py-2">
@@ -94,11 +61,7 @@ export const PropertiesTab: FC<PropertiesTabProps> = ({ item, schema }) => {
                     <div className="text-sm font-normal">Disabled</div>
                     <Switch id="item-disabled" checked={item?.disabled} />
                 </div>
-                <div className="grid grid-cols-4 gap-1">
-                    {suggestions.map(suggestion => (
-                        <SuggestionCard suggestion={suggestion} applyChanges={applyChanges}/>
-                    ))}
-                </div>
+                { (item && schema) && <Suggestions item={item} schema={schema} context="properties" />}
             </div>
         </div>
     )
