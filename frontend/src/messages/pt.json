@@ -1,0 +1,36 @@
+{
+  "Common": {
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "fix": "Fixar",
+    "rename": "Renomear",
+    "export": "Exportar",
+    "archive": "Arquivar",
+    "delete": "Excluir",
+    
+    "text": "Campo de entrada",
+    "email": "E-mail",
+    "password": "Senha",
+    "phone": "Telefone",
+    "url": "Link",
+    "textarea": "Área de texto",
+    "number": "Campo numérico",
+    "date": "Data",
+    "datetime": "Data e hora",
+    "select": "Lista de seleção",
+    "radio": "Botão de opção",
+    "checkbox": "Caixa de seleção"
+  },
+
+  "Tree": {
+    "improve with ai": "Aprimorar com IA",
+    "edit": "Editar",
+    "add item above": "Adicionar item acima",
+    "add item below": "Adicionar item abaixo",
+    "add section below": "Adicionar seção abaixo",
+    "add item": "Adicionar item",
+    "duplicate": "Duplicar",
+    "delete": "Excluir",
+    "rename": "Renomar"
+  }
+}

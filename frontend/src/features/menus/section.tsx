@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Pencil, Plus, Trash, ArrowDownToLine, Copy, SquarePlus, Sparkle, ListPlus } from "lucide-react";
 import { strategyIcons, typesNames } from "../registry";
 
+import { useTranslations } from "next-intl";
+
 const SectionMenuButton = (props: React.ComponentProps<typeof Button>) => {
     return (
         <Button
@@ -26,6 +28,9 @@ const SectionMenuButton = (props: React.ComponentProps<typeof Button>) => {
 }
 
 export const SectionMenu = () => {
+    const tCommon = useTranslations("Common")
+    const tTree = useTranslations("Tree")
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger render={<SectionMenuButton />} />
@@ -34,7 +39,7 @@ export const SectionMenu = () => {
                     <DropdownMenuItem>
                         <Sparkle />
                         <div className="text-sm font-medium truncate">
-                            Improve with AI
+                            {tTree("improve with ai")}
                         </div>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
@@ -43,7 +48,7 @@ export const SectionMenu = () => {
                     <DropdownMenuItem>
                         <Pencil />
                         <div className="text-sm font-medium truncate">
-                            Rename
+                            {tTree("rename")}
                         </div>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
@@ -52,7 +57,7 @@ export const SectionMenu = () => {
                         <DropdownMenuSubTrigger>
                             <ListPlus />
                             <div className="text-sm font-medium truncate">
-                                Add item
+                                {tTree("add item")}
                             </div>
                         </DropdownMenuSubTrigger>
                         <DropdownMenuPortal>
@@ -68,7 +73,7 @@ export const SectionMenu = () => {
                                                 )}
 
                                                 <div className="text-sm font-medium truncate">
-                                                    {typesNames[it]}
+                                                    {tCommon(it)}
                                                 </div>
                                             </div>
                                         </DropdownMenuItem>
@@ -82,7 +87,7 @@ export const SectionMenu = () => {
                     <DropdownMenuItem>
                         <ArrowDownToLine />
                         <div className="text-sm font-medium truncate">
-                            Add section below
+                            {tTree("add section below")}
                         </div>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
@@ -90,7 +95,7 @@ export const SectionMenu = () => {
                     <DropdownMenuItem>
                         <Copy />
                         <div className="text-sm font-medium truncate">
-                            Duplicate
+                            {tTree("duplicate")}
                         </div>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
@@ -99,7 +104,7 @@ export const SectionMenu = () => {
                     <DropdownMenuItem variant="destructive">
                         <Trash />
                         <div className="text-sm font-medium truncate">
-                            Delete
+                            {tTree("delete")}
                         </div>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>

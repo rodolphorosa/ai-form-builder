@@ -1,0 +1,36 @@
+{
+  "Common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "fix": "Fix",
+    "rename": "Rename",
+    "export": "Export",
+    "archive": "Archive",
+    "delete": "Delete",
+
+    "text": "Text field",
+    "email": "E-mail",
+    "password": "Password",
+    "phone": "Phone",
+    "url": "Link",
+    "textarea": "Text area",
+    "number": "Numerical field",
+    "date": "Date",
+    "datetime": "Date & hour",
+    "select": "Selection list",
+    "radio": "Option button",
+    "checkbox": "Select box"
+  },
+
+  "Tree": {
+    "improve with ai": "Improve with AI",
+    "edit": "Edit",
+    "add item above": "Add item above",
+    "add item below": "Add item below",
+    "add section below": "Add section below",
+    "add item": "Add item",
+    "duplicate": "Duplicate",
+    "delete": "Delete",
+    "rename": "Raname"
+  }
+}

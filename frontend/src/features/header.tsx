@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/drawer"
 import { Settings } from "./settings"
 import { useTheme } from "next-themes"
+import { useTranslations } from "next-intl";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 export const Header: FC<{}> = ({}) => {
@@ -30,6 +31,8 @@ export const Header: FC<{}> = ({}) => {
             setTheme("dark")
         }
     }
+
+    const t = useTranslations("Common")
 
     return (
         <div className="flex flex-row justify-between p-4 border border-border bg-background shadow-sm">
@@ -57,31 +60,31 @@ export const Header: FC<{}> = ({}) => {
                             <DropdownMenuItem>
                                 <Pencil />
                                 <div className="text-sm font-medium truncate">
-                                    Rename
+                                    {t("rename")}
                                 </div>
                             </DropdownMenuItem>
                             <DropdownMenuItem>
                                 <Download />
                                 <div className="text-sm font-medium truncate">
-                                    Export
+                                    {t("export")}
                                 </div>
                             </DropdownMenuItem>
                             <DropdownMenuItem>
                                 <Pin />
                                 <div className="text-sm font-medium truncate">
-                                    Fix
+                                    {t("fix")}
                                 </div>
                             </DropdownMenuItem>
                             <DropdownMenuItem>
                                 <Archive />
                                 <div className="text-sm font-medium truncate">
-                                    Archive
+                                    {t("archive")}
                                 </div>
                             </DropdownMenuItem>
                             <DropdownMenuItem variant="destructive">
                                 <Trash />
                                 <div className="text-sm font-medium truncate">
-                                    Delete
+                                    {t("delete")}
                                 </div>
                             </DropdownMenuItem>
                         </DropdownMenuGroup>

@@ -3,6 +3,8 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuGro
 import { ArrowDownToLine, ArrowUpToLine, Copy, Ellipsis, Pencil, Sparkle, Trash } from "lucide-react"
 import { PropertiesTab } from "./props"
 
+import { useTranslations } from "next-intl"
+
 const ItemMenuButton = (props: React.ComponentProps<typeof Button>) => {
     return (
         <Button
@@ -30,6 +32,8 @@ interface ItemMenuProps {
 }
 
 export const ItemMenu = ({ onEdit }: ItemMenuProps) => {
+    const t = useTranslations("Tree")
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger render={<ItemMenuButton />} />
@@ -38,7 +42,7 @@ export const ItemMenu = ({ onEdit }: ItemMenuProps) => {
                     <DropdownMenuItem>
                         <Sparkle />
                         <div className="text-sm font-medium truncate">
-                            Improve with AI
+                            {t("improve with ai")}
                         </div>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
@@ -47,7 +51,7 @@ export const ItemMenu = ({ onEdit }: ItemMenuProps) => {
                     <DropdownMenuItem onClick={() => onEdit(true)}>
                         <Pencil />
                         <div className="text-sm font-medium truncate">
-                            Edit
+                            {t("edit")}
                         </div>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
@@ -55,13 +59,13 @@ export const ItemMenu = ({ onEdit }: ItemMenuProps) => {
                     <DropdownMenuItem>
                         <ArrowUpToLine />
                         <div className="text-sm font-medium truncate">
-                            Add item above
+                            {t("add item above")}
                         </div>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
                         <ArrowDownToLine />
                         <div className="text-sm font-medium truncate">
-                            Add item below
+                            {t("add item below")}
                         </div>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
@@ -69,7 +73,7 @@ export const ItemMenu = ({ onEdit }: ItemMenuProps) => {
                     <DropdownMenuItem>
                         <Copy />
                         <div className="text-sm font-medium truncate">
-                            Duplicate
+                            {t("duplicate")}
                         </div>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
@@ -78,7 +82,7 @@ export const ItemMenu = ({ onEdit }: ItemMenuProps) => {
                     <DropdownMenuItem variant="destructive">
                         <Trash />
                         <div className="text-sm font-medium truncate">
-                            Delete
+                            {t("delete")}
                         </div>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
