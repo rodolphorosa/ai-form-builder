@@ -1,45 +1,29 @@
 "use client"
 
 import { FC, useEffect, useRef } from "react"
-import { FormSchema, Group, Section, SectionItem } from "../types/form"
-import { ItemGroup } from "./inputs/group"
-import { itemStrategies } from "./registry"
+import { FormSchema, Group, Item, Section, SectionItem } from "@/types/form"
+import { ItemGroup } from "../inputs/group"
+import { itemStrategies } from "../registry"
 import { cn } from "@/lib/utils"
-import { EmptyRenderer } from "./emptyRenderer"
+import { EmptyRenderer } from "./empty"
+import { Skeleton } from "@/components/ui/skeleton"
 
-interface RendererProps {
-    schema: FormSchema | null
-    selectedItem: SectionItem | null
-    onCreate: () => void
-    onSchemaCreate: (schema: FormSchema) => void
+interface FormProps {
+    schema: FormSchema
+    selectedItem?: SectionItem | null
 }
 
-export const Renderer: FC<RendererProps> = ({ 
+export const Form: FC<FormProps> = ({ 
     schema, 
-    selectedItem, 
-    onCreate, 
-    onSchemaCreate 
+    selectedItem
 }) => {
 
     const refs = useRef<Record<string, HTMLDivElement | null>>({})
 
-    const isGroup = (item: SectionItem): item is Group => {
-        return "items" in item
-    }
+    console.log("item", selectedItem?.id)
 
-    const renderSectionItem = (item: SectionItem) => {
-
-        if(isGroup(item)) {
-            return (
-                <ItemGroup group={item} />
-            )
-        }
-
+    const renderSectionItem = (item: Item) => {
         const Component = itemStrategies[item.type]
-
-        if(!Component) {
-            return (<div>Unsupported input type</div>)
-        }
 
         return (
             <div 
@@ -47,9 +31,9 @@ export const Renderer: FC<RendererProps> = ({
                     refs.current[item.id] = el
                 }}
                 className={cn(
-                    "rounded-lg border-transparent transition-all p-1",
+                    "rounded-lg transition-all p-2",
                     selectedItem?.id === item.id &&
-                        "shadow-sm bg-muted/80",
+                        "bg-muted",
                     item.type === "textarea" && "col-span-2"
                 )}
             >
@@ -62,7 +46,7 @@ export const Renderer: FC<RendererProps> = ({
     const renderSection = (section: Section) => {
         return (
             <div className="flex flex-col gap-4">
-                <div className="text-left text-base font-semibold">{section.label}</div>
+                <div className="px-2 text-left text-base font-semibold">{section.label}</div>
                 <div className="grid grid-cols-2 gap-3">
                     { section.items.map(item => renderSectionItem(item)) }
                 </div>
@@ -78,17 +62,13 @@ export const Renderer: FC<RendererProps> = ({
             block: "center",
         })
     }, [selectedItem])
-
-    if(!schema) {
-        return <EmptyRenderer onCreate={onCreate} onSchemaCreate={onSchemaCreate}/>
-    }
     
     return (
         <div className="flex flex-col gap-4 p-1 min-h-0 h-full">
             <div className="text-center text-lg font-semibold">
                 {schema.title}
             </div>
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-2">
                 { schema.sections.map(section => renderSection(section)) }
             </div>
         </div>

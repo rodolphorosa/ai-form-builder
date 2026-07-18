@@ -19,7 +19,13 @@
     "datetime": "Date & hour",
     "select": "Selection list",
     "radio": "Option button",
-    "checkbox": "Select box"
+    "checkbox": "Select box",
+
+    "chat-create": "Describe the form you want",
+    "chat-edit": "Describe the changes you want to apply",
+    "chat-default": "Describe what you want",
+
+    "import schema": "Import schema"
   },
 
   "Tree": {

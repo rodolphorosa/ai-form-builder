@@ -73,7 +73,7 @@ export const SuggestionCard = ({ suggestion, applyChanges, backToSuggestions, na
     }
 
     return (
-        <div className="flex flex-col p-4 gap-4 rounded-lg shadow-lg">
+        <div className="flex flex-col p-4 gap-4 rounded-4xl border shadow-sm">
             <div className="flex flex-col gap-2">
                 <div className="flex flex-row gap-2 justify-between items-center text-xs">
                     <div className="flex flex-row gap-2 items-center">

@@ -1,6 +1,6 @@
 import { FC } from "react"
-import { InputProps } from "@/src/types/inputs"
-import { Group, Item } from "@/src/types/form"
+import { InputProps } from "@/types/inputs"
+import { Group, Item } from "@/types/form"
 import { itemStrategies } from "../registry"
 
 export const ItemGroup: FC<{group: Group}> = ({group}) => {

@@ -2,52 +2,90 @@
 
 import React, {FC, useEffect, useRef, useState} from "react"
 import { FormSchema, SectionItem } from "../types/form"
-import { Renderer } from "./renderer"
-import { Textarea } from "@/components/ui/textarea"
-import { Button } from "@/components/ui/button"
-
-import { ArrowUp, Paperclip, Send, Sparkles } from "lucide-react"
-import { Thinking } from "./inputs/common"
+import { Form } from "./form/form"
 import { Header } from "./header"
-import { PropertiesTab } from "./menus/props"
 import { TreeMenu } from "./menus/tree"
+import { Chat } from "./chat/chat"
+import { EmptyRenderer } from "./form/empty"
+import { FormSkeleton } from "./form/skeleton"
+import { Sparkles } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { Chat } from "./chat"
+import { ChatMode } from "@/types/ai"
 
 interface BuilderProps {}
 
 export const Builder: FC<BuilderProps> = ({}) => {
     const [schema, setSchema] = useState<FormSchema | null>(null)
-
     const [selectedItem, setSelectedItem] = useState<SectionItem|null>(null)
-
+    const [loading, setLoading] = useState<boolean>(false)
     const promptRef = useRef<HTMLTextAreaElement>(null)
 
-    const focusPrompt = () => {
-        const promptArea = promptRef.current 
+    const [mode, setMode] = useState<ChatMode>("bubble")
 
-        if (!promptArea) return 
+    console.log(selectedItem)
 
-        promptArea.focus()
-
-        promptArea.setSelectionRange(
-            promptArea.value.length,
-            promptArea.value.length
-        )
-    }
+    const isChatExpanded = mode === "sidebar"
 
     return (
-        <div className="h-screen flex flex-col overflow-hidden">
-            <Header />
-            <div className="h-full grid grid-cols-[1fr_2fr_1fr] min-h-0 flex-1 overflow-hidden">
-                <TreeMenu schema={schema} selectItem={setSelectedItem} selectedItem={selectedItem}/>
-                <div className="h-full flex flex-col px-8 py-4 overflow-hidden">
-                    <div className="p-8  overflow-y-auto h-full">
-                        <Renderer schema={schema} selectedItem={selectedItem } onCreate={focusPrompt} onSchemaCreate={setSchema}/>
+        
+        <div className="flex flex-row h-screen w-screen overflow-hidden">
+            { isChatExpanded ? (
+                <>
+                    <div className="h-full w-150">
+                        <TreeMenu schema={schema} selectItem={setSelectedItem} selectedItem={selectedItem}/>
                     </div>
-                </div>
-                <Chat schema={schema} onSchemaChange={(schema) => setSchema(schema)} promptRef={promptRef} />
-            </div>
+
+                    <div className="flex flex-col h-full w-full">
+                        <Header />
+                        <div className="flex-1 overflow-y-auto">
+                            <div className="p-8 w-[85%] mx-auto">
+                                {loading && <FormSkeleton />}
+                                {!loading && schema && <Form schema={schema} selectedItem={selectedItem} />}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div className="h-full w-150">
+                        <Chat 
+                            mode={mode}
+                            setMode={setMode}
+                            schema={schema}
+                            onSchemaChange={(schema) => setSchema(schema)}
+                            promptRef={promptRef}
+                            loading={loading}
+                            setLoading={setLoading}
+                        />
+                    </div>
+                </>
+            ) : (
+                <>
+                    <div className="h-full w-100">
+                        <TreeMenu schema={schema} selectItem={setSelectedItem} selectedItem={selectedItem}/>
+                    </div>
+                    
+                    <div className="flex flex-col h-full w-full">
+                        <Header />
+                        <div className="flex-1 w-full overflow-y-auto">
+                            <div className="p-8 w-[65%] mx-auto">
+                                {loading && <FormSkeleton />}
+                                {!loading && schema && <Form schema={schema} selectedItem={selectedItem} />}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div className="fixed right-8 bottom-8">
+                        <Chat 
+                            mode={mode}
+                            setMode={setMode}
+                            schema={schema}
+                            onSchemaChange={(schema) => setSchema(schema)}
+                            promptRef={promptRef}
+                            loading={loading}
+                            setLoading={setLoading}
+                        />
+                    </div>
+                </>
+            )}
         </div>
     )
 }

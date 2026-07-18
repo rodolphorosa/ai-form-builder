@@ -21,15 +21,15 @@ export const ValidationMenu = ({ item , schema}: ValidationMenuProps) => {
                     </div>
                     <div className="flex flex-col gap-2">
                         <div className="text-sm font-normal">Maximum value</div>
-                        <Input type="number" min={0} value={item?.validation?.minValue}/>
+                        <Input type="number" min={0} value={item?.validation?.maxValue}/>
                     </div>
                     <div className="flex flex-col gap-2">
                         <div className="text-sm font-normal">Mininum length</div>
-                        <Input type="number" min={0} value={item?.validation?.minValue}/>
+                        <Input type="number" min={0} value={item?.validation?.minLength}/>
                     </div>
                     <div className="flex flex-col gap-2">
                         <div className="text-sm font-normal">Maximum length</div>
-                        <Input type="number" min={0} value={item?.validation?.minValue}/>
+                        <Input type="number" min={0} value={item?.validation?.maxLength}/>
                     </div>
                 </div>
                 <div className="flex flex-col gap-2">

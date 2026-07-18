@@ -51,7 +51,7 @@ const NoSuggestions = ({ loading, onCreate}: NoSuggestionsProps) => {
 
 
     return (
-        <div className="flex flex-row gap-4 p-4 rounded-lg shadow-lg items-start">
+        <div className="flex flex-row gap-4 p-4 rounded-4xl border shadow-sm items-start">
             <div className="flex flex-col gap-2 items-start w-full text-xs">
                 <div className="flex flex-row gap-2 items-center">
                     <Sparkles className="h-4 w-4" />
@@ -132,7 +132,7 @@ export const Suggestions = ({ item, schema, context }: SuggestionsProps) => {
     }
 
     return (
-        <div className="flex flex-col gap-4 p-4 rounded-lg shadow-lg">
+        <div className="flex flex-col gap-4 p-4 rounded-4xl border shadow-sm">
             <div className="flex flex-row p-1 justify-between items-center text-xs">
                 <div className="flex flex-row gap-2 items-center">
                     <Sparkles className="h-4 w-4" />
@@ -148,7 +148,7 @@ export const Suggestions = ({ item, schema, context }: SuggestionsProps) => {
                         <div 
                             className="
                                 flex flex-row items-center justify-between 
-                                rounded-lg shadow-sm
+                                rounded-4xl border
                                 text-xs
                                 cursor-pointer p-1"
 

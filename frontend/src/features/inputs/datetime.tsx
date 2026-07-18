@@ -13,7 +13,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { InputProps } from "@/src/types/inputs"
+import { InputProps } from "@/types/inputs"
 
 export const DatetimeInput: FC<InputProps> = ({item}) => {
   const [open, setOpen] = React.useState(false)

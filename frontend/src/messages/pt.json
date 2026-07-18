@@ -19,7 +19,13 @@
     "datetime": "Data e hora",
     "select": "Lista de seleção",
     "radio": "Botão de opção",
-    "checkbox": "Caixa de seleção"
+    "checkbox": "Caixa de seleção",
+
+    "chat-create": "Descreva o formulário que você deseja",
+    "chat-edit": "Descreva uma alteração no formulário",
+    "chat-default": "Descreva o que você deseja",
+
+    "import schema": "Importar esquema"
   },
 
   "Tree": {

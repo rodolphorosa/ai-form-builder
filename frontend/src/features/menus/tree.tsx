@@ -59,7 +59,7 @@ export const TreeMenu: FC<TreeProps> = ({ schema, selectItem, selectedItem }) =>
     }
 
     return (
-        <div className="flex h-full min-h-0 flex-col border-r bg-background">
+        <div className="flex h-full min-h-0 flex-col border-r bg-card">
             <div className="flex flex-row items-center justify-between p-4 h-14">
                 <div className="flex flex-row items-center gap-2 text-sm font-medium">
                     <Folders className="h-4 w-4" />

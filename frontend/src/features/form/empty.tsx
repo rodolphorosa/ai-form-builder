@@ -9,15 +9,14 @@ import {
 
 import { FilePlusCorner } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { CreateDialog } from "./dialogs/create"
-import { FormSchema } from "../types/form"
+import { CreateDialog } from "../dialogs/create"
+import { FormSchema } from "../../types/form"
 
 interface EmptyRendererProps {
-    onCreate: () => void
     onSchemaCreate: (schema: FormSchema) => void
 }
 
-export const EmptyRenderer = ({onCreate, onSchemaCreate}: EmptyRendererProps) => {
+export const EmptyRenderer = ({onSchemaCreate}: EmptyRendererProps) => {
 
     return (
         <Empty className="h-full">

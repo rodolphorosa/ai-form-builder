@@ -1,5 +1,5 @@
 import React, {FC} from "react"
-import { InputProps } from "@/src/types/inputs"
+import { InputProps } from "@/types/inputs"
 import { InputLabel } from "./common"
 import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"

@@ -1,11 +1,11 @@
 import React, {FC} from "react"
-import { InputProps } from "@/src/types/inputs"
+import { InputProps } from "@/types/inputs"
 
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Field } from "@/components/ui/field"
 import { InputLabel } from "./common"
-import { Option } from "@/src/types/form"
+import { Option } from "@/types/form"
 
 
 export const RadioInput: FC<InputProps> = ({ item: field }) => {

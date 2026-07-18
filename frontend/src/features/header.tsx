@@ -4,22 +4,12 @@ import React, { FC, useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import { Archive, Download, EllipsisVertical, Form, Moon, Pencil, Pin, Settings as SettingsIcon, Sun, Trash } from "lucide-react"
-import { 
-    Drawer, 
-    DrawerContent, 
-    DrawerDescription, 
-    DrawerFooter, 
-    DrawerHeader, 
-    DrawerTitle, 
-    DrawerTrigger 
-} from "@/components/ui/drawer"
 import { Settings } from "./settings"
 import { useTheme } from "next-themes"
 import { useTranslations } from "next-intl";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 export const Header: FC<{}> = ({}) => {
-    // const [theme, setTheme] = useState<"light" | "dark">("light")
     const [open, setOpen] = useState<boolean>(false)
 
     const { theme, setTheme } = useTheme()
@@ -35,23 +25,17 @@ export const Header: FC<{}> = ({}) => {
     const t = useTranslations("Common")
 
     return (
-        <div className="flex flex-row justify-between p-4 border border-border bg-background shadow-sm">
-            <div className="flex flex-row gap-2 self-end">
-                <Form />
-                <div className="text-lg font-bold">Smart Form Builder</div>
-            </div>
-            <div className="flex flex-row gap-1 self-end">
-                <Button variant="outline">Save</Button>
-                <Button variant="outline">Export JSON</Button>
+        <div className="flex flex-row p-3 bg-background w-full">
+            <div className="flex flex-row gap-1 w-full justify-end">
                 <Button variant="ghost" onClick={toggleTheme}>
-                    { theme === "light" ? <Sun /> : <Moon /> }
+                    { theme === "light" ? <Sun className="h-4 w-4"/> : <Moon /> }
                 </Button>
                 <Settings />
                 <DropdownMenu>
                     <DropdownMenuTrigger 
                         render={
                             <Button variant="ghost" size="icon">
-                                <EllipsisVertical />
+                                <EllipsisVertical className="h-4 w-4"/>
                             </Button>
                         }
                     />

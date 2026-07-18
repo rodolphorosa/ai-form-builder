@@ -11,3 +11,5 @@ export interface Suggestion {
     description: string
     changes: Change[]
 }
+
+export type ChatMode = "bubble" | "card" | "sidebar"

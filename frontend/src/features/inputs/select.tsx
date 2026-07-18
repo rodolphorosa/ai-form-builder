@@ -1,5 +1,5 @@
 import React, {FC} from "react"
-import { InputProps } from "@/src/types/inputs"
+import { InputProps } from "@/types/inputs"
 import { snakeCase } from "lodash"
 import { InputLabel } from "./common"
 

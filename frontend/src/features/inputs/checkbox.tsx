@@ -1,4 +1,4 @@
-import { InputProps } from "@/src/types/inputs"
+import { InputProps } from "@/types/inputs"
 import React, { FC } from "react"
 
 import { Checkbox } from "@/components/ui/checkbox"

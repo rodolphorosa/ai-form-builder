@@ -1,5 +1,5 @@
 import React, {FC} from "react"
-import { LabelProps } from "@/src/types/inputs"
+import { LabelProps } from "@/types/inputs"
 import { FieldDescription, FieldLabel } from "@/components/ui/field"
 import { Spinner } from "@/components/ui/spinner"
 

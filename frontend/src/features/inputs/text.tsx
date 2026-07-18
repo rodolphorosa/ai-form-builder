@@ -1,8 +1,8 @@
 import React, {FC} from "react"
-import { InputProps } from "@/src/types/inputs"
 import { InputLabel } from "./common"
 import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { InputProps } from "@/types/inputs"
 
 export const TextInput: FC<InputProps> = ({item: field}) => {
     const { id, label, type, description, required, ui } = field
