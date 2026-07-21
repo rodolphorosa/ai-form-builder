@@ -64,7 +64,7 @@ export const Form: FC<FormProps> = ({
     }, [selectedItem])
     
     return (
-        <div className="flex flex-col gap-4 p-1 min-h-0 h-full">
+        <div className="flex flex-col gap-4 px-8 py-12 min-h-0 h-full bg-card border rounded-lg shadow-sm">
             <div className="text-center text-lg font-semibold">
                 {schema.title}
             </div>

@@ -1,7 +1,7 @@
 import React, { FC, useState } from "react"
 import { FormSchema, Item, Section, SectionItem } from "../../types/form"
 import { Button } from "@/components/ui/button"
-import { ChevronRight, Folder, Folders, TableOfContents } from "lucide-react"
+import { ChevronRight, CircleUser, Folder, Folders, LogOut, Settings, TableOfContents, User } from "lucide-react"
 import {
     Collapsible,
     CollapsibleContent,
@@ -13,6 +13,11 @@ import { ItemMenu } from "./item"
 import { SectionMenu } from "./section"
 import { PropertiesTab } from "./props"
 import { EditMenu } from "./edit"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { useTranslations } from "next-intl"
+
+import Image from "next/image"
 
 
 interface TreeProps {
@@ -26,6 +31,8 @@ export const TreeMenu: FC<TreeProps> = ({ schema, selectItem, selectedItem }) =>
     const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
 
     const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
+
+    const t = useTranslations("Tree")
 
     const toggleSection = (sectionId: string) => {
         setOpenSections((prev) => ({
@@ -115,6 +122,54 @@ export const TreeMenu: FC<TreeProps> = ({ schema, selectItem, selectedItem }) =>
                         </Collapsible>
                     )
                 })}
+            </div>
+            <Separator />
+            <div className="flex p-4 cursor-pointer">
+                <DropdownMenu>
+                    <DropdownMenuTrigger render={
+                        <div className="flex flex-row gap-2">
+                            <Avatar>
+                                <AvatarFallback>
+                                    <User className="h-4 w-4" />
+                                </AvatarFallback>
+                            </Avatar>
+                            <div className="text-sm font-medium truncate">
+                                Rodolpho Rosa da Silva
+                            </div>
+                        </div>
+                    }/>
+                    <DropdownMenuContent className="w-auto">
+                        <div className="flex flex-row gap-2 p-2">
+                            <Avatar>
+                                <AvatarFallback>
+                                    <User className="h-4 w-4"/>
+                                </AvatarFallback>
+                            </Avatar>
+                            <div className="flex flex-col gap-1">
+                                <div className="text-sm font-medium">Rodolpho Rosa da Silva</div>
+                                <div className="text-xs text-muted-foreground">rodolphorosa05@gmail.com</div>
+                            </div>
+                        </div>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuGroup>
+                            <DropdownMenuItem>
+                                <CircleUser className="h-4 w-4" />
+                                {t("profile")}
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                                <Settings className="h-4 w-4" />
+                                {t("settings")}
+                            </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuGroup>
+                            <DropdownMenuItem variant="destructive">
+                                <LogOut className="h-4 w-4" />
+                                {t("logout")}
+                            </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </div>
             {schema && <EditMenu schema={schema} item={selectedItem as Item} open={drawerOpen} setOpen={setDrawerOpen}/>}
         </div>

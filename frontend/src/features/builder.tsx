@@ -22,8 +22,6 @@ export const Builder: FC<BuilderProps> = ({}) => {
 
     const [mode, setMode] = useState<ChatMode>("bubble")
 
-    console.log(selectedItem)
-
     const isChatExpanded = mode === "sidebar"
 
     return (

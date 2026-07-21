@@ -56,7 +56,7 @@ export const Header: FC<{}> = ({}) => {
                             <DropdownMenuItem>
                                 <Pin />
                                 <div className="text-sm font-medium truncate">
-                                    {t("fix")}
+                                    {t("pin")}
                                 </div>
                             </DropdownMenuItem>
                             <DropdownMenuItem>

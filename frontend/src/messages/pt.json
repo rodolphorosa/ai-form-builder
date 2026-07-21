@@ -1,8 +1,10 @@
 {
   "Common": {
+    "name": "Nome",
     "save": "Salvar",
     "cancel": "Cancelar",
-    "fix": "Fixar",
+    "pin": "Fixar",
+    "unpin": "Desfixar",
     "rename": "Renomear",
     "export": "Exportar",
     "archive": "Arquivar",
@@ -25,7 +27,9 @@
     "chat-edit": "Descreva uma alteração no formulário",
     "chat-default": "Descreva o que você deseja",
 
-    "import schema": "Importar esquema"
+    "import schema": "Importar esquema",
+    
+    "updated": "Atualizado"
   },
 
   "Tree": {
@@ -37,6 +41,18 @@
     "add item": "Adicionar item",
     "duplicate": "Duplicar",
     "delete": "Excluir",
-    "rename": "Renomar"
+    "rename": "Renomar",
+
+    "account": "Conta",
+    "profile": "Perfil",
+    "settings": "Configurações",
+    "logout": "Sair", 
+
+    "new project": "Novo projeto",
+    "new form": "Novo formulário",
+    "search": "Pesquisar",
+    "projects": "Projetos",
+    "recent": "Recentes",
+    "move to project": "Mover para projeto"
   }
 }

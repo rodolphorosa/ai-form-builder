@@ -167,23 +167,26 @@ export const Chat = ({ mode, setMode, schema, onSchemaChange, promptRef, loading
                         <div ref={scrollRef} />
                     </div>
                 </div>
-                <div className="p-4">
-                    <PromptArea 
-                        onChat={(message) => {
-                            setMessages(prev => [
-                                ...prev,
-                                { user: "user", content: message}
-                            ])
+                <div className="relative border-t rounded-b-4xl bg-background/80 backdrop-blur-xl ">
+                    <div className="pointer-events-none absolute -top-14 left-0 right-0 h-14 bg-gradient-to-t from-background via-background/70 to-transparent" />
+                    <div className="p-4">
+                        <PromptArea 
+                            onChat={(message) => {
+                                setMessages(prev => [
+                                    ...prev,
+                                    { user: "user", content: message}
+                                ])
 
-                            if (schema) {
-                                editForm(message)
-                            } else {
-                                createForm(message)
-                            }
-                        }} 
-                        promptRef={promptRef ?? null}
-                        placeholder={schema ? "chat-edit": "chat-create"}
-                    />
+                                if (schema) {
+                                    editForm(message)
+                                } else {
+                                    createForm(message)
+                                }
+                            }} 
+                            promptRef={promptRef ?? null}
+                            placeholder={schema ? "chat-edit": "chat-create"}
+                        />
+                    </div>
                 </div>
             </>
         )

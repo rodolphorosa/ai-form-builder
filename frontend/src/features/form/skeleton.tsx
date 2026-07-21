@@ -2,8 +2,8 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 export const FormSkeleton = () => { 
     return (
-        <div className="flex flex-col gap-4 p-1 min-h-0 h-full">
-            <Skeleton className="h-8 w-100"/>
+        <div className="flex flex-col gap-4 px-8 py-12 min-h-0 h-full bg-card border rounded-lg shadow-sm">
+            <Skeleton className="h-8 w-100 mx-auto"/>
             <Skeleton className="h-6 w-50"/>
             <div className="flex flex-col gap-4">
                 <div className="grid grid-cols-2 gap-3">

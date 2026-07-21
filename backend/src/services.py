@@ -21,7 +21,7 @@ When an existing schema is provided:
 The response must ALWAYS be a valid JSON object with the following structure:
 
 {
-    message: "A concise, user-friendly description of the operation.",
+    message: "A human-friendly description of the operation, providing a clear, concise explanation of your choices",
     schema: {
         title: Name of the form,
         sections: [

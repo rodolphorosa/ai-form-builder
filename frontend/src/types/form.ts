@@ -73,12 +73,7 @@ export interface Section {
 export interface FormSchema {
     title: string
     sections: Section[]
-}
-
-export interface AssistentResponse {
-    message: string
-    changes: Record<string,string>[]
-    schema: FormSchema
+    projectId?: string
 }
 
 export const ProviderTypes = {
@@ -88,3 +83,12 @@ export const ProviderTypes = {
 } as const
 
 export type ProviderType = typeof ProviderTypes[keyof typeof ProviderTypes]
+
+export interface Project {
+    id: string
+    name: string
+    createdAt: number
+    updatedAt: number
+    fixed: boolean
+    archived: boolean
+}

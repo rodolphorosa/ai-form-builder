@@ -1,8 +1,10 @@
 {
   "Common": {
+    "name": "Name",
     "save": "Save",
     "cancel": "Cancel",
-    "fix": "Fix",
+    "pin": "Pin",
+    "unpin": "Unpin",
     "rename": "Rename",
     "export": "Export",
     "archive": "Archive",
@@ -25,7 +27,9 @@
     "chat-edit": "Describe the changes you want to apply",
     "chat-default": "Describe what you want",
 
-    "import schema": "Import schema"
+    "import schema": "Import schema",
+
+    "updated": "Updated"
   },
 
   "Tree": {
@@ -37,6 +41,18 @@
     "add item": "Add item",
     "duplicate": "Duplicate",
     "delete": "Delete",
-    "rename": "Raname"
+    "rename": "Raname",
+
+    "account": "Account",
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Log out",
+
+    "new project": "New project",
+    "new form": "New form",
+    "search": "Search",
+    "projects": "Projects",
+    "recent": "Recent",
+    "move to project": "Move to project"
   }
 }
