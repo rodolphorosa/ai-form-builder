@@ -29,7 +29,8 @@
 
     "import schema": "Import schema",
 
-    "updated": "Updated"
+    "updated": "Updated",
+    "edited": "Edited"
   },
 
   "Tree": {
@@ -54,5 +55,13 @@
     "projects": "Projects",
     "recent": "Recent",
     "move to project": "Move to project"
+  },
+
+  "Workspace": {
+    "create with ai": "Create with IA",
+    "blank": "Blank form",
+    "import": "Import",
+    "archived": "Arquivados",
+    "trash": "Lixeira"
   }
 }

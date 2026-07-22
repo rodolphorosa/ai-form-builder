@@ -29,7 +29,8 @@
 
     "import schema": "Importar esquema",
     
-    "updated": "Atualizado"
+    "updated": "Atualizado",
+    "edited": "Editado"
   },
 
   "Tree": {
@@ -54,5 +55,13 @@
     "projects": "Projetos",
     "recent": "Recentes",
     "move to project": "Mover para projeto"
+  },
+
+  "Workspace": {
+    "create with ai": "Criar com IA",
+    "blank": "Em branco",
+    "import": "Importar",
+    "archived": "Arquivados",
+    "trash": "Lixeira"
   }
 }

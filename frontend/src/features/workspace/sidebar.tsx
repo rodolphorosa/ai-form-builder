@@ -6,25 +6,31 @@ import { useState } from "react"
 import { mockSchemas } from "../mock"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Collapsible, CollapsibleContent } from "@/components/ui/collapsible"
-import { EllipsisVertical, Pencil, FolderOpen, Pin, Archive, Trash, Astroid, SquarePen, Search, User, CircleUser, Settings, LogOut } from "lucide-react"
+import { EllipsisVertical, Pencil, FolderOpen, Pin, Archive, Trash, Astroid, SquarePen, Search, User, CircleUser, Settings, LogOut, Trash2, House } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Link } from "@/i18n/navigation"
 
 export const Sidebar = () => {
     const tTree = useTranslations("Tree")
     const tCommon = useTranslations("Common")
+
+    const workspace = useTranslations("Workspace")
 
     const [schemas, setSchemas] = useState<FormSchema[]>(mockSchemas)
 
     const [open, setOpen] = useState<boolean>(true)
 
     const renderRecent = (schema: FormSchema) => {
+        const id = mockSchemas.indexOf(schema)
         return (
             <div className="group flex flex-row items-center rounded-sm justify-between hover:bg-muted cursor-pointer">
-                <div className="text-sm font-normal px-3 py-2 gap-2 text-sm font-normal items-center hover:bg-muted rounded-sm">
-                    {schema.title}
-                </div>
+                <Link href={`/forms/${id}`}>
+                    <div className="text-sm font-normal px-3 py-2 gap-2 text-sm font-normal items-center hover:bg-muted rounded-sm">
+                        {schema.title}
+                    </div>
+                </Link>
                 <DropdownMenu>
                     <DropdownMenuTrigger render={(
                         <Button size="icon" variant="ghost">
@@ -90,7 +96,11 @@ export const Sidebar = () => {
             <Separator />
             <div className="gap-2 h-[100%] overflow-hidden">
                 <div className="flex flex-col h-full p-1 overflow-y-auto">
-                    <div className="flex flex-col">
+                    <div className="flex flex-col sticky">
+                        <div className="flex flex-row px-3 py-2 gap-2 text-sm font-normal items-center hover:bg-muted rounded-sm cursor-pointer">
+                            <House className="h-4 w-4" />
+                            Home
+                        </div>
                         <div className="flex flex-row px-3 py-2 gap-2 text-sm font-normal items-center hover:bg-muted rounded-sm cursor-pointer">
                             <Search className="h-4 w-4" />
                             {tTree("search")}
@@ -98,6 +108,14 @@ export const Sidebar = () => {
                         <div className="flex flex-row px-3 py-2 gap-2 text-sm font-normal items-center hover:bg-muted rounded-sm cursor-pointer">
                             <FolderOpen className="h-4 w-4" />
                             {tTree("projects")}
+                        </div>
+                        <div className="flex flex-row px-3 py-2 gap-2 text-sm font-normal items-center hover:bg-muted rounded-sm cursor-pointer">
+                            <Archive className="h-4 w-4" />
+                            {workspace("archived")}
+                        </div>
+                        <div className="flex flex-row px-3 py-2 gap-2 text-sm font-normal items-center hover:bg-muted rounded-sm cursor-pointer">
+                            <Trash2 className="h-4 w-4" />
+                            {workspace("trash")}
                         </div>
                     </div>
                     <Collapsible key="recent" open={open} className="flex flex-col">

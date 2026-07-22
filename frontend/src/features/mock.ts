@@ -2,55 +2,570 @@ import { FormSchema, Project } from "@/types/form";
 
 export const mockSchemas: FormSchema[] = [
    {
-      "title":"Employee Leave Request",
+      "title":"Employee Onboarding Form",
       "sections":[
          {
-            "id":"employee_information",
-            "label":"Employee Information",
-            "items":[
+            "id":"personal_information",
+            "label":"Personal Information",
+            "items": [
                {
-                  "id":"employee_name",
-                  "label":"Employee Name",
+                  "id": "presentation_letter",
+                  "type": "textarea",
+                  "label": "Cover letter",
+                  "required": true,
+                  "disabled": false
+               },
+               {
+                  "id":"first_name",
                   "type":"text",
-                  "description":"Full employee name",
+                  "label":"First Name",
                   "required":true,
                   "disabled":false,
                   "validation":{
-                     "minLength":3,
-                     "maxLength":100
+                     
                   },
                   "ui":{
-                     "placeholder":"John Doe",
+                     "placeholder":"Your name",
+                     "helpText":""
+                  }
+               },
+               {
+                  "id":"last_name",
+                  "type":"text",
+                  "label":"Last Name",
+                  "required":true,
+                  "disabled":false,
+                  "validation":{
+                     
+                  },
+                  "ui":{
+                     "placeholder":"Your name",
+                     "helpText":""
+                  }
+               },
+               {
+                  "id":"birth_date",
+                  "type":"date",
+                  "label":"Date of Birth",
+                  "required":true,
+                  "disabled":false,
+                  "validation":{
+                     
+                  },
+                  "ui":{
+                     "placeholder":"Your name",
+                     "helpText":""
+                  }
+               },
+               {
+                  "id":"email",
+                  "type":"email",
+                  "label":"Personal Email",
+                  "required":true,
+                  "disabled":false,
+                  "validation":{
+                     
+                  },
+                  "ui":{
+                     "placeholder":"Your name",
+                     "helpText":""
+                  }
+               },
+               {
+                  "id":"phone",
+                  "type":"phone",
+                  "label":"Phone Number",
+                  "required":true,
+                  "disabled":false,
+                  "validation":{
+                     
+                  },
+                  "ui":{
+                     "placeholder":"Your name",
+                     "helpText":""
+                  }
+               },
+               {
+                  "id":"gender",
+                  "type":"radio",
+                  "label":"Gender",
+                  "required":false,
+                  "options":[
+                     {
+                        "label":"Male",
+                        "value":"male"
+                     },
+                     {
+                        "label":"Female",
+                        "value":"female"
+                     },
+                     {
+                        "label":"Other",
+                        "value":"other"
+                     },
+                     {
+                        "label":"Prefer not to say",
+                        "value":"na"
+                     }
+                  ],
+                  "disabled":false,
+                  "validation":{
+                     
+                  },
+                  "ui":{
+                     "placeholder":"Your name",
+                     "helpText":""
+                  }
+               }
+            ]
+         },
+         {
+            "id":"address",
+            "label":"Address",
+            "items":[
+               {
+                  "id":"street",
+                  "type":"text",
+                  "label":"Street",
+                  "required":true,
+                  "disabled":false,
+                  "validation":{
+                     
+                  },
+                  "ui":{
+                     "placeholder":"Your name",
+                     "helpText":""
+                  }
+               },
+               {
+                  "id":"number",
+                  "type":"number",
+                  "label":"House Number",
+                  "required":true,
+                  "disabled":false,
+                  "validation":{
+                     
+                  },
+                  "ui":{
+                     "placeholder":"Your name",
+                     "helpText":""
+                  }
+               },
+               {
+                  "id":"complement",
+                  "type":"text",
+                  "label":"Apartment / Suite",
+                  "required":false,
+                  "disabled":false,
+                  "validation":{
+                     
+                  },
+                  "ui":{
+                     "placeholder":"Your name",
+                     "helpText":""
+                  }
+               },
+               {
+                  "id":"city",
+                  "type":"text",
+                  "label":"City",
+                  "required":true,
+                  "disabled":false,
+                  "validation":{
+                     
+                  },
+                  "ui":{
+                     "placeholder":"Your name",
+                     "helpText":""
+                  }
+
+                  
+               },
+               {
+                  "id":"state",
+                  "type":"select",
+                  "label":"State",
+                  "required":true,
+                  "options":[
+                     {
+                        "label":"California",
+                        "value":"ca"
+                     },
+                     {
+                        "label":"Texas",
+                        "value":"tx"
+                     },
+                     {
+                        "label":"Florida",
+                        "value":"fl"
+                     },
+                     {
+                        "label":"New York",
+                        "value":"ny"
+                     }
+                  ],
+                  "disabled":false,
+                  "validation":{
+                     
+                  },
+                  "ui":{
+                     "placeholder":"Your name",
+                     "helpText":""
+                  }
+               },
+               {
+                  "id":"zip_code",
+                  "type":"text",
+                  "label":"ZIP Code",
+                  "required":true,
+                  "disabled":false,
+                  "validation":{
+                     
+                  },
+                  "ui":{
+                     "placeholder":"Your name",
+                     "helpText":""
+                  }
+               }
+            ]
+         },
+         {
+            "id":"employment",
+            "label":"Employment Information",
+            "items":[
+               {
+                  "id":"employee_id",
+                  "type":"text",
+                  "label":"Employee ID",
+                  "required":true,
+                  "disabled":false,
+                  "validation":{
+                     
+                  },
+                  "ui":{
+                     "placeholder":"Your name",
                      "helpText":""
                   }
                },
                {
                   "id":"department",
+                  "type":"select",
                   "label":"Department",
+                  "required":true,
+                  "options":[
+                     {
+                        "label":"Engineering",
+                        "value":"engineering"
+                     },
+                     {
+                        "label":"Marketing",
+                        "value":"marketing"
+                     },
+                     {
+                        "label":"Sales",
+                        "value":"sales"
+                     },
+                     {
+                        "label":"Human Resources",
+                        "value":"hr"
+                     },
+                     {
+                        "label":"Finance",
+                        "value":"finance"
+                     }
+                  ],
+                  "disabled":false,
+                  "validation":{
+                     
+                  },
+                  "ui":{
+                     "placeholder":"Your name",
+                     "helpText":""
+                  }
+               },
+               {
+                  "id":"position",
                   "type":"text",
-                  "description":"Employee department",
+                  "label":"Job Title",
                   "required":true,
                   "disabled":false,
                   "validation":{
                      
                   },
                   "ui":{
-                     "placeholder":"Engineering",
+                     "placeholder":"Your name",
                      "helpText":""
                   }
                },
                {
                   "id":"manager",
-                  "label":"Manager",
                   "type":"text",
-                  "description":"Manager name",
+                  "label":"Manager",
                   "required":true,
                   "disabled":false,
                   "validation":{
                      
                   },
                   "ui":{
-                     "placeholder":"Jane Smith",
+                     "placeholder":"Your name",
+                     "helpText":""
+                  }
+               },
+               {
+                  "id":"employment_type",
+                  "type":"radio",
+                  "label":"Employment Type",
+                  "required":true,
+                  "options":[
+                     {
+                        "label":"Full Time",
+                        "value":"full_time"
+                     },
+                     {
+                        "label":"Part Time",
+                        "value":"part_time"
+                     },
+                     {
+                        "label":"Contractor",
+                        "value":"contractor"
+                     },
+                     {
+                        "label":"Intern",
+                        "value":"intern"
+                     }
+                  ],
+                  "disabled":false,
+                  "validation":{
+                     
+                  },
+                  "ui":{
+                     "placeholder":"Your name",
+                     "helpText":""
+                  }
+               },
+               {
+                  "id":"start_date",
+                  "type":"date",
+                  "label":"Start Date",
+                  "required":true,
+                  "disabled":false,
+                  "validation":{
+                     
+                  },
+                  "ui":{
+                     "placeholder":"Your name",
+                     "helpText":""
+                  }
+               }
+            ]
+         },
+         {
+            "id":"equipment",
+            "label":"Equipment Request",
+            "items":[
+               {
+                  "id":"requested_equipment",
+                  "type":"checkbox",
+                  "label":"Equipment Needed",
+                  "required":false,
+                  "options":[
+                     {
+                        "label":"Laptop",
+                        "value":"laptop"
+                     },
+                     {
+                        "label":"External Monitor",
+                        "value":"monitor"
+                     },
+                     {
+                        "label":"Keyboard",
+                        "value":"keyboard"
+                     },
+                     {
+                        "label":"Mouse",
+                        "value":"mouse"
+                     },
+                     {
+                        "label":"Headset",
+                        "value":"headset"
+                     },
+                     {
+                        "label":"Docking Station",
+                        "value":"dock"
+                     }
+                  ],
+                  "disabled":false,
+                  "validation":{
+                     
+                  },
+                  "ui":{
+                     "placeholder":"Your name",
+                     "helpText":""
+                  }
+               },
+               {
+                  "id":"operating_system",
+                  "type":"radio",
+                  "label":"Preferred Operating System",
+                  "required":true,
+                  "options":[
+                     {
+                        "label":"Windows",
+                        "value":"windows"
+                     },
+                     {
+                        "label":"macOS",
+                        "value":"macos"
+                     },
+                     {
+                        "label":"Linux",
+                        "value":"linux"
+                     }
+                  ],
+                  "disabled":false,
+                  "validation":{
+                     
+                  },
+                  "ui":{
+                     "placeholder":"Your name",
+                     "helpText":""
+                  }
+               }
+            ]
+         },
+         {
+            "id":"emergency_contact",
+            "label":"Emergency Contact",
+            "items":[
+               {
+                  "id":"contact_name",
+                  "type":"text",
+                  "label":"Contact Name",
+                  "required":true,
+                  "disabled":false,
+                  "validation":{
+                     
+                  },
+                  "ui":{
+                     "placeholder":"Your name",
+                     "helpText":""
+                  }
+               },
+               {
+                  "id":"relationship",
+                  "type":"text",
+                  "label":"Relationship",
+                  "required":true,
+                  "disabled":false,
+                  "validation":{
+                     
+                  },
+                  "ui":{
+                     "placeholder":"Your name",
+                     "helpText":""
+                  }
+               },
+               {
+                  "id":"contact_phone",
+                  "type":"phone",
+                  "label":"Phone Number",
+                  "required":true,
+                  "disabled":false,
+                  "validation":{
+                     
+                  },
+                  "ui":{
+                     "placeholder":"Your name",
+                     "helpText":""
+                  }
+               }
+            ]
+         },
+         {
+            "id":"additional_information",
+            "label":"Additional Information",
+            "items":[
+               {
+                  "id":"shirt_size",
+                  "type":"select",
+                  "label":"T-Shirt Size",
+                  "required":false,
+                  "options":[
+                     {
+                        "label":"XS",
+                        "value":"xs"
+                     },
+                     {
+                        "label":"S",
+                        "value":"s"
+                     },
+                     {
+                        "label":"M",
+                        "value":"m"
+                     },
+                     {
+                        "label":"L",
+                        "value":"l"
+                     },
+                     {
+                        "label":"XL",
+                        "value":"xl"
+                     }
+                  ],
+                  "disabled":false,
+                  "validation":{
+                     
+                  },
+                  "ui":{
+                     "placeholder":"Your name",
+                     "helpText":""
+                  }
+               },
+               {
+                  "id":"dietary_restrictions",
+                  "type":"textarea",
+                  "label":"Dietary Restrictions",
+                  "required":false,
+                  "disabled":false,
+                  "validation":{
+                     
+                  },
+                  "ui":{
+                     "placeholder":"Your name",
+                     "helpText":""
+                  }
+               },
+               {
+                  "id":"additional_notes",
+                  "type":"textarea",
+                  "label":"Additional Notes",
+                  "required":false,
+                  "disabled":false,
+                  "validation":{
+                     
+                  },
+                  "ui":{
+                     "placeholder":"Your name",
+                     "helpText":""
+                  }
+               },
+               {
+                  "id":"agree_terms",
+                  "type":"checkbox",
+                  "label":"Terms and Conditions",
+                  "required":true,
+                  "options":[
+                     {
+                        "label":"I agree with the company policies.",
+                        "value":"accepted"
+                     }
+                  ],
+                  "disabled":false,
+                  "validation":{
+                     
+                  },
+                  "ui":{
+                     "placeholder":"Your name",
                      "helpText":""
                   }
                }

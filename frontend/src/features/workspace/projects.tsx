@@ -80,7 +80,7 @@ export const Projects = ({}: ProjectsPros) => {
             </div>
             <div className="flex flex-col gap-4">
                 <div className="text-sm font-medium">{tTree("recent")}</div>
-                <div className="flex flex-wrap gap-2 items-start content-start">
+                <div className="flex flex-wrap gap-4 items-start content-start mx-auto">
                     {recent.map(project => renderProjectCard(project))}
                 </div>
             </div>
