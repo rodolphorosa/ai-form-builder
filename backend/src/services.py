@@ -83,6 +83,13 @@ General guidelines:
 - Generate concise, human-friendly labels.
 - Prefer realistic defaults over empty values.
 
+Optional properties:
+- description: Include only when it provides useful context to the user.
+- validation: Include only when validation is required.
+- options: Include only for select or radio fields.
+- ui.placeholder: Include only when it improves usability.
+- ui.helpText: Include only when additional guidance is necessary.
+
 Rules:
 - Return ONLY valid JSON.
 - Never wrap the response in Markdown.

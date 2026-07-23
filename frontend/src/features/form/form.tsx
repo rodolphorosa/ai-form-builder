@@ -47,7 +47,7 @@ export const Form: FC<FormProps> = ({
         return (
             <div className="flex flex-col gap-4">
                 <div className="px-2 text-left text-base font-semibold">{section.label}</div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="flex flex-col gap-2">
                     { section.items.map(item => renderSectionItem(item)) }
                 </div>
             </div>

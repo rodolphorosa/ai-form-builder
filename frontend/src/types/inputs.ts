@@ -2,6 +2,7 @@ import { Item } from "./form";
 
 export interface InputProps {
     item: Item
+    editable?: boolean
 }
 
 export interface LabelProps {

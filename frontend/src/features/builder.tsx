@@ -12,13 +12,13 @@ import { Sparkles } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ChatMode } from "@/types/ai"
 import { mockSchemas } from "./mock"
+import { Canvas } from "./form/canvas"
 
 interface BuilderProps {
-    schema?: FormSchema
 }
 
-export const Builder: FC<BuilderProps> = ({ schema }) => {
-    const [localSchema, setSchema] = useState<FormSchema | null>(schema ?? null)
+export const Builder: FC<BuilderProps> = ({}) => {
+    const [schema, setSchema] = useState<FormSchema | null>(null)
     const [selectedItem, setSelectedItem] = useState<SectionItem|null>(null)
     const [loading, setLoading] = useState<boolean>(false)
     const promptRef = useRef<HTMLTextAreaElement>(null)
@@ -33,7 +33,7 @@ export const Builder: FC<BuilderProps> = ({ schema }) => {
             { isChatExpanded ? (
                 <>
                     <div className="h-full w-150">
-                        <TreeMenu schema={localSchema} selectItem={setSelectedItem} selectedItem={selectedItem}/>
+                        <TreeMenu schema={schema} selectItem={setSelectedItem} selectedItem={selectedItem}/>
                     </div>
 
                     <div className="flex flex-col h-full w-full">
@@ -41,7 +41,7 @@ export const Builder: FC<BuilderProps> = ({ schema }) => {
                         <div className="flex-1 overflow-y-auto">
                             <div className="p-8 w-[85%] mx-auto">
                                 {loading && <FormSkeleton />}
-                                {!loading && schema && <Form schema={schema} selectedItem={selectedItem} />}
+                                {!loading && schema && <Canvas schema={schema} />}
                             </div>
                         </div>
                     </div>
@@ -50,7 +50,7 @@ export const Builder: FC<BuilderProps> = ({ schema }) => {
                         <Chat 
                             mode={mode}
                             setMode={setMode}
-                            schema={localSchema}
+                            schema={schema}
                             onSchemaChange={(schema) => setSchema(schema)}
                             promptRef={promptRef}
                             loading={loading}
@@ -61,7 +61,7 @@ export const Builder: FC<BuilderProps> = ({ schema }) => {
             ) : (
                 <>
                     <div className="h-full w-100">
-                        <TreeMenu schema={localSchema} selectItem={setSelectedItem} selectedItem={selectedItem}/>
+                        <TreeMenu schema={schema} selectItem={setSelectedItem} selectedItem={selectedItem}/>
                     </div>
                     
                     <div className="flex flex-col h-full w-full">
@@ -69,7 +69,8 @@ export const Builder: FC<BuilderProps> = ({ schema }) => {
                         <div className="flex-1 w-full overflow-y-auto">
                             <div className="p-8 w-[65%] mx-auto">
                                 {loading && <FormSkeleton />}
-                                {!loading && localSchema && <Form schema={localSchema} selectedItem={selectedItem} />}
+                                {/* {!loading && localSchema && <Form schema={localSchema} selectedItem={selectedItem} />} */}
+                                {!loading && schema && <Canvas schema={schema} />}
                             </div>
                         </div>
                     </div>
@@ -78,7 +79,7 @@ export const Builder: FC<BuilderProps> = ({ schema }) => {
                         <Chat 
                             mode={mode}
                             setMode={setMode}
-                            schema={localSchema}
+                            schema={schema}
                             onSchemaChange={(schema) => setSchema(schema)}
                             promptRef={promptRef}
                             loading={loading}

@@ -3,7 +3,7 @@
 import React, { FC, useState } from "react"
 
 import { Button } from "@/components/ui/button"
-import { Archive, Download, EllipsisVertical, Form, Moon, Pencil, Pin, Settings as SettingsIcon, Sun, Trash } from "lucide-react"
+import { Archive, Download, EllipsisVertical, Eye, EyeOff, Form, Moon, Pencil, Pin, Redo, Settings as SettingsIcon, Sun, Trash, Undo } from "lucide-react"
 import { Settings } from "./settings"
 import { useTheme } from "next-themes"
 import { useTranslations } from "next-intl";
@@ -11,6 +11,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 
 export const Header: FC<{}> = ({}) => {
     const [open, setOpen] = useState<boolean>(false)
+
+    const [mode, setMode] = useState<"canvas" | "preview">("canvas")
 
     const { theme, setTheme } = useTheme()
 
@@ -22,15 +24,28 @@ export const Header: FC<{}> = ({}) => {
         }
     }
 
+    const toggleMode = () => {
+        if (mode == "canvas") {
+            setMode("preview")
+        } else {
+            setMode("canvas")
+        }
+    }
+
     const t = useTranslations("Common")
 
     return (
         <div className="flex flex-row p-3 bg-background w-full">
             <div className="flex flex-row gap-1 w-full justify-end">
-                <Button variant="ghost" onClick={toggleTheme}>
-                    { theme === "light" ? <Sun className="h-4 w-4"/> : <Moon /> }
+                <Button variant="ghost" size="icon">
+                    <Undo className="h-4 w-4" />
                 </Button>
-                <Settings />
+                <Button variant="ghost" size="icon">
+                    <Redo className="h-4 w-4" />
+                </Button>
+                <Button variant="ghost" size="icon" onClick={toggleMode}>
+                    { mode === "canvas" ? <Pencil className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </Button>
                 <DropdownMenu>
                     <DropdownMenuTrigger 
                         render={
@@ -41,12 +56,6 @@ export const Header: FC<{}> = ({}) => {
                     />
                     <DropdownMenuContent>
                         <DropdownMenuGroup className="gap-2 p-1">
-                            <DropdownMenuItem>
-                                <Pencil />
-                                <div className="text-sm font-medium truncate">
-                                    {t("rename")}
-                                </div>
-                            </DropdownMenuItem>
                             <DropdownMenuItem>
                                 <Download />
                                 <div className="text-sm font-medium truncate">

@@ -1,7 +1,7 @@
 import React, {FC} from "react"
 import { InputProps } from "@/types/inputs"
 import { snakeCase } from "lodash"
-import { InputLabel } from "./common"
+import { EditableDescription, EditableLabel, InputLabel } from "./common"
 
 import {
   Select,
@@ -11,10 +11,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Field } from "@/components/ui/field"
 
-export const SelectInput: FC<InputProps> = ({item: field}) => {
-    const { label, description, required, options } = field
+export const SelectInput: FC<InputProps> = ({item, editable}) => {
+    const { label, description, required, options } = item
 
     const parseOptions = (options: string[]) => { 
         return options.map((option, index) => {
@@ -23,22 +22,38 @@ export const SelectInput: FC<InputProps> = ({item: field}) => {
     }
 
     return (
-        <Field>
-            <InputLabel label={label} description={description} required={required} />
-            <Select items={options}>
-                <SelectTrigger className="w-full">
-                    <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-white">
-                    <SelectGroup>
-                        {options?.map((item) => (
-                            <SelectItem key={item.value} value={item.value}>
-                            {item.label}
-                            </SelectItem>
-                        ))}
-                    </SelectGroup>
-                </SelectContent>
-            </Select>
-        </Field>
+        <div className="flex flex-col gap-2">
+            <div>
+                {!editable && (
+                    <InputLabel 
+                        label={item.label} 
+                        description={item.description}
+                        required={item.required}/>
+                )}
+                {editable && (
+                    <div className="flex flex-col gap-1">
+                        <EditableLabel item={item} onBlur={(value) => console.log(value)} />
+                        <EditableDescription item={item} onBlur={(value) => console.log(value)} />
+                    </div>
+                )}
+            </div>
+            <div className="w-full">
+                <Select items={options}>
+                    <SelectTrigger className="w-full">
+                        <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white">
+                        <SelectGroup>
+                            {options?.map((item) => (
+                                <SelectItem key={item.value} value={item.value}>
+                                {item.label}
+                                </SelectItem>
+                            ))}
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
+            </div>
+            
+        </div>
     )
 }

@@ -2,23 +2,22 @@ import { InputProps } from "@/types/inputs"
 import React, { FC } from "react"
 
 import { Checkbox } from "@/components/ui/checkbox"
-import {
-  Field,
-  FieldContent,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-  FieldTitle,
-} from "@/components/ui/field"
-import { Label } from "@/components/ui/label"
+import { EditableLabel, InputLabel } from "./common"
 
-export const CheckboxInput: FC<InputProps> = ({ item: field }) => {
-    const { id, label, disabled, required, ui, options } = field
-
+export const CheckboxInput: FC<InputProps> = ({ item, editable }) => {
     return (
-        <Field orientation="horizontal" data-disabled>
-            <Checkbox id={id} name={id} disabled={disabled} />
-            <FieldLabel htmlFor={id}>{label}</FieldLabel>
-        </Field>
+        <div className="flex gap-3 items-center w-full">
+            <Checkbox id={item.id} name={item.id} disabled={item.disabled} />
+            <>
+                {!editable && (
+                    <InputLabel 
+                        label={item.label} 
+                        required={item.required}/>
+                )}
+                {editable && (
+                    <EditableLabel item={item} onBlur={(value) => console.log(value)} />
+                )}
+            </>
+        </div>
     )
 }

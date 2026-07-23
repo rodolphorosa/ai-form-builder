@@ -10,9 +10,9 @@ import { TextInput } from "./inputs/text"
 import { TextareaInput } from "./inputs/textarea"
 
 import { Calendar, CalendarClock, CircleDot, Container, Hash, Link, List, Lock, Mail, Phone, SquareCheck, Text, TextInitial, Type } from "lucide-react"
-import { State } from "../types/inputs"
+import { InputProps, State } from "../types/inputs"
 
-export const itemStrategies: Record<InputType, React.ComponentType<{item: Item}>> = {
+export const itemStrategies: Record<InputType, React.ComponentType<InputProps>> = {
     text: TextInput,
     email: TextInput,
     password: TextInput,

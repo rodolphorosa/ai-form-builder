@@ -1,12 +1,9 @@
 "use client"
 
 import React, {FC} from "react"
-import { format } from "date-fns"
-import { ChevronDownIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import {
   Popover,
@@ -14,25 +11,40 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { InputProps } from "@/types/inputs"
+import { Calendar as CalendarIcon } from "lucide-react"
+import { EditableDescription, EditableLabel, InputLabel } from "./common"
 
-export const DatetimeInput: FC<InputProps> = ({item}) => {
+export const DatetimeInput: FC<InputProps> = ({item, editable}) => {
   const [open, setOpen] = React.useState(false)
   const [date, setDate] = React.useState<Date | undefined>(undefined)
 
-  const { label, required } = item
-
   return (
-    <FieldGroup className="w-full flex-row gap-1">
-      <Field>
-        <FieldLabel htmlFor="date-picker-optional">{label}</FieldLabel>
+    <div className="flex flex-col gap-2">
+      <div className="h-8">
+          {!editable && (
+              <InputLabel 
+                  label={item.label} 
+                  description={item.description}
+                  required={item.required}/>
+          )}
+          {editable && (
+              <div className="flex flex-col gap-1">
+                  <EditableLabel item={item} onBlur={(value) => console.log(value)} />
+                  <EditableDescription item={item} onBlur={(value) => console.log(value)} />
+              </div>
+          )}
+      </div>
+      <div className="w-full flex flex-row gap-2">
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger 
             render={
                 <Button 
                     variant="outline" 
                     id="date-picker-optional" 
-                    className="w-32 justify-between font-normal">
-                        {date ? format(date, "PPP") : label}<ChevronDownIcon data-icon="inline-end" />
+                    className="w-[212px] justify-between font-normal"
+                    disabled={editable}
+                  >
+                      <CalendarIcon data-icon="inline-end"/>
                 </Button>
             } />
           <PopoverContent className="w-auto overflow-hidden p-0" align="start">
@@ -48,17 +60,14 @@ export const DatetimeInput: FC<InputProps> = ({item}) => {
             />
           </PopoverContent>
         </Popover>
-      </Field>
-      <Field>
-        <FieldLabel htmlFor="time-picker-optional"><br/></FieldLabel>
         <Input
           type="time"
           id="time-picker-optional"
           step="1"
-          defaultValue="10:30:00"
-          className="appearance-none bg-background [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+          className="w-[100px] appearance-none bg-background [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
         />
-      </Field>
-    </FieldGroup>
+      </div>
+    </div>
+    
   )
 }

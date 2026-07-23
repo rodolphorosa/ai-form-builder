@@ -3,9 +3,8 @@
 import React, {FC} from "react"
 import { InputProps } from "@/types/inputs"
 
-import { InputLabel } from "./common"
-import { format } from "date-fns"
-import { ChevronDownIcon } from "lucide-react"
+import { EditableDescription, EditableLabel, InputLabel } from "./common"
+import { Calendar as CalendarIcon, ChevronDownIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
@@ -14,31 +13,39 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { Field } from "@/components/ui/field"
 
-export const DateInput: FC<InputProps> = ({item: item}) => {
-    const label = item.label
-    const required = item.required
-    const description = item.description
-
+export const DateInput: FC<InputProps> = ({item, editable}) => {
     const [date, setDate] = React.useState<Date>()
     
     return (
-        <div>
+        <div className="flex flex-col gap-2">
+            <div>
+                {!editable && (
+                    <InputLabel 
+                        label={item.label} 
+                        description={item.description}
+                        required={item.required}/>
+                )}
+                {editable && (
+                    <div className="flex flex-col gap-1">
+                        <EditableLabel item={item} onBlur={(value) => console.log(value)} />
+                        <EditableDescription item={item} onBlur={(value) => console.log(value)} />
+                    </div>
+                )}
+            </div>
             <Popover>
                 <PopoverTrigger 
                     render={
-                        <div className="flex flex-col gap-2">
-                            <InputLabel label={label} description={description} required={required} />
-                            <Button 
-                                variant={"outline"} 
-                                data-empty={!date} 
-                                className="w-[212px] justify-between text-left font-normal data-[empty=true]:text-muted-foreground">
-                                    {date ? format(date, "PPP") : label}<ChevronDownIcon data-icon="inline-end" />
-                            </Button>
-                        </div>
+                        <Button 
+                            variant={"outline"} 
+                            data-empty={!date} 
+                            className="w-[212px] justify-between text-left font-normal data-[empty=true]:text-muted-foreground"
+                            disabled={editable}
+                        >
+                                <CalendarIcon />
+                        </Button>
                     } />
-                <PopoverContent className="w-auto p-0" align="start">
+                <PopoverContent className="w-fit p-0" align="start">
                     <Calendar
                         mode="single"
                         selected={date}
@@ -50,4 +57,3 @@ export const DateInput: FC<InputProps> = ({item: item}) => {
         </div>
     )
 }
-
