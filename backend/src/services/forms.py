@@ -1,10 +1,13 @@
 from sqlalchemy.orm import Session
+from sqlalchemy.dialects.postgresql import UUID
 
 from src.llm.services import generate_form_schema
 from src.repositories.form_repository import FormRepository
 from src.repositories.project_repository import ProjectRepository
 from src.api.deps import get_llm_provider
 from src.schemas.requests import FormRequest
+from src.schemas.schema import FormSchema
+
 
 class FormService:
 
@@ -13,7 +16,7 @@ class FormService:
 
     def generate(self, data: FormRequest):
         provider = get_llm_provider(data.provider, data.model)
-        form_schema = generate_form_schema(data.prompt, provider)
+        response = generate_form_schema(data.prompt, provider)
 
         project_reposoitory = ProjectRepository(self.db)
 
@@ -23,9 +26,39 @@ class FormService:
             raise Exception("Default project not found")
         
         form_repository = FormRepository(self.db)
-        form_repository.create(
-            form_schema["schema"],
-            default_project.id
+
+        validated_schema = FormSchema.model_validate(response["schema"])
+        
+        form = form_repository.create(
+            name=response.get("title", "Unnamed form"),
+            description=response.get("description", None),
+            schema=validated_schema.model_dump(),
+            project_id=default_project.id
         )
 
-        return form_schema
+        return { "response": response, "form": form }
+    
+
+    def create_blank(self, name: str, description: str | None, project_id: UUID):
+        project_repository = ProjectRepository(self.db)
+
+        project = project_repository.get_by_id(project_id)
+
+        if not project:
+            raise Exception("Project not found")
+        
+        form_repository = FormRepository(self.db)
+
+        schema = FormSchema(
+            title=name,
+            sections=[]
+        )
+
+        form = form_repository.create(
+            name=name,
+            description=description,
+            schema=schema.model_dump(),
+            project_id=project_id
+        )
+
+        return form

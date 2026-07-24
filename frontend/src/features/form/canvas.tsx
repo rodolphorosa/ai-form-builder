@@ -2,7 +2,7 @@
 
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
-import { FormSchema, Item, Section } from "@/types/form"
+import { Form, FormSchema, Item, Section } from "@/types/form"
 import { useState } from "react"
 import { itemStrategies } from "../registry"
 import { ArrowDownToLine, ArrowUpToLine, Astroid, Copy, EllipsisVertical, Pencil, Settings, Sparkle, Trash } from "lucide-react"
@@ -13,7 +13,7 @@ import { Switch } from "@/components/ui/switch"
 import { EditableText } from "../inputs/common"
 
 interface CanvasProps {
-    schema: FormSchema
+    form: Form
 }
 
 interface EditableProps {
@@ -116,7 +116,7 @@ const EditableComponent = ({ item, selected }: EditableProps) => {
     )
 }
 
-export const Canvas = ({ schema }: CanvasProps) => {
+export const Canvas = ({ form }: CanvasProps) => {
     const [selectedItem, setSelectedItem] = useState<Item | null>(null)
 
     const [titleFocused, setTitleFocused] = useState<boolean>(false)
@@ -148,7 +148,7 @@ export const Canvas = ({ schema }: CanvasProps) => {
                     <div className="flex flex-col gap-2 p-5">
                         <EditableText 
                             id="form-title" 
-                            value={schema.title} 
+                            value={form.name} 
                             placeholder="Title" 
                             onChange={(value) => console.log(value)} 
                             onBlur={(value) => console.log(value)} 
@@ -167,7 +167,7 @@ export const Canvas = ({ schema }: CanvasProps) => {
                 ):(
                     <div className="flex flex-col gap-2 p-5">
                         <div className="flex items-center justify-center h-8 text-lg font-semibold">
-                            {schema.title}
+                            {form.name}
                         </div>
                         <div className="flex items-center justify-center h-8 text-sm">
                             Form description
@@ -177,7 +177,7 @@ export const Canvas = ({ schema }: CanvasProps) => {
             </div>
             
             <div className="flex flex-col gap-2">
-                { schema.sections.map(section => renderSection(section)) }
+                { form.schema.sections.map(section => renderSection(section)) }
             </div>
         </div>
     )

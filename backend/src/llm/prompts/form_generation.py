@@ -18,8 +18,9 @@ The response must ALWAYS be a valid JSON object with the following structure:
 
 {
     message: "A human-friendly description of the operation, providing a clear, concise explanation of your choices",
+    title: Name of the form,
+    description: A human-friendly, succint description of the form,
     schema: {
-        title: Name of the form,
         sections: [
             {
                 id: Unique identifier of the section,

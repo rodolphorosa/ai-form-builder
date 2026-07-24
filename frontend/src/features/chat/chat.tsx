@@ -2,7 +2,7 @@ import { Separator } from "@/components/ui/separator"
 import { Astroid, Bot, Maximize, Minimize, Sparkles, X } from "lucide-react"
 import { RefObject, useEffect, useRef, useState } from "react"
 import { PromptArea } from "../promptArea"
-import { FormSchema } from "../../types/form"
+import { Form, FormSchema } from "../../types/form"
 import { Thinking } from "../inputs/common"
 import { formService } from "../../api/form.service"
 import { ApiFormResponse } from "../../api/types"
@@ -13,7 +13,8 @@ import { ChatMode } from "@/types/ai"
 interface ChatProps {
     mode: ChatMode
     setMode: (mode: ChatMode) => void
-    schema: FormSchema | null
+    form: Form | null
+    onFormCreate: (form: Form | null) => void
     onSchemaChange: (schema: FormSchema | null) => void
     promptRef?: RefObject<HTMLTextAreaElement | null> | null
     loading?: boolean
@@ -25,7 +26,7 @@ interface Message {
     content: string | React.ReactElement
 }
 
-export const Chat = ({ mode, setMode, schema, onSchemaChange, promptRef, loading, setLoading }: ChatProps) => {
+export const Chat = ({ mode, setMode, form, onFormCreate, onSchemaChange, promptRef, loading, setLoading }: ChatProps) => {
     const [messages, setMessages] = useState<Message[]>([])
     // const [loading, setLoading] = useState<boolean>(false)
     
@@ -65,7 +66,8 @@ export const Chat = ({ mode, setMode, schema, onSchemaChange, promptRef, loading
 
     const handleResponseData = (data: ApiFormResponse["data"]) => {
         // @ts-ignore
-        onSchemaChange(data.schema)
+        // onSchemaChange(data.form.schema)
+        onFormChange
         setMessages(prev => [
             ...prev, 
             {
@@ -85,7 +87,17 @@ export const Chat = ({ mode, setMode, schema, onSchemaChange, promptRef, loading
                 provider: "openai",
                 model: "gpt-4.1-nano"
             })
-            handleResponseData(data)
+            // handleResponseData(data)
+
+            onFormCreate(data.form)
+            setMessages(prev => [
+                ...prev, 
+                {
+                    user: "model",
+                    // @ts-ignore
+                    content: data.message
+                }
+            ])
         } catch (error) {
             console.error("Failed to generate form", error)
         } finally {
@@ -94,23 +106,23 @@ export const Chat = ({ mode, setMode, schema, onSchemaChange, promptRef, loading
     }
 
     const editForm = async (prompt: string) => {
-        if(!schema) return
+        // if(!schema) return
 
-        setLoading?.(true)
+        // setLoading?.(true)
         
-        try {
-            const { data } = await formService.editForm({
-                prompt: prompt,
-                schema: schema,
-                provider: "openai",
-                model: "gpt-4.1-nano"
-            })
-            handleResponseData(data)
-        } catch (error) {
-            console.log("Failed to edit form", error)
-        } finally {
-            setLoading?.(false)
-        }
+        // try {
+        //     const { data } = await formService.editForm({
+        //         prompt: prompt,
+        //         schema: schema,
+        //         provider: "openai",
+        //         model: "gpt-4.1-nano"
+        //     })
+        //     handleResponseData(data)
+        // } catch (error) {
+        //     console.log("Failed to edit form", error)
+        // } finally {
+        //     setLoading?.(false)
+        // }
     }
 
     const renderChatHeader = () => {
@@ -162,7 +174,7 @@ export const Chat = ({ mode, setMode, schema, onSchemaChange, promptRef, loading
                         {messages.map(message => renderMessage(message))}
                         {loading && renderMessage({
                             user: "model",
-                            content: <Thinking step={ schema ? "Editing your form..." : "Creating form..."} />
+                            content: <Thinking step={ form ? "Editing your form..." : "Creating form..."} />
                         })}
                         <div ref={scrollRef} />
                     </div>
@@ -177,14 +189,14 @@ export const Chat = ({ mode, setMode, schema, onSchemaChange, promptRef, loading
                                     { user: "user", content: message}
                                 ])
 
-                                if (schema) {
+                                if (form) {
                                     editForm(message)
                                 } else {
                                     createForm(message)
                                 }
                             }} 
                             promptRef={promptRef ?? null}
-                            placeholder={schema ? "chat-edit": "chat-create"}
+                            placeholder={form ? "chat-edit": "chat-create"}
                         />
                     </div>
                 </div>

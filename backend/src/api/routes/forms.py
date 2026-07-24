@@ -25,9 +25,17 @@ def get_forms(db: Session = Depends(get_db)):
 def generate_form(data: FormRequest, db: Session = Depends(get_db)):
     service = FormService(db)
 
-    form_schema = service.generate(data)
+    result = service.generate(data)
 
-    return { "data": form_schema }
+    llm_response = result["response"]
+    form = result["form"]
+
+    return { 
+        "data": {
+            "message": llm_response["message"],
+            "form": FormResponse.from_model(form)
+        }
+    }
 
 @router.post('/edit')
 def edit_form(data: EditRequest):

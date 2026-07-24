@@ -48,5 +48,4 @@ class Section(BaseModel):
     items: list[Item]
 
 class FormSchema(BaseModel):
-    title: str
     sections: list[Section]

@@ -1,8 +1,8 @@
 "use client"
 
 import React, {FC, useEffect, useRef, useState} from "react"
-import { FormSchema, SectionItem } from "../types/form"
-import { Form } from "./form/form"
+import { Form, FormSchema, SectionItem } from "../types/form"
+import { Form as FormComponent } from "./form/form"
 import { Header } from "./header"
 import { TreeMenu } from "./menus/tree"
 import { Chat } from "./chat/chat"
@@ -20,7 +20,7 @@ interface BuilderProps {
 }
 
 export const Builder: FC<BuilderProps> = ({}) => {
-    const [schema, setSchema] = useState<FormSchema | null>(null)
+    const [form, setForm] = useState<Form | null>(null)
     const [selectedItem, setSelectedItem] = useState<SectionItem|null>(null)
     const [loading, setLoading] = useState<boolean>(false)
     const promptRef = useRef<HTMLTextAreaElement>(null)
@@ -35,7 +35,7 @@ export const Builder: FC<BuilderProps> = ({}) => {
             { isChatExpanded ? (
                 <>
                     <div className="h-full w-150">
-                        <TreeMenu schema={schema} selectItem={setSelectedItem} selectedItem={selectedItem}/>
+                        <TreeMenu schema={form?.schema ?? {} as FormSchema} selectItem={setSelectedItem} selectedItem={selectedItem}/>
                     </div>
 
                     <div className="flex flex-col h-full w-full">
@@ -43,7 +43,7 @@ export const Builder: FC<BuilderProps> = ({}) => {
                         <div className="flex-1 overflow-y-auto">
                             <div className="p-8 w-[85%] mx-auto">
                                 {loading && <FormSkeleton />}
-                                {!loading && schema && <Canvas schema={schema} />}
+                                {!loading && form && <Canvas form={form} />}
                             </div>
                         </div>
                     </div>
@@ -52,8 +52,9 @@ export const Builder: FC<BuilderProps> = ({}) => {
                         <Chat 
                             mode={mode}
                             setMode={setMode}
-                            schema={schema}
-                            onSchemaChange={(schema) => setSchema(schema)}
+                            form={form}
+                            onFormCreate={(form) => setForm(form)}
+                            onSchemaChange={(schema) => console.log(schema)}
                             promptRef={promptRef}
                             loading={loading}
                             setLoading={setLoading}
@@ -63,7 +64,7 @@ export const Builder: FC<BuilderProps> = ({}) => {
             ) : (
                 <>
                     <div className="h-full w-100">
-                        <TreeMenu schema={schema} selectItem={setSelectedItem} selectedItem={selectedItem}/>
+                        <TreeMenu schema={form?.schema ?? {} as FormSchema} selectItem={setSelectedItem} selectedItem={selectedItem}/>
                     </div>
                     
                     <div className="flex flex-col h-full w-full">
@@ -72,7 +73,7 @@ export const Builder: FC<BuilderProps> = ({}) => {
                             <div className="p-8 w-[65%] mx-auto">
                                 {loading && <FormSkeleton />}
                                 {/* {!loading && localSchema && <Form schema={localSchema} selectedItem={selectedItem} />} */}
-                                {!loading && schema && <Canvas schema={schema} />}
+                                {!loading && form && <Canvas form={form} />}
                             </div>
                         </div>
                     </div>
@@ -81,8 +82,9 @@ export const Builder: FC<BuilderProps> = ({}) => {
                         <Chat 
                             mode={mode}
                             setMode={setMode}
-                            schema={schema}
-                            onSchemaChange={(schema) => setSchema(schema)}
+                            form={form}
+                            onFormCreate={(form) => setForm(form)}
+                            onSchemaChange={(schema) => console.log(schema)}
                             promptRef={promptRef}
                             loading={loading}
                             setLoading={setLoading}
