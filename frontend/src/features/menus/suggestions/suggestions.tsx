@@ -5,7 +5,7 @@ import { Thinking } from "../../inputs/common"
 import { Progress } from "@/components/ui/progress"
 import { SuggestionCard } from "./card"
 import { Separator } from "@/components/ui/separator"
-import { formService } from "@/api/form"
+import { formService } from "@/api/form.service"
 import { Suggestion } from "@/types/ai"
 import { Item, FormSchema } from "@/types/form"
 

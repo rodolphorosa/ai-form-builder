@@ -1,5 +1,5 @@
 import { Suggestion } from "../types/ai"
-import { FormSchema, Item, ProviderType, Section } from "../types/form"
+import { FormSchema, Item, Project, ProviderType, Section } from "../types/form"
 
 interface BaseRequest {
     prompt: string
@@ -20,20 +20,14 @@ export interface SuggestionRequest {
     model: string
 }
 
-interface SuggestionResponse {
-    suggestions: Suggestion[]
-}
-
 interface FormResponse {
     message: string
     changes: { type: string, label: string}[]
     schema: FormSchema
 }
 
-interface ApiResponse<T> {
+export interface ApiResponse<T> {
     data: T
 }
 
 export type ApiFormResponse = ApiResponse<FormResponse>
-
-export type ApiSuggestionResponse = ApiResponse<SuggestionResponse>

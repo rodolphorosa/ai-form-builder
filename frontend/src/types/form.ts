@@ -89,6 +89,19 @@ export interface Project {
     name: string
     createdAt: number
     updatedAt: number
-    fixed: boolean
+    pinned: boolean
     archived: boolean
+}
+
+export interface Form {
+    id: string
+    name: string
+    description?: string
+    schema: FormSchema
+    projectId: string
+    createdAt: number
+    updatedAt: number
+    pinned: boolean
+    archived: boolean
+    deleted: boolean
 }

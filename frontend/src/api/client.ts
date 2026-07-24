@@ -1,5 +1,6 @@
 export class ApiClient {
     private readonly headers = { 
+        'Accept': 'application/json',
         'Content-Type': 'application/json' 
     }
     
@@ -11,7 +12,20 @@ export class ApiClient {
             body: JSON.stringify(body)
         })
 
-        if(!response.ok) {
+        return this.handleResponse<T>(response)
+    }
+
+    async get<T>(url: string): Promise<T> {
+        const response = await fetch(url, {
+            method: "GET",
+            headers: this.headers
+        })
+
+        return this.handleResponse<T>(response)
+    }
+
+    private async handleResponse<T>(response: Response): Promise<T> {
+        if (!response.ok) {
             const error = await response.text()
             throw new Error("Request failed " + error)
         }

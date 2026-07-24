@@ -18,7 +18,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Sparkles } from "lucide-react"
 import { useState } from "react"
 import { Thinking } from "../inputs/common"
-import { formService } from "@/api/form"
+import { formService } from "@/api/form.service"
 import { FormSchema } from "@/types/form"
 
 interface DialogProps {

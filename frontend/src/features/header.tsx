@@ -3,7 +3,7 @@
 import React, { FC, useState } from "react"
 
 import { Button } from "@/components/ui/button"
-import { Archive, Download, EllipsisVertical, Eye, EyeOff, Form, Moon, Pencil, Pin, Redo, Settings as SettingsIcon, Sun, Trash, Undo } from "lucide-react"
+import { Archive, Download, EllipsisVertical, Eye, EyeOff, FolderInput, Form, Moon, Pencil, Pin, Redo, Settings as SettingsIcon, Sun, Trash, Undo } from "lucide-react"
 import { Settings } from "./settings"
 import { useTheme } from "next-themes"
 import { useTranslations } from "next-intl";
@@ -12,7 +12,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 export const Header: FC<{}> = ({}) => {
     const [open, setOpen] = useState<boolean>(false)
 
-    const [mode, setMode] = useState<"canvas" | "preview">("canvas")
+    const [mode, setMode] = useState<"edit" | "preview">("edit")
 
     const { theme, setTheme } = useTheme()
 
@@ -25,10 +25,10 @@ export const Header: FC<{}> = ({}) => {
     }
 
     const toggleMode = () => {
-        if (mode == "canvas") {
+        if (mode == "edit") {
             setMode("preview")
         } else {
-            setMode("canvas")
+            setMode("edit")
         }
     }
 
@@ -44,7 +44,7 @@ export const Header: FC<{}> = ({}) => {
                     <Redo className="h-4 w-4" />
                 </Button>
                 <Button variant="ghost" size="icon" onClick={toggleMode}>
-                    { mode === "canvas" ? <Pencil className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    { mode === "edit" ? <Eye className="h-4 w-4" /> : <Pencil className="h-4 w-4" />}
                 </Button>
                 <DropdownMenu>
                     <DropdownMenuTrigger 
@@ -54,8 +54,14 @@ export const Header: FC<{}> = ({}) => {
                             </Button>
                         }
                     />
-                    <DropdownMenuContent>
+                    <DropdownMenuContent className="w-full">
                         <DropdownMenuGroup className="gap-2 p-1">
+                            <DropdownMenuItem>
+                                <FolderInput />
+                                <div className="text-sm font-medium truncate">
+                                    {t("move to project")}
+                                </div>
+                            </DropdownMenuItem>
                             <DropdownMenuItem>
                                 <Download />
                                 <div className="text-sm font-medium truncate">

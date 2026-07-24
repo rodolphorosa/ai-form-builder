@@ -30,7 +30,9 @@
     "import schema": "Importar esquema",
     
     "updated": "Atualizado",
-    "edited": "Editado"
+    "edited": "Editado",
+
+    "move to project": "Mover para projeto"
   },
 
   "Tree": {

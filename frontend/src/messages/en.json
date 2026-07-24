@@ -30,7 +30,9 @@
     "import schema": "Import schema",
 
     "updated": "Updated",
-    "edited": "Edited"
+    "edited": "Edited",
+
+    "move to project": "Move to project"
   },
 
   "Tree": {
