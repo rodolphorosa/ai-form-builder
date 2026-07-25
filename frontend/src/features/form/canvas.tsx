@@ -142,7 +142,7 @@ export const Canvas = ({ form }: CanvasProps) => {
     }
     
     return (
-        <div className="flex flex-col gap-4 px-8 py-12 min-h-0 h-full bg-card border rounded-lg shadow-sm">
+        <div className="flex flex-col gap-4 px-8 py-12 bg-card border rounded-lg shadow-sm">
             <div className="w-full" onClick={() => setTitleFocused(true)} onBlur={() => setTitleFocused(false)}>
                 {titleFocused ? (
                     <div className="flex flex-col gap-2 p-5">
@@ -157,20 +157,20 @@ export const Canvas = ({ form }: CanvasProps) => {
                         />
                         <EditableText 
                             id="form-title" 
-                            value="Form description" 
+                            value={form.description ?? ""}
                             placeholder="Description placeholder" 
                             onChange={(value) => console.log(value)} 
-                            className="font-medium text-center h-8"
+                            className="font-medium text-center h-8 text-muted-foreground"
                             onBlur={(value) => console.log(value)} 
                         />
                     </div>
                 ):(
                     <div className="flex flex-col gap-2 p-5">
-                        <div className="flex items-center justify-center h-8 text-lg font-semibold">
+                        <div className="text-center h-8 text-lg font-semibold">
                             {form.name}
                         </div>
-                        <div className="flex items-center justify-center h-8 text-sm">
-                            Form description
+                        <div className="text-center h-8 text-sm text-muted-foreground">
+                            {form.description}
                         </div>
                     </div>
                 )}

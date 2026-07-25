@@ -16,7 +16,7 @@ interface PromptAreaProps {
 export const PromptArea = ({
     onChat, promptRef, placeholder
 }: PromptAreaProps) => {
-    const [prompt, setPrompt] = useState<string|null>("")
+    const [prompt, setPrompt] = useState<string|null>(promptRef?.current?.value ?? "")
 
     const t = useTranslations("Common")
 

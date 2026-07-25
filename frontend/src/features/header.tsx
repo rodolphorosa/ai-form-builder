@@ -1,6 +1,6 @@
 "use client"
 
-import React, { FC, useState } from "react"
+import { useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import { Archive, Download, EllipsisVertical, Eye, EyeOff, FolderInput, Form, Moon, Pencil, Pin, Redo, Settings as SettingsIcon, Sun, Trash, Undo } from "lucide-react"
@@ -9,10 +9,17 @@ import { useTheme } from "next-themes"
 import { useTranslations } from "next-intl";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
-export const Header: FC<{}> = ({}) => {
-    const [open, setOpen] = useState<boolean>(false)
+interface HeaderProps {
+    undo: () => void
+    redo: () => void
+    undoDisabled: boolean
+    redoDisabled: boolean
+    mode: "edit" | "preview"
+    toggleMode: () => void
+}
 
-    const [mode, setMode] = useState<"edit" | "preview">("edit")
+export const Header = ({ undo, redo, undoDisabled, redoDisabled, mode, toggleMode }: HeaderProps) => {
+    const [open, setOpen] = useState<boolean>(false)
 
     const { theme, setTheme } = useTheme()
 
@@ -24,23 +31,15 @@ export const Header: FC<{}> = ({}) => {
         }
     }
 
-    const toggleMode = () => {
-        if (mode == "edit") {
-            setMode("preview")
-        } else {
-            setMode("edit")
-        }
-    }
-
     const t = useTranslations("Common")
 
     return (
         <div className="flex flex-row p-3 bg-background w-full">
             <div className="flex flex-row gap-1 w-full justify-end">
-                <Button variant="ghost" size="icon">
+                <Button variant="ghost" size="icon" onClick={undo} disabled={undoDisabled}>
                     <Undo className="h-4 w-4" />
                 </Button>
-                <Button variant="ghost" size="icon">
+                <Button variant="ghost" size="icon" onClick={redo} disabled={redoDisabled}>
                     <Redo className="h-4 w-4" />
                 </Button>
                 <Button variant="ghost" size="icon" onClick={toggleMode}>

@@ -75,7 +75,7 @@ export const TreeMenu: FC<TreeProps> = ({ schema, selectItem, selectedItem }) =>
             </div>
             <Separator />
             <div className="flex-1 overflow-y-auto p-2 space-y-1">
-                {sections.map((section) => {
+                {sections?.map((section) => {
                     const isOpen = !!openSections[section.id];
 
                     return (

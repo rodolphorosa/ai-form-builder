@@ -1,11 +1,11 @@
 from sqlalchemy.orm import Session
 from sqlalchemy.dialects.postgresql import UUID
 
-from src.llm.services import generate_form_schema
+from src.llm.services import generate_form_schema, edit_form_schema
 from src.repositories.form_repository import FormRepository
 from src.repositories.project_repository import ProjectRepository
 from src.api.deps import get_llm_provider
-from src.schemas.requests import FormRequest
+from src.schemas.requests import EditRequest, FormRequest
 from src.schemas.schema import FormSchema
 
 
@@ -62,3 +62,11 @@ class FormService:
         )
 
         return form
+    
+
+    def edit_schema_with_ai(self, data: EditRequest):
+        prompt = f"{data.prompt} \n\n Current schema:\n\n{data.schema}"
+        provider = get_llm_provider(data.provider, data.model)
+        response = edit_form_schema(prompt, provider)
+
+        return response

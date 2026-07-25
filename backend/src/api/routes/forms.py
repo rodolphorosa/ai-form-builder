@@ -38,12 +38,9 @@ def generate_form(data: FormRequest, db: Session = Depends(get_db)):
     }
 
 @router.post('/edit')
-def edit_form(data: EditRequest):
-    provider = get_llm_provider(data.provider, data.model)
-    
-    form = generate_form_schema(
-        f"{data.prompt}\n\n Current schema:\n {data.schema}",
-        provider
-    )
+def edit_form(data: EditRequest, db: Session = Depends(get_db)):
+    service = FormService(db)
 
-    return { "data": form }
+    result = service.edit_schema_with_ai(data)
+
+    return { "data": result }

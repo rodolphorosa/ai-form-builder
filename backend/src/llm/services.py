@@ -1,11 +1,23 @@
 import json
 
 from src.llm.providers.base import BaseProvider
-from src.llm.prompts.form_generation import SYSTEM_PROMPT
+from src.llm.prompts.form_generation import SYSTEM_PROMPT as CREATION_PROMPT
+from src.llm.prompts.schema_edition import SYSTEM_PROMPT as EDITION_PROMPT
 
 def generate_form_schema(prompt: str, provider: BaseProvider):
     messages = [
-        {"role": "system", "content": SYSTEM_PROMPT},
+        {"role": "system", "content": CREATION_PROMPT},
+        {"role": "user", "content": prompt}
+    ]
+    response = provider.chat(messages=messages)
+    parsed = json.loads(response)
+
+    return parsed
+
+
+def edit_form_schema(prompt: str, provider: BaseProvider):
+    messages = [
+        {"role": "system", "content": EDITION_PROMPT},
         {"role": "user", "content": prompt}
     ]
     response = provider.chat(messages=messages)

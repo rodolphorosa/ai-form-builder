@@ -15,6 +15,7 @@ class InputType(str, Enum):
     RADIO = "radio"
     CHECKBOX = "checkbox"
     TEXTAREA = "textarea"
+    FILE = "file"
 
 class Validation(BaseModel):
     minValue: int | None = None

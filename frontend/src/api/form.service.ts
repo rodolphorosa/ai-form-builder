@@ -1,6 +1,7 @@
 import { CreateRequest, ApiFormResponse, EditRequest, SuggestionRequest, ApiResponse } from "./types"
 import { ApiClient } from "./client"
 import { Suggestion } from "@/types/ai"
+import { FormSchema } from "@/types/form"
 
 const api = new ApiClient()
 
@@ -9,8 +10,8 @@ export const formService = {
         return api.post<ApiFormResponse>("/api/forms/generate", request)
     },
 
-    editForm(request: EditRequest): Promise<ApiFormResponse> {
-        return api.post<ApiFormResponse>("/api/forms/edit", request)
+    editForm(request: EditRequest): Promise<ApiResponse<{ message: string, schema: FormSchema }>> {
+        return api.post<ApiResponse<{ message: string, schema: FormSchema }>>("/api/forms/edit", request)
     },
 
     suggest(request: SuggestionRequest): Promise<ApiResponse<{ suggestions: Suggestion[]}>> {

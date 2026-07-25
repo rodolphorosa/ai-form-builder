@@ -1,5 +1,5 @@
 import { Separator } from "@/components/ui/separator"
-import { Astroid, Bot, Maximize, Minimize, Sparkles, X } from "lucide-react"
+import { Astroid, Bot, BriefcaseBusiness, Check, GraduationCap, Maximize, Minimize, ShoppingCart, Sparkles, X } from "lucide-react"
 import { RefObject, useEffect, useRef, useState } from "react"
 import { PromptArea } from "../promptArea"
 import { Form, FormSchema } from "../../types/form"
@@ -9,26 +9,73 @@ import { ApiFormResponse } from "../../api/types"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { ChatMode } from "@/types/ai"
+import { Message, SuggestionStatus } from "@/types/chat"
+import { SuggestionMessage, TextMessage, ThinkingMessage } from "./messages"
 
 interface ChatProps {
     mode: ChatMode
     setMode: (mode: ChatMode) => void
     form: Form | null
-    onFormCreate: (form: Form | null) => void
-    onSchemaChange: (schema: FormSchema | null) => void
+    onFormCreate: (form: Form) => void
+    onSchemaChange: (schema: FormSchema) => void
     promptRef?: RefObject<HTMLTextAreaElement | null> | null
     loading?: boolean
     setLoading?: (loading: boolean) => void
 }
 
-interface Message {
-    user: "user" | "model"
-    content: string | React.ReactElement
+const EmptyChat = ({ onCreate }: { onCreate?: (prompt: string) => void }) => {
+    return (
+        <div className="flex flex-col gap-4 text-sm m-auto">
+            <div className="flex flex-col gap-1">
+                <div className="flex flex-row gap-2 items-center justify-center w-full">
+                    <Sparkles className="h-4 w-4 shrink-0" />
+                    <span className="font-medium">Vamos criar algo incrível?</span>
+                </div>
+                <span className="text-center text-muted-foreground">
+                    Descreva o formulário que você precisa e eu vou ajudar a criar a estrutura.
+                </span>
+            </div>
+            <div className="flex flex-col gap-2">
+                <span className="">Experimente:</span>
+                <div className="flex flex-col gap-1 text-muted-foreground">
+                    <button 
+                        className="flex flex-row gap-1 items-start text-left hover:text-foreground transition-colors cursor-pointer" 
+                        onClick={() => onCreate?.("Crie um formulário de cadastro de funcionários.")}
+                    >
+                        <BriefcaseBusiness className="h-4 w-4 shrink-0" />
+                        <span>Crie um formulário de cadastro de funcionários.</span>
+                    </button>
+                    <button 
+                        className="flex flex-row gap-1 items-start text-left hover:text-foreground transition-colors cursor-pointer"
+                        onClick={() => onCreate?.("Crie um formulário de pedido de orçamento.")}
+                    >
+                        <ShoppingCart className="h-4 w-4 shrink-0" />
+                        Crie um formulário de pedido de orçamento.
+                    </button>
+                    <button 
+                        className="flex flex-row gap-1 items-start text-left hover:text-foreground transition-colors cursor-pointer"
+                        onClick={() => onCreate?.("Crie um formulário de inscrição em um curso.")}
+                    >
+                        <GraduationCap className="h-4 w-4 shrink-0" />
+                        Crie um formulário de inscrição em um curso.
+                    </button>
+                </div>
+            </div>
+        </div>
+    )
 }
 
-export const Chat = ({ mode, setMode, form, onFormCreate, onSchemaChange, promptRef, loading, setLoading }: ChatProps) => {
+export const Chat = ({ 
+    mode, 
+    setMode, 
+    form, 
+    onFormCreate, 
+    onSchemaChange, 
+    promptRef, 
+    loading, 
+    setLoading 
+}: ChatProps) => {
     const [messages, setMessages] = useState<Message[]>([])
-    // const [loading, setLoading] = useState<boolean>(false)
     
     const scrollRef = useRef<HTMLDivElement>(null)
 
@@ -37,6 +84,46 @@ export const Chat = ({ mode, setMode, form, onFormCreate, onSchemaChange, prompt
             behavior: "smooth"
         })
     }, [messages])
+
+    const applySuggestion = (message: Message) => {
+        onSchemaChange(message.suggestion?.schema!)
+        updateMessage(message.id, "applied")
+    }
+
+    const discardSuggestion = (message: Message) => {
+        onSchemaChange(message.suggestion?.previousSchema!)
+        updateMessage(message.id, "discarded")
+    }
+    
+    const updateMessage = (id: string, status: SuggestionStatus) => {
+        setMessages(messages => 
+            messages.map(message => 
+                message.id === id ? {
+                    ...message, 
+                    suggestion: {
+                        ...message.suggestion!,
+                        status: status
+                    }
+                } : message
+            ))
+    }
+
+    const renderMessageStrategy = (message: Message) => {
+        switch(message.type) {
+            case "suggestion":
+                return (
+                    <SuggestionMessage 
+                        message={message} 
+                        onApply={() => applySuggestion(message)} 
+                        onDiscard={() => discardSuggestion(message)} 
+                    />
+                )
+            case "text":
+                return <TextMessage message={message} />
+            case "thinking":
+                return <ThinkingMessage message={message} />
+        }
+    }
 
     const renderMessage = (message: Message) => {
         const isUser = message.user === "user";
@@ -57,25 +144,11 @@ export const Chat = ({ mode, setMode, form, onFormCreate, onSchemaChange, prompt
                     )}
                 >
                     <div className="text-sm">
-                        {message.content}
+                        {renderMessageStrategy(message)}
                     </div>
                 </div>
             </div>
-        );
-    };
-
-    const handleResponseData = (data: ApiFormResponse["data"]) => {
-        // @ts-ignore
-        // onSchemaChange(data.form.schema)
-        onFormChange
-        setMessages(prev => [
-            ...prev, 
-            {
-                user: "model",
-                // @ts-ignore
-                content: data.message
-            }
-        ])
+        )
     }
 
     const createForm = async (prompt: string) => {
@@ -87,15 +160,15 @@ export const Chat = ({ mode, setMode, form, onFormCreate, onSchemaChange, prompt
                 provider: "openai",
                 model: "gpt-4.1-nano"
             })
-            // handleResponseData(data)
 
             onFormCreate(data.form)
             setMessages(prev => [
                 ...prev, 
                 {
+                    id: crypto.randomUUID(),
                     user: "model",
-                    // @ts-ignore
-                    content: data.message
+                    text: data.message,
+                    type: "text"
                 }
             ])
         } catch (error) {
@@ -106,23 +179,49 @@ export const Chat = ({ mode, setMode, form, onFormCreate, onSchemaChange, prompt
     }
 
     const editForm = async (prompt: string) => {
-        // if(!schema) return
+        if(!form) return
 
-        // setLoading?.(true)
+        setLoading?.(true)
         
-        // try {
-        //     const { data } = await formService.editForm({
-        //         prompt: prompt,
-        //         schema: schema,
-        //         provider: "openai",
-        //         model: "gpt-4.1-nano"
-        //     })
-        //     handleResponseData(data)
-        // } catch (error) {
-        //     console.log("Failed to edit form", error)
-        // } finally {
-        //     setLoading?.(false)
-        // }
+        try {
+            const { data } = await formService.editForm({
+                prompt: prompt,
+                schema: form.schema,
+                provider: "openai",
+                model: "gpt-4.1-nano"
+            })
+
+            setMessages(prev => [
+                ...prev, 
+                {
+                    id: crypto.randomUUID(),
+                    user: "model",
+                    text: data.message,
+                    type: "text"
+                }
+            ])
+            onSchemaChange(data.schema)
+
+        } catch (error) {
+            console.log("Failed to edit form", error)
+        } finally {
+            setLoading?.(false)
+        }
+    }
+
+    const onSelectPrompt = (prompt: string) => {
+
+        setMessages(prev => [
+            ...prev,
+            { 
+                id: crypto.randomUUID(), 
+                user: "user", 
+                text: prompt, 
+                type: "text" 
+            }
+        ])
+
+        createForm(prompt)
     }
 
     const renderChatHeader = () => {
@@ -166,27 +265,48 @@ export const Chat = ({ mode, setMode, form, onFormCreate, onSchemaChange, prompt
         )
     }
 
+
     const renderChat = () => {
         const chat = (
             <>
                 <div className="flex-1 overflow-y-auto p-4">
-                    <div className="flex flex-col justify-end gap-6">
-                        {messages.map(message => renderMessage(message))}
+                    <div className="flex flex-col justify-end gap-6 h-full">
+                        {messages.length == 0 && <EmptyChat onCreate={(prompt) => onSelectPrompt(prompt)} />}
+                        {messages.length > 0 && messages.map(message => renderMessage(message))}
                         {loading && renderMessage({
+                            id: crypto.randomUUID(),
                             user: "model",
-                            content: <Thinking step={ form ? "Editing your form..." : "Creating form..."} />
+                            text: form ? "Editing your form..." : "Creating form...",
+                            type: "thinking"
                         })}
                         <div ref={scrollRef} />
                     </div>
                 </div>
                 <div className="relative border-t rounded-b-4xl bg-background/80 backdrop-blur-xl ">
-                    <div className="pointer-events-none absolute -top-14 left-0 right-0 h-14 bg-gradient-to-t from-background via-background/70 to-transparent" />
+                    <div 
+                        className="
+                            pointer-events-none 
+                            absolute 
+                            -top-14 
+                            left-0 
+                            right-0 
+                            h-14 
+                            bg-gradient-to-t 
+                            from-background 
+                            via-background/70 
+                            to-transparent" 
+                        />
                     <div className="p-4">
                         <PromptArea 
                             onChat={(message) => {
                                 setMessages(prev => [
                                     ...prev,
-                                    { user: "user", content: message}
+                                    { 
+                                        id: crypto.randomUUID(), 
+                                        user: "user", 
+                                        text: message, 
+                                        type: "text" 
+                                    }
                                 ])
 
                                 if (form) {

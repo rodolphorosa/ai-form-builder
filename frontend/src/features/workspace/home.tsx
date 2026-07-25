@@ -7,7 +7,7 @@ import { Astroid, ChevronDown, EllipsisVertical, FilePlus, FilePlusCorner, Folde
 import { Button } from "@/components/ui/button"
 import { useTranslations } from "next-intl"
 import { mockProjects, mockSchemas } from "../mock"
-import { Form } from "../form/form"
+import { FormRenderer } from "../form/form"
 import { Chevron } from "react-day-picker"
 import { cn } from "@/lib/utils"
 import { motion } from "motion/react"
