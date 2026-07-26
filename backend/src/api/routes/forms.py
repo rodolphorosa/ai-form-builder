@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
+from uuid import UUID
+
 from src.database.session import get_db
 from src.database.models.form import Form
 from src.database.models.project import Project
@@ -20,6 +22,15 @@ def get_forms(db: Session = Depends(get_db)):
     forms = form_repository.get_all()
     
     return { "data": [FormResponse.from_model(f) for f in forms] }
+
+
+@router.get('/{id}')
+def get_form(id: UUID, db: Session = Depends(get_db)):
+    service = FormService(db)
+
+    form = service.get_form(id)
+
+    return { "data": form }
 
 @router.post('/generate')
 def generate_form(data: FormRequest, db: Session = Depends(get_db)):

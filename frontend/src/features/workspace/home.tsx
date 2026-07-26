@@ -1,28 +1,33 @@
 "use client"
 
-import { FormSchema, Item, Project, Section } from "@/types/form"
+import { Form, FormSchema, Item, Project } from "@/types/form"
 import { useEffect, useState } from "react"
 import { Sidebar } from "./sidebar"
-import { Astroid, ChevronDown, EllipsisVertical, FilePlus, FilePlusCorner, Folder, FolderOpen, Form as FormIcon, Import, Pin, PinOff } from "lucide-react"
+import { Astroid, ChevronDown, EllipsisVertical, FilePlusCorner, FolderOpen, Form as FormIcon, Import } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useTranslations } from "next-intl"
-import { mockProjects, mockSchemas } from "../mock"
-import { FormRenderer } from "../form/form"
-import { Chevron } from "react-day-picker"
 import { cn } from "@/lib/utils"
-import { motion } from "motion/react"
 import { Link } from "@/i18n/navigation";
+import { formService } from "@/api/form.service"
+import { projectService } from "@/api/project.service"
+
+import { formatDistanceToNow } from "date-fns"
+import { ptBR } from "date-fns/locale"
+import { FormDropdown } from "./dropdown-menus/formOptions"
+import { ProjectDropdown } from "./dropdown-menus/projectOptions"
+
 
 interface CreationOption {
     icon: React.ComponentType
     title: string
     description: string
-    action: () => void
+    action?: () => void
+    href?: string
 }
 
 export const Workspace = () => {
-    const [projects, setProjects] = useState<Project[]>(mockProjects)
-    const [forms, setForms] = useState<FormSchema[]>(mockSchemas)
+    const [projects, setProjects] = useState<Project[]>([])
+    const [forms, setForms] = useState<Form[]>([])
 
     const workspace = useTranslations("Workspace")
 
@@ -31,7 +36,8 @@ export const Workspace = () => {
             icon: Astroid,
             title: workspace("create with ai"),
             description: "Descreva o que você precisa e a IA irá gerar para você",
-            action: () => console.log("criar com ia")
+            action: () => console.log("criar com ia"),
+            href: "/forms/new"
         },
         {
             icon: FilePlusCorner,
@@ -47,33 +53,83 @@ export const Workspace = () => {
         },
     ]
 
+    const getForms = async () => {
+        try {
+            const response = await formService.getAll()
+            setForms(sortByUpdate(response.data) as Form[])
 
-    const tCommon = useTranslations("Common")
+        } catch (err) {
+            console.log(err)
+        } finally {
+
+        }
+    }
+
+    const getProjects = async () => {
+        try {
+            const response = await projectService.getAll()
+            setProjects(sortByUpdate(response.data) as Project[])
+
+        } catch (err) {
+            console.log(err)
+        } finally {
+
+        }
+    }
+
+    useEffect(() => {
+
+        getForms()
+        getProjects()
+
+    }, [])
+
+
+    const common = useTranslations("Common")
+
+    const sortByUpdate = (array: Form[] | Project[]): Form[] | Project[] => {
+        return array.sort((a, b) => b.updatedAt - a.updatedAt)
+    }
 
     const countItems = (schema: FormSchema) => {
         return schema.sections.reduce((acc, cur) => {
             return acc + cur.items.length
         }, 0)
     }
+
+    const parseUpdateDate = (updatedAt: number) => {
+        return formatDistanceToNow(new Date(updatedAt), {
+            addSuffix: true,
+            locale: ptBR,
+        })
+    }
+
     
     const renderOptionCard = (option: CreationOption) => {
         const IconComponent = option.icon as React.ComponentType<{ className?: string }>
 
         return (
-            <div 
-                className="flex flex-row p-3 gap-4 border rounded-lg shadow-sm h-fit bg-card items-center h-fit w-[240px] cursor-pointer"
-                onClick={option.action}
-            >
-                <div className="p-4 rounded-sm border bg-muted">
-                    <IconComponent />
-                </div>
-                
-                <div className="flex flex-col gap-2">
-                    <div className="text-sm font-medium">{option.title}</div>
-                    <div className="text-xs font-normal text-muted-foreground">{option.description}</div>
-                </div>
+            <Link href={option.href ?? ""}>
+                <div 
+                    className="flex flex-row p-3 gap-4 border rounded-lg shadow-sm h-fit bg-card items-center h-fit w-[240px] cursor-pointer"
+                    onClick={(e) => {
+                        if (!option.href) {
+                            e.preventDefault()
+                            option.action?.()
+                        }
+                    }}
+                >
+                    <div className="p-4 rounded-sm border bg-muted">
+                        <IconComponent />
+                    </div>
+                    
+                    <div className="flex flex-col gap-2">
+                        <div className="text-sm font-medium">{option.title}</div>
+                        <div className="text-xs font-normal text-muted-foreground">{option.description}</div>
+                    </div>
 
-            </div>
+                </div>
+            </Link>
         )
     }
 
@@ -112,33 +168,29 @@ export const Workspace = () => {
         }
     }
 
-    const renderFormCard = (schema: FormSchema) => {
-        const id = mockSchemas.indexOf(schema)
-        
+    const renderFormCard = (form: Form) => {
         return (
-            <Link href={`/forms/${id}`}>
-                <div 
-                    className="group flex flex-col justify-between p-3 gap-4 border rounded-lg shadow-sm h-fit w-[240px] bg-card cursor-pointer"
-                >
-                    <div className="h-[180px] bg-muted/40 p-3 flex justify-center overflow-hidden">
+            <Link href={`/forms/${form.id}`}>
+                <div className="group border rounded-lg shadow-sm h-fit w-[240px]">
+                    <div className="h-[180px] bg-muted/60 p-2 flex justify-center overflow-hidden">
                         <div 
                             className="
                                 flex flex-col gap-1 
                                 bg-card border rounded-sm shadow-sm 
-                                w-full p-4 scale-[0.95] origin-top overflow-hidden 
-                                transition-transform duration-300 group-hover:scale-105"
+                                w-full p-4 scale-[0.95] origin-top overflow-y-auto 
+                                transition-transform duration-300 group-hover:scale-100"
                         >
                             <div className="text-center text-[8px] font-semibold">
-                                {schema.title}
+                                {form.name}
                             </div>
                             <div className="flex flex-col gap-1">
-                                {schema.sections.slice(0, 1).map(section => (
+                                {form.schema.sections.map(section => (
                                     <div key={section.id} className="space-y-2">
                                         <div className="text-[8px] font-medium">
                                             {section.label}
                                         </div>
 
-                                        <div className="grid grid-cols-2 gap-1">
+                                        <div className="flex flex-col gap-1">
                                             {section.items.map(item => (
                                                 <div 
                                                     key={item.id} 
@@ -150,8 +202,6 @@ export const Workspace = () => {
                                                     <div className="text-[6px] text-muted-foreground">
                                                         {item.label}
                                                     </div>
-
-                                                    {/* <div className="p-1 w-full bg-muted rounded-sm" /> */}
                                                     {renderItemThumbnail(item)}
                                                 </div>
                                             ))}
@@ -161,33 +211,34 @@ export const Workspace = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="flex flex-row gap-4 justify-between">
-                        <div className="flex gap-2 items-start min-w-0 flex-1">
-                            <FormIcon className="h-4 w-4 shrink-0 mt-0.5" />
+                    <div 
+                        className="flex flex-col justify-between p-3 gap-4 rounded-b-lg bg-card cursor-pointer"
+                    >
+                        <div className="flex flex-row gap-4 justify-between">
                             <div className="flex flex-col gap-1 min-w-0">
                                 <div className="text-sm font-medium leading-tight truncate">
-                                    {schema.title}
+                                    {form.name}
                                 </div>
 
                                 <div className="text-xs font-medium text-muted-foreground truncate">
-                                    {projects[0]?.name ?? "Sem projeto"}
+                                    {projects.find(it => it.id === form.projectId)?.name ?? "Sem projeto"}
                                 </div>
                                 
                                 <div className="text-xs font-normal text-muted-foreground self-start">
-                                    {tCommon("edited")} há 3 dias
+                                    {common("edited")} {parseUpdateDate(form.updatedAt)}
                                 </div>
                             </div>
+                            <FormDropdown 
+                                projects={projects}
+                                onRename={() => {}}
+                                onMove={() => []}
+                                onExport={() => {}}
+                                onPin={() => {}}
+                                onArchive={() => {}}
+                                onDuplicate={() => []}
+                                onDelete={() => {}}
+                            />
                         </div>
-                        <Button 
-                            variant="ghost" 
-                            size="icon" 
-                            className="cursor-pointer"
-                            onClick={(e) => {
-                                e.preventDefault()
-                            }}
-                        >
-                            <EllipsisVertical className="h-4 w-4 shrink-0" />
-                        </Button>
                     </div>
                 </div>
             </Link>
@@ -198,34 +249,33 @@ export const Workspace = () => {
         return (
             <div className="flex flex-col justify-between p-3 gap-4 border rounded-lg shadow-sm h-fit w-[240px] bg-card">
                 <div className="flex flex-row gap-4 justify-between">
-                    <div className="flex gap-2 items-start min-w-0 flex-1">
-                        <FolderOpen className="h-4 w-4 shrink-0 mt-0.5" />
-                        <div className="flex flex-col gap-1 min-w-0">
-                            <div className="text-sm font-medium leading-tight truncate">
-                                {project.name}
-                            </div>
+                    <div className="flex flex-col gap-1 min-w-0">
+                        <div className="text-sm font-medium leading-tight truncate">
+                            {project.name}
+                        </div>
 
-                            <div className="text-xs text-muted-foreground truncate">
-                                3 formulários
-                            </div>
-                            <div className="text-xs font-normal text-muted-foreground self-start">
-                                {tCommon("updated")} há 3 dias
-                            </div>
+                        <div className="text-xs text-muted-foreground truncate">
+                            3 formulários
+                        </div>
+                        <div className="text-xs font-normal text-muted-foreground self-start">
+                            {common("updated")} {parseUpdateDate(project.updatedAt)}
                         </div>
                     </div>
-                    <Button variant="ghost" size="icon">
-                        <EllipsisVertical className="h-4 w-4" />
-                    </Button>
+                    <ProjectDropdown 
+                        onRename={() => {}}
+                        onPin={() => {}}
+                        onArchive={() => {}}
+                        onDelete={() => {}}
+                    />
                 </div>
-                
             </div>
         )
     }
 
     return (
         <div className="flex flex-row h-screen w-screen overflow-hidden">
-            <Sidebar />
-            <div className="flex flex-col p-8 gap-8 overflow-y-auto">
+            <Sidebar forms={forms} projects={projects} />
+            <div className="flex flex-col p-8 gap-8 overflow-y-auto mx-auto">
                 <div className="flex flex-col gap-2">
                     <div className="text-sm font-medium">Criar novo formulário</div>
                     <div className="flex flex-wrap gap-4 items-start content-start">
@@ -234,14 +284,14 @@ export const Workspace = () => {
                 </div>
                 <div className="flex flex-col gap-2">
                     <div className="text-sm font-medium">Continue de onde parou</div>
-                    <div className="flex flex-wrap gap-4 items-start content-start mx-auto">
-                        {forms.slice(0, 5).map(form => renderFormCard(form))}
+                    <div className="flex flex-wrap gap-4 items-start content-start ">
+                        {forms.slice(0, 4).map(form => renderFormCard(form))}
                     </div>
                 </div>
                 <div className="flex flex-col gap-2">
                     <div className="text-sm font-medium">Seus projetos recentes</div>
-                    <div className="flex flex-wrap gap-4 items-start content-start mx-auto">
-                        {projects.slice(0, 5).map(project => renderProjectCard(project))}
+                    <div className="flex flex-wrap gap-4 items-start content-start ">
+                        {projects.slice(0, 4).map(project => renderProjectCard(project))}
                     </div>
                 </div>
             </div>

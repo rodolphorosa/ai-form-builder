@@ -5,12 +5,12 @@ import { Project } from "@/types/form"
 const api = new ApiClient()
 
 export const projectService = {
-    getProject(id: string): Promise<ApiResponse<Project[]>> {
-        return api.get<ApiResponse<Project[]>>(`/api/projects/${id}`)
+    getById(id: string): Promise<ApiResponse<Project>> {
+        return api.get<ApiResponse<Project>>(`/api/projects/${id}`)
 
     },
 
-    getProjects(): Promise<ApiResponse<Project>> {
-        return api.get<ApiResponse<Project>>("/api/projects")
+    getAll(): Promise<ApiResponse<Project[]>> {
+        return api.get<ApiResponse<Project[]>>("/api/projects")
     }
 }

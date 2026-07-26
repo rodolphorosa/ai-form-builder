@@ -1,7 +1,7 @@
 "use client"
 
-import {FC, useRef, useState} from "react"
-import { Form, FormSchema, SectionItem } from "../types/form"
+import {FC, useEffect, useRef, useState} from "react"
+import { Form, FormSchema, Project, SectionItem } from "../types/form"
 import { FormRenderer } from "./form/form"
 import { Header } from "./header"
 import { TreeMenu } from "./menus/tree"
@@ -11,12 +11,42 @@ import { ChatMode } from "@/types/ai"
 import { Canvas } from "./form/canvas"
 import { FormHistory } from "@/types/builder"
 
+import { useParams } from "next/navigation"
+import { formService } from "@/api/form.service"
+import { projectService } from "@/api/project.service"
+
 interface BuilderProps {
 }
 
 export const Builder = ({}: BuilderProps) => {
-    const [committedForm, setCommitForm] = useState<Form | null>(null)
+    const [projects, setProjects] = useState<Project[]>([])
 
+    const params = useParams()
+    const id = params.id as string
+
+    useEffect(() => {
+        if (!id) return
+
+        const loadForm = async () => {
+            try {
+                setLoading(true)
+
+                const response = await formService.getById(id)
+
+                setCommitForm(response.data)
+                setWorkingForm(response.data)
+            } catch (err) {
+                console.error(err)
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        loadForm()
+    }, [id])
+    
+    
+    const [committedForm, setCommitForm] = useState<Form | null>(null)
     const [workingForm, setWorkingForm] = useState<Form | null>(null)
 
     const [history, setHistory] = useState<FormHistory<Form>>({
@@ -94,6 +124,22 @@ export const Builder = ({}: BuilderProps) => {
         }
     }
 
+    const getProjects = async () => {
+        try {
+            const response = await projectService.getAll()
+            setProjects(response.data)
+
+        } catch (err) {
+            console.log(err)
+        } finally {
+
+        }
+    }
+
+    useEffect(() => {
+        getProjects()
+    }, [])
+
     const undoDisabled = history.past.length == 0
     const redoDisabled = history.future.length == 0
 
@@ -114,6 +160,7 @@ export const Builder = ({}: BuilderProps) => {
                             redoDisabled={redoDisabled} 
                             mode={renderMode} 
                             toggleMode={toggleMode} 
+                            projects={projects}
                         />
                         <div className="flex-1 overflow-y-auto">
                             <div className="p-8 w-[85%] mx-auto">
@@ -155,6 +202,7 @@ export const Builder = ({}: BuilderProps) => {
                             redoDisabled={redoDisabled} 
                             mode={renderMode} 
                             toggleMode={toggleMode} 
+                            projects={projects}
                         />
                         <div className="flex-1 w-full overflow-y-auto">
                             <div className="p-8 w-[65%] mx-auto">

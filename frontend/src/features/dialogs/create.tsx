@@ -35,7 +35,7 @@ export const CreateDialog = ({ onSchemaCreate }: DialogProps) => {
         setLoading(true)
         
         try {
-            const { data } = await formService.createForm({
+            const { data } = await formService.create({
                 prompt: prompt,
                 provider: "openai",
                 model: "gpt-4.1-nano"

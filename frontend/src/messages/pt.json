@@ -56,7 +56,8 @@
     "search": "Pesquisar",
     "projects": "Projetos",
     "recent": "Recentes",
-    "move to project": "Mover para projeto"
+    "move to project": "Mover para projeto",
+    "pinned": "Fixados"
   },
 
   "Workspace": {

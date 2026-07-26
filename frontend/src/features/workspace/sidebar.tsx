@@ -1,87 +1,79 @@
 "use client"
 
-import { FormSchema } from "@/types/form"
+import { Form, Project } from "@/types/form"
 import { useTranslations } from "next-intl"
-import { useState } from "react"
-import { mockSchemas } from "../mock"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { useEffect, useState } from "react"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Collapsible, CollapsibleContent } from "@/components/ui/collapsible"
-import { EllipsisVertical, Pencil, FolderOpen, Pin, Archive, Trash, Astroid, SquarePen, Search, User, CircleUser, Settings, LogOut, Trash2, House } from "lucide-react"
+import { EllipsisVertical, Form as FormIcon, Pencil, FolderOpen, Pin, Archive, Trash, Astroid, SquarePen, Search, User, CircleUser, Settings, LogOut, Trash2, House, FolderInput, FolderPlus, FolderSearch, Download, FileBraces, Copy, File } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Link } from "@/i18n/navigation"
+import { FaRegFilePdf } from "react-icons/fa"
+import { FormDropdown } from "./dropdown-menus/formOptions"
+import { ProjectDropdown } from "./dropdown-menus/projectOptions"
 
-export const Sidebar = () => {
-    const tTree = useTranslations("Tree")
-    const tCommon = useTranslations("Common")
+interface Props {
+    forms: Form[]
+    projects: Project[]
+}
 
+export const Sidebar = ({ forms, projects }: Props) => {
+    const tree = useTranslations("Tree")
+    const common = useTranslations("Common")
     const workspace = useTranslations("Workspace")
+    
+    const [recentOpen, setRecentOpen] = useState<boolean>(true)
+    const [pinnedOpen, setPinnedOpen] = useState<boolean>(true)
 
-    const [schemas, setSchemas] = useState<FormSchema[]>(mockSchemas)
-
-    const [open, setOpen] = useState<boolean>(true)
-
-    const renderRecent = (schema: FormSchema) => {
-        const id = mockSchemas.indexOf(schema)
+    const renderRecent = (form: Form, displayIcon: boolean = false) => {
         return (
-            <div className="group flex flex-row items-center rounded-sm justify-between hover:bg-muted cursor-pointer">
-                <Link href={`/forms/${id}`}>
-                    <div className="text-sm font-normal px-3 py-2 gap-2 text-sm font-normal items-center hover:bg-muted rounded-sm">
-                        {schema.title}
+            <Link href={`/forms/${form.id}`}>
+                <div className="w-full group flex flex-row items-center rounded-sm justify-between hover:bg-muted cursor-pointer">
+                    <div className="flex flex-row text-sm font-normal px-3 py-2 gap-2 text-sm font-normal items-center hover:bg-muted rounded-sm truncate">
+                        {displayIcon && <FormIcon className="h-4 w-4 shrink-0" />}
+                        {form.name}
                     </div>
-                </Link>
-                <DropdownMenu>
-                    <DropdownMenuTrigger render={(
-                        <Button size="icon" variant="ghost">
-                            <EllipsisVertical className="h-4 w-4" />
-                        </Button>
-                    )} />
-                    <DropdownMenuContent className="w-fit">
-                        <DropdownMenuGroup>
-                            <DropdownMenuItem>
-                                <Pencil className="h-4 w-4" />
-                                <div className="text-sm font-medium truncate">
-                                    {tCommon("rename")}
-                                </div>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                <FolderOpen className="h-4 w-4" />
-                                <div className="text-sm font-medium truncate">
-                                    {tTree("move to project")}
-                                </div>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                <Pin className="h-4 w-4" />
-                                <div className="text-sm font-medium truncate">
-                                    {tCommon("pin")}
-                                </div>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                <Archive className="h-4 w-4" />
-                                <div className="text-sm font-medium truncate">
-                                    {tCommon("archive")}
-                                </div>
-                            </DropdownMenuItem>
-                        </DropdownMenuGroup>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuGroup>
-                            <DropdownMenuItem variant="destructive">
-                                <Trash className="h-4 w-4" />
-                                <div className="text-sm font-medium truncate">
-                                    {tCommon("delete")}
-                                </div>
-                            </DropdownMenuItem>
-                        </DropdownMenuGroup>
-                    </DropdownMenuContent>
-                    
-                </DropdownMenu>
-            </div>
+                    <FormDropdown 
+                        projects={projects}
+                        onRename={() => {}}
+                        onMove={() => []}
+                        onExport={() => {}}
+                        onPin={() => {}}
+                        onArchive={() => {}}
+                        onDuplicate={() => []}
+                        onDelete={() => {}}
+                    />
+                </div>
+            </Link>
         )
     }
 
+    const renderPinnedProject = (project: Project) => {
+        return (
+            <Link href="">
+                <div className="w-full group flex flex-row items-center rounded-sm justify-between hover:bg-muted cursor-pointer">
+                    <div className="flex flex-row text-sm font-normal px-3 py-2 gap-2 text-sm font-normal items-center hover:bg-muted rounded-sm truncate">
+                        <FolderOpen className="h-4 w-4 shrink-0" />
+                        {project.name}
+                    </div>
+                    <ProjectDropdown 
+                        onRename={() => {}}
+                        onPin={() => {}}
+                        onArchive={() => {}}
+                        onDelete={() => {}}
+                    />
+                </div>
+            </Link>
+        )
+    }
+
+    const pinnedForms = forms.filter(it => it.pinned == true)
+    const pinnedProjects = projects.filter(it => it.pinned == true)
+
     return (
-        <div className="flex flex-col h-full min-h-0 border-r bg-card">
+        <div className="flex flex-col h-full w-100 min-h-0 border-r bg-card">
             <div className="flex flex-col gap-2 p-1 justify-left">
                 <div className="p-3">
                     <Button variant="outline" size="icon" className="border rounded-full">
@@ -90,12 +82,12 @@ export const Sidebar = () => {
                 </div>
                 <div className="flex flex-row py-2 px-3 gap-2 text-sm font-normal items-center hover:bg-muted rounded-sm cursor-pointer">
                     <SquarePen className="h-4 w-4" />
-                    {tTree("new form")}
+                    {tree("new form")}
                 </div>
             </div>
             <Separator />
             <div className="gap-2 h-[100%] overflow-hidden">
-                <div className="flex flex-col h-full p-1 overflow-y-auto">
+                <div className="flex flex-col gap-3 h-full p-1 overflow-y-auto">
                     <div className="flex flex-col sticky">
                         <div className="flex flex-row px-3 py-2 gap-2 text-sm font-normal items-center hover:bg-muted rounded-sm cursor-pointer">
                             <House className="h-4 w-4" />
@@ -103,11 +95,11 @@ export const Sidebar = () => {
                         </div>
                         <div className="flex flex-row px-3 py-2 gap-2 text-sm font-normal items-center hover:bg-muted rounded-sm cursor-pointer">
                             <Search className="h-4 w-4" />
-                            {tTree("search")}
+                            {tree("search")}
                         </div>
                         <div className="flex flex-row px-3 py-2 gap-2 text-sm font-normal items-center hover:bg-muted rounded-sm cursor-pointer">
                             <FolderOpen className="h-4 w-4" />
-                            {tTree("projects")}
+                            {tree("projects")}
                         </div>
                         <div className="flex flex-row px-3 py-2 gap-2 text-sm font-normal items-center hover:bg-muted rounded-sm cursor-pointer">
                             <Archive className="h-4 w-4" />
@@ -118,13 +110,26 @@ export const Sidebar = () => {
                             {workspace("trash")}
                         </div>
                     </div>
-                    <Collapsible key="recent" open={open} className="flex flex-col">
-                        <div className="px-3 py-2 text-sm font-medium" onClick={() => setOpen(!open)}>
-                            {tTree("recent")}
+                    {(pinnedForms.length > 0 || pinnedProjects.length > 0) && (
+                        <Collapsible key="recent" open={pinnedOpen} className="flex flex-col">
+                            <div className="px-3 py-2 text-sm font-medium" onClick={() => setPinnedOpen(!pinnedOpen)}>
+                                {tree("pinned")}
+                            </div>
+                            <CollapsibleContent className="pt-0.5">
+                                <div className="flex flex-col gap-0.5">
+                                    {pinnedProjects.map(project => renderPinnedProject(project))}
+                                    {pinnedForms.map(form => renderRecent(form, true))}
+                                </div>
+                            </CollapsibleContent>
+                        </Collapsible>
+                    )}
+                    <Collapsible key="recent" open={recentOpen} className="flex flex-col">
+                        <div className="px-3 py-2 text-sm font-medium" onClick={() => setRecentOpen(!recentOpen)}>
+                            {tree("recent")}
                         </div>
                         <CollapsibleContent className="pt-0.5">
                             <div className="flex flex-col gap-0.5">
-                                {schemas.map(schema => renderRecent(schema))}
+                                {forms.filter(it => it.pinned == false).map(form => renderRecent(form))}
                             </div>
                         </CollapsibleContent>
                     </Collapsible>
@@ -161,18 +166,18 @@ export const Sidebar = () => {
                         <DropdownMenuGroup>
                             <DropdownMenuItem>
                                 <CircleUser className="h-4 w-4" />
-                                {tTree("profile")}
+                                {tree("profile")}
                             </DropdownMenuItem>
                             <DropdownMenuItem>
                                 <Settings className="h-4 w-4" />
-                                {tTree("settings")}
+                                {tree("settings")}
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
                             <DropdownMenuItem variant="destructive">
                                 <LogOut className="h-4 w-4" />
-                                {tTree("logout")}
+                                {tree("logout")}
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                     </DropdownMenuContent>

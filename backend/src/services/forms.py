@@ -70,3 +70,14 @@ class FormService:
         response = edit_form_schema(prompt, provider)
 
         return response
+
+
+    def get_form(self, id: UUID):
+        form_repository = FormRepository(self.db)
+
+        form = form_repository.get_by_id(id)
+
+        if not form:
+            raise Exception("Form not found")
+
+        return form

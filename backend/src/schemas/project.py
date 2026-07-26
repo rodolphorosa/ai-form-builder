@@ -18,8 +18,8 @@ class ProjectResponse(BaseModel):
         return cls(
             id=project.id,
             name=project.name,
-            createdAt=int(project.created_at.timestamp()),
-            updatedAt=int(project.updated_at.timestamp()),
+            createdAt=int(project.created_at.timestamp() * 1000),
+            updatedAt=int(project.updated_at.timestamp() * 1000),
             pinned=project.is_pinned,
             archived=project.is_archived,
             deleted=project.is_deleted,

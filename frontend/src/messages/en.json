@@ -56,7 +56,8 @@
     "search": "Search",
     "projects": "Projects",
     "recent": "Recent",
-    "move to project": "Move to project"
+    "move to project": "Move to project",
+    "pinned": "Pinned"
   },
 
   "Workspace": {

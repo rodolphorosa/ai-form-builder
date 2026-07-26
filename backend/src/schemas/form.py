@@ -24,8 +24,8 @@ class FormResponse(BaseModel):
             description = form.description,
             schema = form.schema,
             projectId = form.project_id,
-            createdAt = int(form.created_at.timestamp()),
-            updatedAt = int(form.updated_at.timestamp()),
+            createdAt = int(form.created_at.timestamp() * 1000),
+            updatedAt = int(form.updated_at.timestamp() * 1000),
             pinned = form.is_pinned,
             archived = form.is_archived,
             deleted = form.is_deleted

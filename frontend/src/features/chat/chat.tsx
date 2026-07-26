@@ -155,7 +155,7 @@ export const Chat = ({
         setLoading?.(true)
         
         try {
-            const { data } = await formService.createForm({
+            const { data } = await formService.create({
                 prompt: prompt,
                 provider: "openai",
                 model: "gpt-4.1-nano"
@@ -184,7 +184,7 @@ export const Chat = ({
         setLoading?.(true)
         
         try {
-            const { data } = await formService.editForm({
+            const { data } = await formService.edit({
                 prompt: prompt,
                 schema: form.schema,
                 provider: "openai",
