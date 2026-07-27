@@ -15,6 +15,8 @@ import { formatDistanceToNow } from "date-fns"
 import { ptBR } from "date-fns/locale"
 import { FormDropdown } from "./dropdown-menus/formOptions"
 import { ProjectDropdown } from "./dropdown-menus/projectOptions"
+import { CreateDialog } from "../dialogs/create"
+import { useRouter } from "@/i18n/navigation"
 
 
 interface CreationOption {
@@ -26,8 +28,12 @@ interface CreationOption {
 }
 
 export const Workspace = () => {
+    const router = useRouter()
+    
     const [projects, setProjects] = useState<Project[]>([])
     const [forms, setForms] = useState<Form[]>([])
+
+    const [createOpen, setCreateOpen] = useState<boolean>(false)
 
     const workspace = useTranslations("Workspace")
 
@@ -43,7 +49,7 @@ export const Workspace = () => {
             icon: FilePlusCorner,
             title: workspace("blank"),
             description: "Comece do zero com um formulário em branco.",
-            action: () => console.log("criar em branco")
+            action: () => setCreateOpen(true)
         },
         {
             icon: Import,
@@ -102,6 +108,19 @@ export const Workspace = () => {
             addSuffix: true,
             locale: ptBR,
         })
+    }
+
+    const onCreate = async (form: Partial<Form>) => {
+        try {
+            const response = await formService.createBlank(form)
+            router.push(`/forms/${response.data.id}`)
+
+        } catch(err) {
+            console.log(err)
+
+        } finally {
+
+        }
     }
 
     
@@ -294,6 +313,7 @@ export const Workspace = () => {
                         {projects.slice(0, 4).map(project => renderProjectCard(project))}
                     </div>
                 </div>
+                <CreateDialog onCreate={onCreate} open={createOpen} onOpenChange={setCreateOpen} />
             </div>
         </div>
     )

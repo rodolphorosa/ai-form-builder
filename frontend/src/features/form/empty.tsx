@@ -32,7 +32,7 @@ export const EmptyRenderer = ({onSchemaCreate}: EmptyRendererProps) => {
                 </EmptyDescription>
             </EmptyHeader>
             <EmptyContent className="flex-row justify-center gap-2">
-                <CreateDialog onSchemaCreate={onSchemaCreate} />
+                {/* <CreateDialog onCreate={onSchemaCreate} /> */}
                 <Button variant="outline">Import Schema</Button>
             </EmptyContent>
         </Empty>

@@ -270,7 +270,7 @@ export const Chat = ({
         const chat = (
             <>
                 <div className="flex-1 overflow-y-auto p-4">
-                    <div className="flex flex-col justify-end gap-6 h-full">
+                    <div className="flex flex-col gap-6">
                         {messages.length == 0 && <EmptyChat onCreate={(prompt) => onSelectPrompt(prompt)} />}
                         {messages.length > 0 && messages.map(message => renderMessage(message))}
                         {loading && renderMessage({

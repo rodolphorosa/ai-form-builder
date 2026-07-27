@@ -71,9 +71,7 @@ export interface Section {
 }
 
 export interface FormSchema {
-    title: string
     sections: Section[]
-    projectId?: string
 }
 
 export const ProviderTypes = {

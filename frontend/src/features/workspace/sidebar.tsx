@@ -13,6 +13,7 @@ import { Link } from "@/i18n/navigation"
 import { FaRegFilePdf } from "react-icons/fa"
 import { FormDropdown } from "./dropdown-menus/formOptions"
 import { ProjectDropdown } from "./dropdown-menus/projectOptions"
+import { cn } from "@/lib/utils"
 
 interface Props {
     forms: Form[]
@@ -23,17 +24,23 @@ export const Sidebar = ({ forms, projects }: Props) => {
     const tree = useTranslations("Tree")
     const common = useTranslations("Common")
     const workspace = useTranslations("Workspace")
+
+    const [hasScroll, setHasScroll] = useState(false)
     
     const [recentOpen, setRecentOpen] = useState<boolean>(true)
     const [pinnedOpen, setPinnedOpen] = useState<boolean>(true)
+
+    const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        setHasScroll(e.currentTarget.scrollTop > 0)
+    }
 
     const renderRecent = (form: Form, displayIcon: boolean = false) => {
         return (
             <Link href={`/forms/${form.id}`}>
                 <div className="w-full group flex flex-row items-center rounded-sm justify-between hover:bg-muted cursor-pointer">
-                    <div className="flex flex-row text-sm font-normal px-3 py-2 gap-2 text-sm font-normal items-center hover:bg-muted rounded-sm truncate">
+                    <div className="flex-1 min-w-0 flex text-sm font-normal px-3 py-2 gap-2 text-sm font-normal items-center hover:bg-muted rounded-sm truncate">
                         {displayIcon && <FormIcon className="h-4 w-4 shrink-0" />}
-                        {form.name}
+                        <span className="truncate">{form.name}</span>
                     </div>
                     <FormDropdown 
                         projects={projects}
@@ -54,9 +61,9 @@ export const Sidebar = ({ forms, projects }: Props) => {
         return (
             <Link href="">
                 <div className="w-full group flex flex-row items-center rounded-sm justify-between hover:bg-muted cursor-pointer">
-                    <div className="flex flex-row text-sm font-normal px-3 py-2 gap-2 text-sm font-normal items-center hover:bg-muted rounded-sm truncate">
+                    <div className="flex-1 min-w-0 flex text-sm font-normal px-3 py-2 gap-2 text-sm font-normal items-center hover:bg-muted rounded-sm truncate">
                         <FolderOpen className="h-4 w-4 shrink-0" />
-                        {project.name}
+                        <span className="truncate">{project.name}</span>
                     </div>
                     <ProjectDropdown 
                         onRename={() => {}}
@@ -73,8 +80,11 @@ export const Sidebar = ({ forms, projects }: Props) => {
     const pinnedProjects = projects.filter(it => it.pinned == true)
 
     return (
-        <div className="flex flex-col h-full w-100 min-h-0 border-r bg-card">
-            <div className="flex flex-col gap-2 p-1 justify-left">
+        <div className="flex flex-col h-full w-[300px] min-h-0 border-r bg-card">
+            <div className={cn(
+                "flex flex-col gap-2 p-1 justify-left",
+                hasScroll && "border-b"
+            )}>
                 <div className="p-3">
                     <Button variant="outline" size="icon" className="border rounded-full">
                         <Astroid className="h-4 w-4" />
@@ -85,9 +95,8 @@ export const Sidebar = ({ forms, projects }: Props) => {
                     {tree("new form")}
                 </div>
             </div>
-            <Separator />
             <div className="gap-2 h-[100%] overflow-hidden">
-                <div className="flex flex-col gap-3 h-full p-1 overflow-y-auto">
+                <div className="flex flex-col gap-3 h-full px-1 overflow-y-auto" onScroll={handleScroll}>
                     <div className="flex flex-col sticky">
                         <div className="flex flex-row px-3 py-2 gap-2 text-sm font-normal items-center hover:bg-muted rounded-sm cursor-pointer">
                             <House className="h-4 w-4" />
@@ -111,7 +120,7 @@ export const Sidebar = ({ forms, projects }: Props) => {
                         </div>
                     </div>
                     {(pinnedForms.length > 0 || pinnedProjects.length > 0) && (
-                        <Collapsible key="recent" open={pinnedOpen} className="flex flex-col">
+                        <Collapsible key="pinned" open={pinnedOpen} className="flex flex-col">
                             <div className="px-3 py-2 text-sm font-medium" onClick={() => setPinnedOpen(!pinnedOpen)}>
                                 {tree("pinned")}
                             </div>

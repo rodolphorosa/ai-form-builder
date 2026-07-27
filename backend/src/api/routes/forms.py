@@ -7,7 +7,7 @@ from src.database.session import get_db
 from src.database.models.form import Form
 from src.database.models.project import Project
 from src.schemas.form import FormResponse
-from src.schemas.requests import FormRequest, EditRequest
+from src.schemas.requests import BlankRequest, FormRequest, EditRequest
 from src.services.forms import FormService, generate_form_schema
 from src.api.deps import get_llm_provider
 
@@ -47,6 +47,20 @@ def generate_form(data: FormRequest, db: Session = Depends(get_db)):
             "form": FormResponse.from_model(form)
         }
     }
+
+
+@router.post('/create_blank')
+def create(data: BlankRequest, db: Session = Depends(get_db)):
+    service = FormService(db)
+
+    form = service.create_blank(
+        name=data.name, 
+        description=data.description, 
+        project_id=data.project_id
+    )
+
+    return { "data": form }
+    
 
 @router.post('/edit')
 def edit_form(data: EditRequest, db: Session = Depends(get_db)):

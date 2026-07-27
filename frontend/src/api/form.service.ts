@@ -18,6 +18,10 @@ export const formService = {
         return api.post<ApiResponse<{ suggestions: Suggestion[]}>>("/api/suggestions/", request)
     },
 
+    createBlank(request: Partial<Form>): Promise<ApiResponse<Form>> {
+        return api.post<ApiResponse<Form>>("/api/forms/create_blank", request)
+    },
+
     getAll(): Promise<ApiResponse<Form[]>> {
         return api.get<ApiResponse<Form[]>>("/api/forms")
     },
