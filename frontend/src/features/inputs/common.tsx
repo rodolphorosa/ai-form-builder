@@ -5,82 +5,69 @@ import { Item } from "@/types/form"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 
-export const InputLabel: FC<LabelProps> = ({label, description, required}) => {
-    return (
-        <div className="flex flex-col gap-2">
-            <div className="h-8 flex items-center text-sm font-normal">
-                {label} <span className="text-destructive">{ required ? "*":""}</span>
-            </div>
-            {description && (
-                <div className="h-8 flex items-center text-xs text-muted-foreground">
-                    {description}
-                </div>
-            )}
-        </div>
-    )
-}
-
 interface EditableTextProps {
-    id: string
-    value: string
-    placeholder: string
-    onChange: (value: string) => void
-    onBlur: (value: string) => void
+    text?: string
+    editable?: boolean
     className?: string
-    autofocus?: boolean
+    placeholder?: string
+    onChange?: (value: string) => void
 }
 
-export const EditableText = ({id, value, placeholder, onChange, onBlur, className, autofocus = false}: EditableTextProps) => {
+export function EditableText({
+    text,
+    editable,
+    className,
+    placeholder,
+    onChange
+}: EditableTextProps) {
     return (
-        <Input
-            id={id}
-            type="text"
-            placeholder={placeholder}
-            value={value}
+        <span
+            contentEditable={editable}
+            suppressContentEditableWarning
+            suppressHydrationWarning
+            onBlur={(e) => {
+                const value = e.currentTarget.textContent?.trim()
+
+                if (!value) {
+                    e.currentTarget.textContent = placeholder ?? ""
+                    onChange?.(placeholder ?? "")
+                    return
+                }
+
+                onChange?.(value)
+            }}
+            onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                    e.preventDefault()
+                    e.currentTarget.blur()
+                }
+            }}
             className={cn(
-                "h-8 border-0 border-b rounded-none p-0 shadow-none text-sm font-normal",
-                "focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none focus:border-b",
+                "py-1 border-b border-transparent outline-none",
+                editable && "cursor-text group-hover:border-border",
                 className
             )}
-            onBlur={e => onBlur(e.target.value)}
-            onChange={e => onChange(e.target.value)}
-            autoFocus={autofocus}
-        />
+            
+        >
+            {text?.trim() || placeholder || ""}
+        </span>
     )
 }
 
-interface EditableProps {
-    item: Item
-    onBlur: (value: string) => void
-}
 
-export const EditableLabel = ({item, onBlur}: EditableProps) => {
-    const [label, setLabel] = useState<string>(item.label)
-
+export const EditableLabel = ({label, required, editable, onChange}: {
+    label: string
+    required: boolean
+    editable?: boolean
+    onChange?: (value: string) => void
+}) => {
     return (
-        <EditableText
-            id={`${item.id}_label`}
-            value={label}
-            placeholder={label}
-            onChange={setLabel}
-            onBlur={setLabel}
-            autofocus={true}
-        />
-    )
-}
-
-export const EditableDescription = ({ item, onBlur}: EditableProps) => {
-    const [description, setDescription] = useState<string>(item.description ?? "")
-
-    return (
-        <EditableText 
-            id={`${item.id}_description`}
-            value={description}
-            placeholder="Description (optional)"
-            onChange={setDescription}
-            onBlur={setDescription}
-            className="border-0 !text-xs italic text-muted-foreground focus:border-none"
-        />
+        <div className="flex flex-col gap-2">
+            <div className="flex items-center text-sm font-normal">
+                <EditableText text={label} placeholder="Untitled" editable={editable} onChange={onChange} />
+                { required && <span className="text-destructive">*</span> }
+            </div>
+        </div>
     )
 }
 

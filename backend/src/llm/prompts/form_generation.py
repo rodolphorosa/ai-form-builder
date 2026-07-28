@@ -14,6 +14,7 @@ The response must ALWAYS be a valid JSON object with the following structure:
             {
                 id: Unique identifier of the section,
                 label: Section label,
+                description: Optional description of the section,
                 items: [
                     {
                         id: Field id,

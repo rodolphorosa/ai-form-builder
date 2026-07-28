@@ -1,7 +1,7 @@
 "use client"
 
 import {FC, useEffect, useRef, useState} from "react"
-import { Form, FormSchema, Project, SectionItem } from "../types/form"
+import { Form, FormSchema, Item, Project, SectionItem } from "../types/form"
 import { FormRenderer } from "./form/form"
 import { Header } from "./header"
 import { TreeMenu } from "./menus/tree"
@@ -54,11 +54,11 @@ export const Builder = ({}: BuilderProps) => {
         future: []
     })
     
-    const [selectedItem, setSelectedItem] = useState<SectionItem|null>(null)
+    const [selectedItem, setSelectedItem] = useState<Item|null>(null)
     const [loading, setLoading] = useState<boolean>(false)
     const promptRef = useRef<HTMLTextAreaElement>(null)
 
-    const [chatMode, setChatMode] = useState<ChatMode>("card")
+    const [chatMode, setChatMode] = useState<ChatMode>("sidebar")
     const [renderMode, setRenderMode] = useState<"edit" | "preview">("preview")
 
     const isChatExpanded = chatMode === "sidebar"
@@ -167,7 +167,6 @@ export const Builder = ({}: BuilderProps) => {
                                 {loading && <FormSkeleton />}
                                 {!loading && workingForm && renderMode === "edit" && <Canvas form={workingForm} />}
                                 {!loading && workingForm && renderMode === "preview" && <FormRenderer form={workingForm} />}
-                                {/* <FormSkeleton /> */}
                             </div>
                         </div>
                     </div>
@@ -209,7 +208,6 @@ export const Builder = ({}: BuilderProps) => {
                                 {loading && <FormSkeleton />}
                                 {!loading && workingForm && renderMode === "edit" && <Canvas form={workingForm} />}
                                 {!loading && workingForm && renderMode === "preview" && <FormRenderer form={workingForm} />}
-                                {/* <FormSkeleton /> */}
                             </div>
                         </div>
                     </div>

@@ -22,8 +22,8 @@ import Image from "next/image"
 
 interface TreeProps {
     schema: FormSchema | null
-    selectItem: (item: SectionItem) => void
-    selectedItem: SectionItem | null
+    selectItem: (item: Item) => void
+    selectedItem: Item | null
 }
 
 export const TreeMenu: FC<TreeProps> = ({ schema, selectItem, selectedItem }) => {
@@ -41,7 +41,7 @@ export const TreeMenu: FC<TreeProps> = ({ schema, selectItem, selectedItem }) =>
         }))
     }
 
-    const renderContent = (items: SectionItem[]) => {
+    const renderContent = (items: Item[]) => {
         return items.map((item) => {
             const IconComponent = strategyIcons[item.type] as React.ComponentType<{ className?: string }> | undefined;
             

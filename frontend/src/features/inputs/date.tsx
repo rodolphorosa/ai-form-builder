@@ -3,7 +3,6 @@
 import React, {FC} from "react"
 import { InputProps } from "@/types/inputs"
 
-import { EditableDescription, EditableLabel, InputLabel } from "./common"
 import { Calendar as CalendarIcon, ChevronDownIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -13,26 +12,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { EditableLabel } from "./common"
 
-export const DateInput: FC<InputProps> = ({item, editable}) => {
+export const DateInput: FC<InputProps> = ({item, editable, onChange}) => {
     const [date, setDate] = React.useState<Date>()
     
     return (
         <div className="flex flex-col gap-2">
-            <div>
-                {!editable && (
-                    <InputLabel 
-                        label={item.label} 
-                        description={item.description}
-                        required={item.required}/>
-                )}
-                {editable && (
-                    <div className="flex flex-col gap-1">
-                        <EditableLabel item={item} onBlur={(value) => console.log(value)} />
-                        <EditableDescription item={item} onBlur={(value) => console.log(value)} />
-                    </div>
-                )}
-            </div>
+            <EditableLabel label={item.label} required={item.required} editable={editable} onChange={onChange}/>
             <Popover>
                 <PopoverTrigger 
                     render={

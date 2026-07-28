@@ -46,6 +46,7 @@ class Item(BaseModel):
 class Section(BaseModel):
     id: str
     label: str
+    description: str | None = None
     items: list[Item]
 
 class FormSchema(BaseModel):

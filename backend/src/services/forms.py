@@ -51,7 +51,9 @@ class FormService:
 
         schema = FormSchema(
             title=name,
-            sections=[]
+            sections=[
+                {"id": "default", "label": "Untitled section", "items": []}
+            ]
         )
 
         form = form_repository.create(

@@ -12,28 +12,15 @@ import {
 } from "@/components/ui/popover"
 import { InputProps } from "@/types/inputs"
 import { Calendar as CalendarIcon } from "lucide-react"
-import { EditableDescription, EditableLabel, InputLabel } from "./common"
+import { EditableLabel } from "./common"
 
-export const DatetimeInput: FC<InputProps> = ({item, editable}) => {
+export const DatetimeInput: FC<InputProps> = ({item, editable, onChange}) => {
   const [open, setOpen] = React.useState(false)
   const [date, setDate] = React.useState<Date | undefined>(undefined)
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="h-8">
-          {!editable && (
-              <InputLabel 
-                  label={item.label} 
-                  description={item.description}
-                  required={item.required}/>
-          )}
-          {editable && (
-              <div className="flex flex-col gap-1">
-                  <EditableLabel item={item} onBlur={(value) => console.log(value)} />
-                  <EditableDescription item={item} onBlur={(value) => console.log(value)} />
-              </div>
-          )}
-      </div>
+      <EditableLabel label={item.label} required={item.required} editable={editable} onChange={onChange}/>
       <div className="w-full flex flex-row gap-2">
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger 

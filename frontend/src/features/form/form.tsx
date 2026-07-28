@@ -7,6 +7,7 @@ import { itemStrategies } from "../registry"
 import { cn } from "@/lib/utils"
 import { EmptyRenderer } from "./empty"
 import { Skeleton } from "@/components/ui/skeleton"
+import { EditableText } from "../inputs/common"
 
 interface RendererProps {
     form: Form
@@ -65,18 +66,11 @@ export const FormRenderer = ({
     
     return (
         <div className="flex flex-col gap-12 px-8 py-12 min-h-0 h-full bg-card border rounded-lg shadow-sm">
-            {/* <div className="text-center text-lg font-semibold">
-                {form.name}
-            </div> */}
-            <div className="flex flex-col gap-2 p-5">
-                <div className="text-lg font-semibold text-center h-8">
-                    {form.name}
-                </div>
+            <div className="flex flex-col gap-2 p-5 items-center">
+                <EditableText text={form.name} className="text-lg font-medium" />
                 {form.description && (
-                    <div className="text-sm text-center text-muted-foreground h-8">
-                        {form.description}
-                    </div>)
-                }
+                    <EditableText text={form.description} className="text-sm font-muted-foreground" />
+                )}
             </div>
             <div className="flex flex-col gap-2">
                 { form.schema.sections.map(section => renderSection(section)) }

@@ -1,7 +1,6 @@
 import React, {FC} from "react"
 import { InputProps } from "@/types/inputs"
 import { snakeCase } from "lodash"
-import { EditableDescription, EditableLabel, InputLabel } from "./common"
 
 import {
   Select,
@@ -11,8 +10,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { EditableLabel } from "./common"
 
-export const SelectInput: FC<InputProps> = ({item, editable}) => {
+export const SelectInput: FC<InputProps> = ({item, editable, onChange}) => {
     const { label, description, required, options } = item
 
     const parseOptions = (options: string[]) => { 
@@ -23,20 +23,7 @@ export const SelectInput: FC<InputProps> = ({item, editable}) => {
 
     return (
         <div className="flex flex-col gap-2">
-            <div>
-                {!editable && (
-                    <InputLabel 
-                        label={item.label} 
-                        description={item.description}
-                        required={item.required}/>
-                )}
-                {editable && (
-                    <div className="flex flex-col gap-1">
-                        <EditableLabel item={item} onBlur={(value) => console.log(value)} />
-                        <EditableDescription item={item} onBlur={(value) => console.log(value)} />
-                    </div>
-                )}
-            </div>
+            <EditableLabel label={item.label} required={item.required} editable={editable} onChange={onChange}/>
             <div className="w-full">
                 <Select items={options}>
                     <SelectTrigger className="w-full">

@@ -39,6 +39,7 @@ type OptionValue = string | number | boolean
 export interface Option<T extends OptionValue = string> {
     value: T
     label: string
+    extra?: Record<string,unknown>
 }
 
 interface ComponentBase {
@@ -67,6 +68,7 @@ export type SectionItem = Item | Group
 export interface Section {
     id: string
     label: string
+    description?: string
     items: Item[]
 }
 

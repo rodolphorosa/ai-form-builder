@@ -3,6 +3,7 @@ import { Item } from "./form";
 export interface InputProps {
     item: Item
     editable?: boolean
+    onChange?: (value: string) => void
 }
 
 export interface LabelProps {

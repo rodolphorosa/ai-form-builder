@@ -3,11 +3,11 @@ import { InputProps } from "@/types/inputs"
 
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { EditableDescription, EditableLabel, InputLabel } from "./common"
 import { Option } from "@/types/form"
+import { EditableLabel } from "./common"
 
 
-export const RadioInput: FC<InputProps> = ({ item, editable }) => {
+export const RadioInput: FC<InputProps> = ({ item, editable, onChange }) => {
     const parseOptions = (options: Option[]) => {
         return options.map((option, index) => {
             const id = `${item.id}-${index}`
@@ -23,20 +23,7 @@ export const RadioInput: FC<InputProps> = ({ item, editable }) => {
 
     return (
         <div className="flex flex-col gap-2">
-            <div>
-                {!editable && (
-                    <InputLabel 
-                        label={item.label} 
-                        description={item.description}
-                        required={item.required}/>
-                )}
-                {editable && (
-                    <div className="flex flex-col gap-1">
-                        <EditableLabel item={item} onBlur={(value) => console.log(value)} />
-                        <EditableDescription item={item} onBlur={(value) => console.log(value)} />
-                    </div>
-                )}
-            </div>
+            <EditableLabel label={item.label} required={item.required} editable={editable} onChange={onChange}/>
             <RadioGroup className="w-fit">
                 {parseOptions(item.options ?? [])}
             </RadioGroup>

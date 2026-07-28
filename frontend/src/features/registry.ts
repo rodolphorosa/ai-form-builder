@@ -9,7 +9,7 @@ import { SelectInput } from "./inputs/select"
 import { TextInput } from "./inputs/text"
 import { TextareaInput } from "./inputs/textarea"
 
-import { Calendar, CalendarClock, CircleDot, Container, Hash, Link, List, Lock, Mail, Phone, SquareCheck, Text, TextInitial, Type } from "lucide-react"
+import { Calendar, CalendarClock, CircleDot, Container, Hash, Link, List, Lock, Mail, Phone, SquareCheck, Text, TextAlignStart, TextInitial, Type } from "lucide-react"
 import { InputProps, State } from "../types/inputs"
 
 export const itemStrategies: Record<InputType, React.ComponentType<InputProps>> = {
@@ -33,7 +33,7 @@ export const strategyIcons: Record<InputType, React.ComponentType> = {
     password: Lock,
     phone: Phone,
     url: Link,
-    textarea: TextInitial,
+    textarea: TextAlignStart,
     number: Hash,
     date: Calendar,
     datetime: CalendarClock,
