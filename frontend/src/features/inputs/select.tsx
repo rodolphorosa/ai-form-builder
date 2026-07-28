@@ -1,6 +1,5 @@
-import React, {FC} from "react"
+import React, {FC, useState} from "react"
 import { InputProps } from "@/types/inputs"
-import { snakeCase } from "lodash"
 
 import {
   Select,
@@ -11,36 +10,59 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { EditableLabel } from "./common"
+import { Option } from "@/types/form"
+import { OptionsEditor } from "../form/optionEditor"
+
 
 export const SelectInput: FC<InputProps> = ({item, editable, onChange}) => {
-    const { label, description, required, options } = item
-
-    const parseOptions = (options: string[]) => { 
-        return options.map((option, index) => {
-            return { value: snakeCase(option), label: option }
-        })
-    }
+    // const { options } = item
+    const [options, setOptions] = useState<Option[]>(item.options ?? [])
 
     return (
         <div className="flex flex-col gap-2">
             <EditableLabel label={item.label} required={item.required} editable={editable} onChange={onChange}/>
-            <div className="w-full">
-                <Select items={options}>
-                    <SelectTrigger className="w-full">
-                        <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent className="bg-white">
-                        <SelectGroup>
-                            {options?.map((item) => (
-                                <SelectItem key={item.value} value={item.value}>
-                                {item.label}
-                                </SelectItem>
-                            ))}
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
-            </div>
-            
+            {editable && (
+                // @ts-ignore
+                <OptionsEditor 
+                    options={options} 
+                    type="select" 
+                    onAdd={
+                        (option) => setOptions(
+                            prev => [...prev, option]
+                        )
+                    }
+                    onDelete={
+                        (option) => setOptions(
+                            prev => [...prev.filter(op => op.value !== option.value)]
+                        )
+                    }
+                    onEdit={
+                        (option) => setOptions(
+                            prev => [...prev.map(op => (
+                                op.value == option.value ? option : op
+                            ))]
+                        )
+                    }
+                />
+            )}
+            {!editable && (
+                <div className="w-full">
+                    <Select items={options}>
+                        <SelectTrigger className="w-full">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white">
+                            <SelectGroup>
+                                {options?.map((item) => (
+                                    <SelectItem key={item.value} value={item.value}>
+                                    {item.label}
+                                    </SelectItem>
+                                ))}
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
+            )}
         </div>
     )
 }
