@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from sqlalchemy.orm import Session
 from sqlalchemy.dialects.postgresql import UUID
 
@@ -5,7 +7,7 @@ from src.llm.services import generate_form_schema, edit_form_schema
 from src.repositories.form_repository import FormRepository
 from src.repositories.project_repository import ProjectRepository
 from src.api.deps import get_llm_provider
-from src.schemas.requests import EditRequest, FormRequest
+from src.schemas.requests import EditRequest, FormRequest, UpdateFormRequest
 from src.schemas.schema import FormSchema
 
 
@@ -83,3 +85,16 @@ class FormService:
             raise Exception("Form not found")
 
         return form
+
+    def update(self, id: UUID, request: UpdateFormRequest):
+        repository = FormRepository(self.db)
+        form = repository.get_by_id(id)
+
+        updates = request.model_dump(exclude_unset=True)
+
+        for field, value in updates.items():
+            setattr(form, field, value)
+
+        form.updated_at = datetime.now(timezone.utc)
+
+        return repository.save(form)

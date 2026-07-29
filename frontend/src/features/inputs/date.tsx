@@ -18,8 +18,13 @@ export const DateInput: FC<InputProps> = ({item, editable, onChange}) => {
     const [date, setDate] = React.useState<Date>()
     
     return (
-        <div className="flex flex-col gap-2">
-            <EditableLabel label={item.label} required={item.required} editable={editable} onChange={onChange}/>
+        <div className="flex flex-col gap-1">
+            <EditableLabel 
+                label={item.label} 
+                required={item.required} 
+                editable={editable} 
+                onChange={(value) => onChange?.(["label"], value)}
+            />
             <Popover>
                 <PopoverTrigger 
                     render={

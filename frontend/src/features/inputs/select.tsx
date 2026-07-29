@@ -1,4 +1,4 @@
-import React, {FC, useState} from "react"
+import React, {FC, useEffect, useState} from "react"
 import { InputProps } from "@/types/inputs"
 
 import {
@@ -18,9 +18,18 @@ export const SelectInput: FC<InputProps> = ({item, editable, onChange}) => {
     // const { options } = item
     const [options, setOptions] = useState<Option[]>(item.options ?? [])
 
+    useEffect(() => {
+        onChange?.(["options"], options)
+    }, [options])
+
     return (
-        <div className="flex flex-col gap-2">
-            <EditableLabel label={item.label} required={item.required} editable={editable} onChange={onChange}/>
+        <div className="flex flex-col gap-1">
+            <EditableLabel 
+                label={item.label} 
+                required={item.required} 
+                editable={editable} 
+                onChange={(value) => onChange?.(["label"], value)}
+            />
             {editable && (
                 // @ts-ignore
                 <OptionsEditor 
@@ -47,7 +56,7 @@ export const SelectInput: FC<InputProps> = ({item, editable, onChange}) => {
             )}
             {!editable && (
                 <div className="w-full">
-                    <Select items={options}>
+                    <Select items={options} disabled={editable}>
                         <SelectTrigger className="w-full">
                             <SelectValue />
                         </SelectTrigger>

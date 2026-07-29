@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field, ConfigDict
 from src.llm.factory import ProviderType
+from src.schemas.schema import FormSchema
 
 from uuid import UUID
 
@@ -29,3 +30,11 @@ class SuggestionRequest(BaseModel):
     context: str
     provider: ProviderType
     model: str
+
+class UpdateFormRequest(BaseModel):
+    name: str | None = None
+    description: str | None = None
+    schema: FormSchema | None = None
+    pinned: bool | None = None
+    archived: bool | None = None
+    deleted: bool | None = None

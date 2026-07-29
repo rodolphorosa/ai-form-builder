@@ -104,6 +104,7 @@ export const Workspace = () => {
     }
 
     const parseUpdateDate = (updatedAt: number) => {
+        console.log(updatedAt)
         return formatDistanceToNow(new Date(updatedAt), {
             addSuffix: true,
             locale: ptBR,

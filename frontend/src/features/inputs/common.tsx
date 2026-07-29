@@ -44,7 +44,7 @@ export function EditableText({
             }}
             className={cn(
                 "py-1 border-b border-transparent outline-none",
-                editable && "cursor-text group-hover:border-border",
+                editable && "cursor-text focus:border-ring",
                 className
             )}
             

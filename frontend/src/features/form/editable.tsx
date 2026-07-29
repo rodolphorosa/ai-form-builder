@@ -1,15 +1,17 @@
-import { InputType, Item, Option, Section } from "@/types/form"
+import { InputType, Item, Option, Path, Section } from "@/types/form"
 import { useTranslations } from "next-intl"
 import { itemStrategies, strategyIcons } from "../registry"
 import { cn } from "@/lib/utils"
-import { ArrowDownToLine, ArrowRightLeft, ArrowUpToLine, Asterisk, Astroid, Check, Copy, EllipsisVertical, Layers, Pencil, Trash } from "lucide-react"
+import { ArrowDownToLine, ArrowRightLeft, ArrowUpToLine, Asterisk, Astroid, Check, Copy, EllipsisVertical, GitBranch, Layers, Pencil, Sparkles, Trash } from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
 
 interface EditableProps {
     item: Item
     selected: boolean
+    onChange: (path: Path, value: unknown) => void
     sections?: Section[]
 }
 
@@ -35,16 +37,16 @@ const TypeSelect = ({ type, onSelect }: { type: InputType, onSelect: (type: Inpu
             >
                 <div className="flex items-center gap-1.5">
                     {IconComponent && (
-                        <IconComponent className="h-4 w-4 shrink-0" />
+                        <IconComponent className="h-3 w-3 shrink-0" />
                     )}
-                    <span className="truncate">
+                    <span className="text-xs font-normal truncate">
                         {common(option.value)}
                     </span>
                 </div>
 
                 <Check
                     className={cn(
-                        "h-4 w-4 shrink-0",
+                        "h-3 w-3 shrink-0",
                         option.value === type ? "opacity-100" : "opacity-0"
                     )}
                 />
@@ -58,9 +60,9 @@ const TypeSelect = ({ type, onSelect }: { type: InputType, onSelect: (type: Inpu
         return (
             <div className="flex items-center gap-1">
                 {IconComponent && (
-                    <IconComponent className="h-4 w-4 shrink-0" />
+                    <IconComponent className="!h-3 !w-3 shrink-0" />
                 )}
-                <span className="text-smtruncate">
+                <span className="text-xs font-normal truncate">
                     {common(option.value)}
                 </span>
             </div>
@@ -73,10 +75,10 @@ const TypeSelect = ({ type, onSelect }: { type: InputType, onSelect: (type: Inpu
         <Popover>
             <PopoverTrigger 
                 render={
-                    <Button variant="outline">{renderTrigger(currentOption)}</Button>
+                    <Button variant="outline" className="border-0 cursor-pointer">{renderTrigger(currentOption)}</Button>
                 }
             />
-            <PopoverContent align="start" className="w-max min-w-[120px] p-1 gap-0.5">
+            <PopoverContent align="start" className="w-max min-w-[120px] p-1 gap-0.5 shadow-lg">
                 {options?.map((item) => renderTypeOption(item))}
             </PopoverContent>
 
@@ -84,7 +86,7 @@ const TypeSelect = ({ type, onSelect }: { type: InputType, onSelect: (type: Inpu
     )
 }
 
-export const EditableComponent = ({ item, selected, sections }: EditableProps) => {
+export const EditableComponent = ({ item, selected, onChange, sections }: EditableProps) => {
     const t = useTranslations("Tree")
     
     const Component = itemStrategies[item.type]
@@ -94,52 +96,93 @@ export const EditableComponent = ({ item, selected, sections }: EditableProps) =
     return (
         <div
             className={cn(
-                "flex flex-col border border-transparent rounded-md px-6 pb-5 pt-2.5 transition-colors",
-                selected ? "rounded-l-lg bg-card" : "hover:border-muted"
+                "relative flex flex-col gap-2 border border-transparent p-4 rounded-md transition-colors",
+                selected ? "rounded-l-lg bg-card border-ring" : "hover:border-border hover:bg-card"
             )}
         >
             <div 
                 className={cn(
-                    "w-full flex flex-row gap-1 justify-end",
+                    "absolute left-1/2 -top-5 -translate-x-1/2 z-10 transition-all duration-200 rounded-lg shadow-lg",
                     selected
                         ? "opacity-100"
                         : "pointer-events-none opacity-0 group-hover:opacity-50"
                 )}
             >
-                <div className="flex flex-row gap-0.5 items-center">
-                    <TypeSelect type={item.type} onSelect={(type) => console.log("novo tipo:", type)}/>
-                    <Button variant="outline" size="icon">
-                        <Asterisk className="h-4 w-4 shrink-0" />
+                <div className="flex flex-row gap-0.5 p-1 items-center border border-border rounded-lg bg-card">
+                    <TypeSelect 
+                        type={item.type} 
+                        onSelect={(type) => {
+                            onChange(["type"], type)
+                        }}
+                    />
+                    <Separator orientation="vertical" />
+                    <Button 
+                        className="border-0 cursor-pointer"
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => {
+                            onChange(["required"], !item.required)
+                        }}
+                    >
+                        <Asterisk className="h-3 w-3 shrink-0" />
                     </Button>
-                    <Button variant="outline" size="icon">
-                        <Copy className="h-4 w-4 shrink-0" />
+                    <Button 
+                        className="border-0 cursor-pointer"
+                        variant="outline" 
+                        size="sm"
+                    >
+                        <Copy className="h-3 w-3 shrink-0" />
                     </Button>
                     <DropdownMenu>
                         <DropdownMenuTrigger render={(
-                            <Button variant="outline" size="icon">
-                                <ArrowRightLeft className="h-4 w-4 shrink-0"/>
+                            <Button 
+                                className="border-0 cursor-pointer"
+                                variant="outline" 
+                                size="sm"
+                            >
+                                <ArrowRightLeft className="h-3 w-3 shrink-0"/>
                             </Button>
                         )} />
-                        <DropdownMenuContent className="w-auto">
+                        <DropdownMenuContent className="w-auto shadow-lg">
                             <DropdownMenuGroup>
                                 <DropdownMenuLabel>
                                     Mover para
                                 </DropdownMenuLabel>
                                 {sections?.map(section => (
-                                    <DropdownMenuItem>
-                                        <Layers className="h-4 w-4 shrink-0"/>
+                                    <DropdownMenuItem className="text-xs">
+                                        <Layers className="h-3 w-3 shrink-0" />
                                         {section.label}
                                     </DropdownMenuItem>
                                 ))}
                             </DropdownMenuGroup>
                         </DropdownMenuContent>
                     </DropdownMenu>
-                    <Button variant="outline" size="icon">
-                        <Astroid className="h-4 w-4 shrink-0"/>
+                    <Button 
+                        className="border-0 cursor-pointer"
+                        variant="outline" 
+                        size="sm"
+                    >
+                        <Sparkles className="h-3 w-3 shrink-0"/>
+                    </Button>
+                    <Separator orientation="vertical" />
+                    <Button 
+                        className="border-0 cursor-pointer bg-card"
+                        variant="destructive" 
+                        size="sm"
+                    >
+                        <Trash className="h-3 w-3 shrink-0" />
                     </Button>
                 </div>
             </div>
-            <Component item={item} editable={selected} onChange={(value) => console.log(value)} />
+            <Component 
+                item={item} 
+                editable={selected} 
+                onChange={(path, value) => onChange(path, value)} 
+            />
+            <div className="w-fit flex flex-row gap-1 p-2 items-center border rounded-sm text-xs font-normal bg-muted/50 cursor-pointer">
+                <GitBranch className="h-3 w-3 shrink-0" />
+                Lógica condicional ativa
+            </div>
         </div>
     )
 }

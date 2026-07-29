@@ -105,3 +105,5 @@ export interface Form {
     archived: boolean
     deleted: boolean
 }
+
+export type Path = (string | number)[]

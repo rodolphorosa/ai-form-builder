@@ -1,7 +1,7 @@
 "use client"
 
 import {FC, useEffect, useRef, useState} from "react"
-import { Form, FormSchema, Item, Project, SectionItem } from "../types/form"
+import { Form, FormSchema, Item, Path, Project, SectionItem } from "../types/form"
 import { FormRenderer } from "./form/form"
 import { Header } from "./header"
 import { TreeMenu } from "./menus/tree"
@@ -14,6 +14,12 @@ import { FormHistory } from "@/types/builder"
 import { useParams } from "next/navigation"
 import { formService } from "@/api/form.service"
 import { projectService } from "@/api/project.service"
+
+import {set, isEqual} from "lodash"
+import { PropertyPath } from "lodash"
+import cloneDeep from "lodash/cloneDeep"
+import { useAutosave } from "@/hooks/use-autosave"
+import { UpdateFormRequest } from "@/api/types"
 
 interface BuilderProps {
 }
@@ -33,7 +39,7 @@ export const Builder = ({}: BuilderProps) => {
 
                 const response = await formService.getById(id)
 
-                setCommitForm(response.data)
+                setCommittedForm(response.data)
                 setWorkingForm(response.data)
             } catch (err) {
                 console.error(err)
@@ -46,8 +52,23 @@ export const Builder = ({}: BuilderProps) => {
     }, [id])
     
     
-    const [committedForm, setCommitForm] = useState<Form | null>(null)
+    const [committedForm, setCommittedForm] = useState<Form | null>(null)
     const [workingForm, setWorkingForm] = useState<Form | null>(null)
+
+    console.log("committed", committedForm)
+
+    const { status } = useAutosave({
+        value: workingForm,
+        savedValue: committedForm,
+        delay: 2000,
+
+        async onSave(form) {
+            if (!form) return
+
+            await formService.update(form.id, createFormPatch())
+            setCommittedForm(form)
+        }
+    })
 
     const [history, setHistory] = useState<FormHistory<Form>>({
         past: [],
@@ -59,9 +80,33 @@ export const Builder = ({}: BuilderProps) => {
     const promptRef = useRef<HTMLTextAreaElement>(null)
 
     const [chatMode, setChatMode] = useState<ChatMode>("sidebar")
-    const [renderMode, setRenderMode] = useState<"edit" | "preview">("preview")
+    const [renderMode, setRenderMode] = useState<"edit" | "preview">("edit")
 
     const isChatExpanded = chatMode === "sidebar"
+
+    function setPatchValue<K extends keyof UpdateFormRequest>(
+        patch: UpdateFormRequest,
+        key: K,
+        value: UpdateFormRequest[K]
+    ) {
+        patch[key] = value
+    }
+
+    const createFormPatch = () => {
+        const patch: UpdateFormRequest = {}
+
+        const updatableKeys: (keyof UpdateFormRequest)[] = ["name", "description", "schema", "projectId", "pinned", "archived"]
+
+        if(!workingForm || !committedForm) return patch
+
+        for (const key of updatableKeys) {
+            if (!isEqual(workingForm[key], committedForm[key])) {
+                setPatchValue(patch, key, workingForm[key])
+            }
+        }
+
+        return patch
+    }
 
     const onSchemaChange = (schema: FormSchema) => {
         const previous = workingForm
@@ -136,6 +181,23 @@ export const Builder = ({}: BuilderProps) => {
         }
     }
 
+    const onPropertyChange = (path: Path, value: unknown) => {
+        if (!workingForm) return
+
+        const previous = workingForm
+
+        const copy = cloneDeep(workingForm)
+        set(copy, path, value)
+
+        setWorkingForm(copy)
+
+        previous && setHistory(prev => ({
+            ...prev,
+            past: [...prev.past, previous],
+            future: []
+        }))
+    }
+
     useEffect(() => {
         getProjects()
     }, [])
@@ -148,9 +210,9 @@ export const Builder = ({}: BuilderProps) => {
         <div className="flex flex-row h-screen overflow-hidden">
             { isChatExpanded ? (
                 <>
-                    <div className="h-full w-150">
+                    {/* <div className="h-full w-150">
                         <TreeMenu schema={workingForm?.schema ?? {} as FormSchema} selectItem={setSelectedItem} selectedItem={selectedItem}/>
-                    </div>
+                    </div> */}
 
                     <div className="flex flex-col h-full w-full">
                         <Header 
@@ -161,11 +223,13 @@ export const Builder = ({}: BuilderProps) => {
                             mode={renderMode} 
                             toggleMode={toggleMode} 
                             projects={projects}
+                            updatedAt={committedForm?.updatedAt}
+                            status={status}
                         />
                         <div className="flex-1 overflow-y-auto">
                             <div className="p-8 w-[85%] mx-auto">
                                 {loading && <FormSkeleton />}
-                                {!loading && workingForm && renderMode === "edit" && <Canvas form={workingForm} />}
+                                {!loading && workingForm && renderMode === "edit" && <Canvas form={workingForm} onPropertyChange={onPropertyChange} />}
                                 {!loading && workingForm && renderMode === "preview" && <FormRenderer form={workingForm} />}
                             </div>
                         </div>
@@ -177,7 +241,7 @@ export const Builder = ({}: BuilderProps) => {
                             setMode={setChatMode}
                             form={workingForm}
                             onFormCreate={(form) => {
-                                setCommitForm(form)
+                                setCommittedForm(form)
                                 setWorkingForm(form)
                             }}
                             onSchemaChange={(schema) => onSchemaChange(schema)}
@@ -189,9 +253,9 @@ export const Builder = ({}: BuilderProps) => {
                 </>
             ) : (
                 <>
-                    <div className="h-full w-100">
+                    {/* <div className="h-full w-100">
                         <TreeMenu schema={workingForm?.schema ?? {} as FormSchema} selectItem={setSelectedItem} selectedItem={selectedItem}/>
-                    </div>
+                    </div> */}
                     
                     <div className="flex flex-col h-full w-full">
                         <Header 
@@ -202,11 +266,13 @@ export const Builder = ({}: BuilderProps) => {
                             mode={renderMode} 
                             toggleMode={toggleMode} 
                             projects={projects}
+                            updatedAt={committedForm?.updatedAt}
+                            status={status}
                         />
                         <div className="flex-1 w-full overflow-y-auto">
                             <div className="p-8 w-[65%] mx-auto">
                                 {loading && <FormSkeleton />}
-                                {!loading && workingForm && renderMode === "edit" && <Canvas form={workingForm} />}
+                                {!loading && workingForm && renderMode === "edit" && <Canvas form={workingForm} onPropertyChange={onPropertyChange} />}
                                 {!loading && workingForm && renderMode === "preview" && <FormRenderer form={workingForm} />}
                             </div>
                         </div>
@@ -218,7 +284,7 @@ export const Builder = ({}: BuilderProps) => {
                             setMode={setChatMode}
                             form={workingForm}
                             onFormCreate={(form) => {
-                                setCommitForm(form)
+                                setCommittedForm(form)
                                 setWorkingForm(form)
                             }}
                             onSchemaChange={(schema) => onSchemaChange(schema)}

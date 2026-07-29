@@ -1,4 +1,4 @@
-import React, {FC, useState} from "react"
+import React, {FC, useEffect, useState} from "react"
 import { InputProps } from "@/types/inputs"
 
 import { Label } from "@/components/ui/label"
@@ -10,6 +10,10 @@ import { OptionsEditor } from "../form/optionEditor"
 
 export const RadioInput: FC<InputProps> = ({ item, editable, onChange }) => {
     const [options, setOptions] = useState<Option[]>(item.options ?? [])
+
+    useEffect(() => {
+        onChange?.(["options"], options)
+    }, [options])
 
     const parseOptions = (options: Option[]) => {
         return options.map((option, index) => {
@@ -25,8 +29,13 @@ export const RadioInput: FC<InputProps> = ({ item, editable, onChange }) => {
     }
 
     return (
-        <div className="flex flex-col gap-2">
-            <EditableLabel label={item.label} required={item.required} editable={editable} onChange={onChange}/>
+        <div className="flex flex-col gap-1">
+            <EditableLabel 
+                label={item.label} 
+                required={item.required} 
+                editable={editable} 
+                onChange={(value) => onChange?.(["label"], value)}
+            />
             {editable && (
                 // @ts-ignore
                 <OptionsEditor 

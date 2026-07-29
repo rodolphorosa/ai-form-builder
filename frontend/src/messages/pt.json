@@ -32,7 +32,12 @@
     "updated": "Atualizado",
     "edited": "Editado",
 
-    "move to project": "Mover para projeto"
+    "move to project": "Mover para projeto",
+
+    "saved": "Salvo",
+    "unsaved": "Atualizações pendentes",
+    "saving": "Salvando...",
+    "error": "Erro"
   },
 
   "Tree": {

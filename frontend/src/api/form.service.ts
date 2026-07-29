@@ -1,4 +1,4 @@
-import { CreateRequest, ApiFormResponse, EditRequest, SuggestionRequest, ApiResponse } from "./types"
+import { CreateRequest, ApiFormResponse, EditRequest, SuggestionRequest, ApiResponse, UpdateFormRequest } from "./types"
 import { ApiClient } from "./client"
 import { Suggestion } from "@/types/ai"
 import { Form, FormSchema } from "@/types/form"
@@ -28,5 +28,9 @@ export const formService = {
 
     getById(id: string): Promise<ApiResponse<Form>> {
         return api.get<ApiResponse<Form>>(`/api/forms/${id}`)
+    },
+
+    update(id: string, form: UpdateFormRequest): Promise<ApiResponse<Form>> {
+        return api.patch<ApiResponse<Form>>(`/api/forms/${id}`, form)
     }
 }

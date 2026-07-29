@@ -1,9 +1,9 @@
-import { Item } from "./form";
+import { Item, Option, Path } from "./form";
 
 export interface InputProps {
     item: Item
     editable?: boolean
-    onChange?: (value: string) => void
+    onChange?: (path: Path, value: string | Option[]) => void
 }
 
 export interface LabelProps {

@@ -24,6 +24,16 @@ export class ApiClient {
         return this.handleResponse<T>(response)
     }
 
+    async patch<T>(url: string, patch: unknown): Promise<T> {
+        const response = await fetch(url, {
+            method: "PATCH",
+            headers: this.headers,
+            body: JSON.stringify(patch)
+        })
+
+        return this.handleResponse<T>(response)
+    }
+
     private async handleResponse<T>(response: Response): Promise<T> {
         if (!response.ok) {
             const error = await response.text()

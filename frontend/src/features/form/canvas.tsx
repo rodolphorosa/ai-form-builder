@@ -2,7 +2,7 @@
 
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
-import { Form, FormSchema, InputType, Item, Option, Section } from "@/types/form"
+import { Form, FormSchema, InputType, Item, Option, Path, Section } from "@/types/form"
 import { useEffect, useRef, useState } from "react"
 import { itemStrategies, strategyIcons } from "../registry"
 import { ArrowDownToLine, ArrowRightLeft, ArrowUpToLine, Asterisk, Astroid, Check, Copy, EllipsisVertical, Icon, Layers, Pencil, Plus, Settings, Sparkle, Trash } from "lucide-react"
@@ -15,17 +15,18 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { InputProps } from "@base-ui/react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Toggle } from "@/components/ui/toggle"
-import { set } from "lodash"
+import { PropertyPath, set } from "lodash"
 import { is } from "date-fns/locale"
 import { EditableComponent } from "./editable"
+import { Separator } from "@/components/ui/separator"
 
 interface CanvasProps {
     form: Form
-    item?: Item | null
+    onPropertyChange: (path: Path, value: unknown) => void
 }
 
 
-export const Canvas = ({ form }: CanvasProps) => {
+export const Canvas = ({ form, onPropertyChange }: CanvasProps) => {
     const [selectedItem, setSelectedItem] = useState<Item | null>(null)
     const [selectedSection, setSelectedSection] = useState<Section | null>(null)
 
@@ -36,48 +37,73 @@ export const Canvas = ({ form }: CanvasProps) => {
 
     const refs = useRef<Record<string, HTMLDivElement | null>>({})
 
-    const renderSection = (section: Section) => {
+    const renderSection = (section: Section, index: number) => {
         const isSelected = section.id === selectedSection?.id
+        const basePath = ["schema", "sections", index]
 
         return (
             <div className="flex flex-col gap-2">
-                <div className="flex flex-col p-5">
-                    <div className="flex flex-row">
-                        <div
-                            onClick={() => setSelectedSection(section)}
-                            className="flex flex-col gap-1 border-b pb-1"
-                        >
-                            <EditableText text={section.label} placeholder="Untitled section" editable={isSelected} className="font-medium"/>
-                            <EditableText text={section.description} placeholder="Description (optional)" editable={isSelected} className="text-sm font-normal text-muted-foreground"/>
-                        </div>
-                        <div
-                            className={cn(
-                                "w-full flex flex-row gap-1 justify-end",
-                                isSelected
-                                ? "opacity-100"
-                                : "pointer-events-none opacity-0 group-hover:opacity-50"
-                            )}
-                        >
-                            <Button variant="outline" size="icon">
-                                <Copy className="h-4 w-4 shrink-0"/>
-                            </Button>
-                        </div>
+                <div className="flex flex-col px-4">
+                    <div
+                        className={cn(
+                            "w-full flex flex-row gap-1 justify-end",
+                            isSelected
+                            ? "opacity-100"
+                            : "pointer-events-none opacity-0 group-hover:opacity-50"
+                        )}
+                    >
+                        <Button variant="outline" size="icon">
+                            <Copy className="h-4 w-4 shrink-0"/>
+                        </Button>
                     </div>
-                    {section.items.map(it => renderItem(it))}
+                    <div
+                        onClick={() => setSelectedSection(section)}
+                        className="flex flex-col gap-1"
+                    >
+                        <EditableText 
+                            text={section.label} 
+                            placeholder="Untitled section" 
+                            editable={isSelected} 
+                            className="font-medium"
+                            onChange={(label) => onPropertyChange([...basePath, "label"], label)}
+                        />
+                        <EditableText 
+                            text={section.description} 
+                            placeholder="Description (optional)" 
+                            editable={isSelected} 
+                            className="text-sm font-normal text-muted-foreground"
+                            onChange={(description) => onPropertyChange([...basePath, "description"], description)}
+                        />
+                    </div>
+                </div>
+                <Separator />
+                {section.items.map((it, index) => renderItem(it, [...basePath, "items", index]))}
+                <div className="py-1 px-4">
                     <Button 
                         variant="outline"
                         className="w-fit p-4 gap-2 cursor-pointer text-sm font-normal text-muted-foreground border-dashed self-left"
+                        onClick={() => {
+                            const item: Item = {
+                                id: "id",
+                                label: "untitled",
+                                type: "text",
+                                required: false,
+                                disabled: false,
+                                ui: { placeholder: "Resposta" }
+                            }
+
+                            onPropertyChange([...basePath, "items"], [...section.items, item])
+                        }}
                     >
                         <Plus className="h4 w-4 shrink-0"/>
                         <span>Adicionar campo nessa seção</span>
                     </Button>
                 </div>
-                
             </div>
         )
     }
     
-    const renderItem = (item: Item) => {
+    const renderItem = (item: Item, basePath: Path) => {
         const isSelected = item.id === selectedItem?.id
         
         return (
@@ -87,7 +113,16 @@ export const Canvas = ({ form }: CanvasProps) => {
                 }}
                 onClick={() => setSelectedItem(item)}
             >
-                <EditableComponent item={item} selected={isSelected} sections={form.schema.sections}/>
+                <EditableComponent 
+                    item={item} 
+                    selected={isSelected} 
+                    sections={form.schema.sections}
+                    onChange={
+                        (path, value) => onPropertyChange(
+                            [...basePath, ...path], value
+                        )
+                    }
+                />
             </div>
         )
     }
@@ -102,35 +137,37 @@ export const Canvas = ({ form }: CanvasProps) => {
     }, [selectedItem])
     
     return (
-        <div className="flex flex-col gap-12 px-8 py-12 min-h-0 h-full bg-card border rounded-lg shadow-sm">
+        <div className="flex flex-col gap-4 px-8 py-12 min-h-0 h-full bg-card border rounded-lg shadow-sm bg-muted/40">
             <div className="w-full" onClick={() => setTitleFocused(true)} onBlur={() => setTitleFocused(false)}>
                 <div className="group flex flex-col gap-2 p-5 items-center">
                     <EditableText 
-                        text={name} 
+                        text={form.name} 
                         editable={titleFocused} 
                         placeholder="Untitled Form" 
-                        onChange={setName}
-                        className="text-lg font-medium"
+                        onChange={(name) => onPropertyChange(["name"], name)}
+                        className="text-center text-lg font-medium"
                     />
                     <EditableText 
-                        text={description} 
+                        text={form.description} 
                         editable={titleFocused} 
                         placeholder="Description (optional)"
-                        onChange={setDescription}
-                        className="text-sm font-muted-foreground"
+                        onChange={(description) => onPropertyChange(["description"], description)}
+                        className="text-center text-sm font-muted-foreground"
                     />
                 </div>
             </div>
-            <div className="flex flex-col gap-2">
-                { form.schema.sections.map(section => renderSection(section)) }
+            <div className="flex flex-col">
+                { form.schema.sections.map((section, index) => renderSection(section, index)) }
             </div>
-            <Button 
-                variant="outline"
-                className="w-full p-4 gap-2 cursor-pointer text-sm font-normal text-muted-foreground border-dashed self-center"
-            >
-                <Layers className="h4 w-4 shrink-0"/>
-                <span>Adicionar seção</span>
-            </Button>
+            <div className="px-4">
+                <Button 
+                    variant="outline"
+                    className="w-full p-4 gap-2 cursor-pointer text-sm font-normal text-muted-foreground border-dashed self-center"
+                >
+                    <Layers className="h4 w-4 shrink-0"/>
+                    <span>Adicionar seção</span>
+                </Button>
+            </div>
         </div>
     )
 }

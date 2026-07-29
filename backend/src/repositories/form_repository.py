@@ -20,6 +20,13 @@ class FormRepository:
         self.db.refresh(form)
 
         return form
+
+    def save(self, form: Form) -> Form:
+        self.db.add(form)
+        self.db.commit()
+        self.db.refresh(form)
+
+        return form
     
     
     def get_all(self) -> list[Form]:

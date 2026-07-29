@@ -18,7 +18,7 @@ export const OptionsEditor = ({ options, type, onAdd, onDelete, onEdit }: {
             <div className="flex flex-col gap-1 w-full">
                 {options.map((option, index) => {
                     return (
-                        <div className="group flex flex-row gap-1 text-xs font-normal items-center w-full">
+                        <div className="group flex flex-row gap-1.5 text-xs font-normal items-center w-full">
                             <Button 
                                 variant="ghost" 
                                 size="xs" 
@@ -29,9 +29,9 @@ export const OptionsEditor = ({ options, type, onAdd, onDelete, onEdit }: {
                             >
                                 <GripVertical className="h-3 w-3 shrink-0"/>
                             </Button>
-                            {type === "select" && <span>{index}.</span>}
-                            {type === "radio" && <RadioGroupItem value={option.value} id={option.value} disabled />}
-                            {type === "checkbox" && <Checkbox id={option.value} name={option.value} disabled />}
+                            {type === "select" && <span>{index + 1}.</span>}
+                            {type === "radio" && <RadioGroupItem className="h-3 w-3"  value={option.value} id={option.value} disabled />}
+                            {type === "checkbox" && <Checkbox className="h-3 w-3" id={option.value} name={option.value} disabled />}
                             <EditableText 
                                 text={option.label} 
                                 editable={true} 

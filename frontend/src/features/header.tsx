@@ -10,6 +10,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 import { Project } from "@/types/form"
 
 import { FaRegFilePdf } from "react-icons/fa";
+import { formatDistanceToNow } from "date-fns"
+import { ptBR } from "date-fns/locale"
 
 interface HeaderProps {
     undo: () => void
@@ -19,26 +21,31 @@ interface HeaderProps {
     mode: "edit" | "preview"
     toggleMode: () => void
     projects?: Project[]
+    updatedAt?: number
+    status?: string
 }
 
-export const Header = ({ undo, redo, undoDisabled, redoDisabled, mode, toggleMode, projects }: HeaderProps) => {
-    const [open, setOpen] = useState<boolean>(false)
+export const Header = ({ undo, redo, undoDisabled, redoDisabled, mode, toggleMode, projects, updatedAt, status }: HeaderProps) => {
 
-    const { theme, setTheme } = useTheme()
+    console.log("updated at", updatedAt)
 
-    const toggleTheme = () => {
-        if (theme === "dark") {
-            setTheme("light")
-        } else {
-            setTheme("dark")
-        }
+    const common = useTranslations("Common")
+
+    const parseUpdateDate = (updatedAt: number) => {
+        return formatDistanceToNow(new Date(updatedAt), {
+            addSuffix: true,
+            locale: ptBR,
+        })
     }
 
-    const t = useTranslations("Common")
-
     return (
-        <div className="flex flex-row p-3 bg-background w-full">
-            <div className="flex flex-row gap-1 w-full justify-end">
+        <div className="flex flex-row p-3 bg-background w-full items-center">
+            <div className="flex flex-row gap-1 w-full items-center justify-end">
+                <span
+                    className="text-xs font-normal"
+                >
+                    {status && common(status)} {updatedAt && parseUpdateDate(updatedAt)}
+                </span>
                 <Button variant="ghost" size="icon" onClick={undo} disabled={undoDisabled}>
                     <Undo className="h-4 w-4" />
                 </Button>
@@ -62,7 +69,7 @@ export const Header = ({ undo, redo, undoDisabled, redoDisabled, mode, toggleMod
                                 <DropdownMenuSubTrigger>
                                     <FolderInput />
                                     <div className="text-sm font-medium truncate">
-                                        {t("move to project")}
+                                        {common("move to project")}
                                     </div>
                                 </DropdownMenuSubTrigger>
                                 <DropdownMenuPortal>
@@ -106,7 +113,7 @@ export const Header = ({ undo, redo, undoDisabled, redoDisabled, mode, toggleMod
                                 <DropdownMenuSubTrigger>
                                     <Download className="h-4 w-4 shrink-0" />
                                     <div className="text-sm font-medium truncate">
-                                        {t("export")}
+                                        {common("export")}
                                     </div>
                                 </DropdownMenuSubTrigger>
                                 <DropdownMenuPortal>
@@ -131,13 +138,13 @@ export const Header = ({ undo, redo, undoDisabled, redoDisabled, mode, toggleMod
                             <DropdownMenuItem>
                                 <Pin />
                                 <div className="text-sm font-medium truncate">
-                                    {t("pin")}
+                                    {common("pin")}
                                 </div>
                             </DropdownMenuItem>
                             <DropdownMenuItem>
                                 <Archive />
                                 <div className="text-sm font-medium truncate">
-                                    {t("archive")}
+                                    {common("archive")}
                                 </div>
                             </DropdownMenuItem>
                             <DropdownMenuItem>
@@ -152,7 +159,7 @@ export const Header = ({ undo, redo, undoDisabled, redoDisabled, mode, toggleMod
                             <DropdownMenuItem variant="destructive">
                                 <Trash />
                                 <div className="text-sm font-medium truncate">
-                                    {t("delete")}
+                                    {common("delete")}
                                 </div>
                             </DropdownMenuItem>
                         </DropdownMenuGroup>

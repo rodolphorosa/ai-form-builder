@@ -65,7 +65,7 @@ export const FormRenderer = ({
     }, [selectedItem])
     
     return (
-        <div className="flex flex-col gap-12 px-8 py-12 min-h-0 h-full bg-card border rounded-lg shadow-sm">
+        <div className="flex flex-col gap-4 px-8 py-12 min-h-0 h-full bg-card border rounded-lg shadow-sm bg-muted/40">
             <div className="flex flex-col gap-2 p-5 items-center">
                 <EditableText text={form.name} className="text-lg font-medium" />
                 {form.description && (
