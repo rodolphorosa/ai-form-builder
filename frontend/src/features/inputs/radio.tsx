@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from "react"
+import { FC } from "react"
 import { InputProps } from "@/types/inputs"
 
 import { Label } from "@/components/ui/label"
@@ -9,11 +9,7 @@ import { OptionsEditor } from "../form/optionEditor"
 
 
 export const RadioInput: FC<InputProps> = ({ item, editable, onChange }) => {
-    const [options, setOptions] = useState<Option[]>(item.options ?? [])
-
-    useEffect(() => {
-        onChange?.(["options"], options)
-    }, [options])
+    const options = item.options ?? []
 
     const parseOptions = (options: Option[]) => {
         return options.map((option, index) => {
@@ -41,23 +37,20 @@ export const RadioInput: FC<InputProps> = ({ item, editable, onChange }) => {
                 <OptionsEditor 
                     options={options} 
                     type="radio" 
-                    onAdd={
-                        (option) => setOptions(
-                            prev => [...prev, option]
+                    onAdd={(option) => {
+                        onChange?.(["options"], [...options, option])
+                    }}
+
+                    onDelete={(option) => {
+                        onChange?.(["options"], [...options.filter(op => op.value !== option.value)])
+                    }}
+
+                    onEdit={(option) => {
+                        onChange?.(
+                            ["options"],
+                            [...options.map(op => (op.value == option.value ? option : op))]
                         )
-                    }
-                    onDelete={
-                        (option) => setOptions(
-                            prev => [...prev.filter(op => op.value !== option.value)]
-                        )
-                    }
-                    onEdit={
-                        (option) => setOptions(
-                            prev => [...prev.map(op => (
-                                op.value == option.value ? option : op
-                            ))]
-                        )
-                    }
+                    }}
                 />
             )}
             {!editable && (

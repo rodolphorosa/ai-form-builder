@@ -51,3 +51,8 @@ class Section(BaseModel):
 
 class FormSchema(BaseModel):
     sections: list[Section]
+
+class Form(BaseModel):
+    name: str
+    description: str | None = None
+    schema: FormSchema

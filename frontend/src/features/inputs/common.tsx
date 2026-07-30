@@ -1,4 +1,4 @@
-import React, {FC, useState} from "react"
+import React, {FC, useRef, useState} from "react"
 import { LabelProps } from "@/types/inputs"
 import { Spinner } from "@/components/ui/spinner"
 import { Item } from "@/types/form"
@@ -21,17 +21,20 @@ export function EditableText({
     placeholder,
     onChange
 }: EditableTextProps) {
+    const initialValue = useRef("")
+
     return (
         <span
             contentEditable={editable}
             suppressContentEditableWarning
             suppressHydrationWarning
+            onFocus={(e) => {
+                initialValue.current = e.currentTarget.textContent ?? ""
+            }}
             onBlur={(e) => {
-                const value = e.currentTarget.textContent?.trim()
+                const value = e.currentTarget.textContent?.trim() ?? ""
 
-                if (!value) {
-                    e.currentTarget.textContent = placeholder ?? ""
-                    onChange?.(placeholder ?? "")
+                if (value === initialValue.current.trim()) {
                     return
                 }
 

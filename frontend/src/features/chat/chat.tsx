@@ -155,7 +155,7 @@ export const Chat = ({
         setLoading?.(true)
         
         try {
-            const { data } = await formService.create({
+            const { data } = await formService.createWithAI({
                 prompt: prompt,
                 provider: "openai",
                 model: "gpt-4.1-nano"

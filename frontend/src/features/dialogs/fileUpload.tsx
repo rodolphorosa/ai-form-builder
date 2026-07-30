@@ -1,169 +1,155 @@
-import { Attachment, AttachmentAction, AttachmentActions, AttachmentContent, AttachmentDescription, AttachmentMedia, AttachmentTitle } from "@/components/ui/attachment"
 import { Button } from "@/components/ui/button"
-import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Field } from "@/components/ui/field"
-import { Label } from "@/components/ui/label"
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog"
 import { Form } from "@/types/form"
-import { FileBraces, X } from "lucide-react"
-import { ChangeEvent, useRef, useState } from "react"
+import { useTranslations } from "next-intl"
+import { useRef, useState } from "react"
+import { FormAttachment } from "./attachment"
+import { formService } from "@/api/form.service"
 
 interface DialogProps {
-    onUpload: (form: Partial<Form>) => void
     open: boolean
     onOpenChange: (open: boolean) => void
-
 }
 
-interface JsonImportProps<T> {
-    onImport: (data: T) => void
+interface JsonImportProps {
+    file: File | null
+    onImport: (file: File) => void
+    failed?: boolean
+    errorMessage?: string
 }
 
-interface Metadata {
-    name: string
-    size: number
-    type: string
-    lastModified: Date
-}
-
-export function JsonImport<T>({ onImport }: JsonImportProps<T>) {
-    const [metadata, setMetadata] = useState<Metadata>()
-
+function JsonImport({ file, onImport, failed, errorMessage }: JsonImportProps) {
     const inputRef = useRef<HTMLInputElement>(null)
 
-    const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
+    const importFile = (file?: File) => {
+        if (!file) return
+
+        const isJson =
+            file.type === "application/json" ||
+            file.name.toLowerCase().endsWith(".json")
+
+        if (!isJson) return
+
+        onImport(file)
+    }
+
+    const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault()
 
-        const file = e.dataTransfer.files[0]
-
-        if (!file) return
-
-        try {
-            const text = await file.text()
-            const json = JSON.parse(text) as T
-
-            setMetadata({
-                name: file.name,
-                size: file.size,
-                type: file.type,
-                lastModified: new Date(file.lastModified)
-            })
-
-            onImport(json)
-        } catch (error) {
-            console.error(error)
-            // alert("Arquivo JSON inválido.")
-        } finally {
-            // Permite importar o mesmo arquivo novamente
-            // @ts-ignore
-            e.target.value = ""
-        }
+        importFile(e.dataTransfer.files[0])
     }
 
-    const handleChange = async(e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0]
-
-        if (!file) return
-
-        try {
-            const text = await file.text()
-            const json = JSON.parse(text) as T
-
-            setMetadata({
-                name: file.name,
-                size: file.size,
-                type: file.type,
-                lastModified: new Date(file.lastModified)
-            })
-
-            onImport(json)
-        } catch (error) {
-            console.error(error)
-            alert("Arquivo JSON inválido.")
-        } finally {
-            // Permite importar o mesmo arquivo novamente
-            e.target.value = ""
-        }
-    }
-
-    const formatFileSize = (bytes: number): string => {
-        if (bytes < 1024) {
-            return `${bytes} B`
-        }
-
-        if (bytes < 1024 * 1024) {
-            return `${(bytes / 1024).toFixed(1)} KB`
-        }
-
-        if (bytes < 1024 * 1024 * 1024) {
-            return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
-        }
-
-        return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        importFile(e.target.files?.[0])
+        e.target.value = ""
     }
 
     return (
-        <div className="flex flex-col gap-1">
-            {metadata && (
-                <Attachment className="w-full">
-                    <AttachmentMedia>
-                        <FileBraces />
-                    </AttachmentMedia>
-                    <AttachmentContent>
-                        <AttachmentTitle>{metadata.name}</AttachmentTitle>
-                        <AttachmentDescription>
-                            JSON · {formatFileSize(metadata.size)}
-                        </AttachmentDescription>
-                    </AttachmentContent>
-                    <AttachmentActions>
-                        <AttachmentAction>
-                            <X className="h-4 w-4 shrink-0"/>
-                        </AttachmentAction>
-                    </AttachmentActions>
-                </Attachment>
-            )}
-            {
-                <div
-                    onDragOver={(e) => e.preventDefault()}
-                    onDrop={handleDrop}
-                    className="flex flex-col gap-2 items-center border-2 border-dashed rounded-lg p-8 text-center"
-                >
-                    <span className="text-sm font-normal text-muted-foreground">Arraste um arquivo JSON aqui</span>
-                    <Button
-                        className="w-fit"
-                        onClick={() => inputRef.current?.click()}
-                    >
-                        Escolher arquivo
-                    </Button>
+        <div className="flex flex-col gap-2">
+            {file && <FormAttachment file={file} type="json" failed={failed} errorMessage={errorMessage} />}
 
-                    <input
-                        ref={inputRef}
-                        hidden
-                        type="file"
-                        accept=".json"
-                        onChange={handleChange}
-                    />
-                </div>
-            }
+            <div
+                className="flex flex-col items-center gap-2 rounded-lg border-2 border-dashed p-8 text-center"
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={handleDrop}
+            >
+                <span className="text-sm text-muted-foreground">
+                    Arraste um arquivo JSON aqui
+                    <br />
+                    ou
+                </span>
+
+                <Button onClick={() => inputRef.current?.click()}>
+                    Escolher arquivo
+                </Button>
+
+                <input
+                    ref={inputRef}
+                    hidden
+                    type="file"
+                    accept=".json,application/json"
+                    onChange={handleChange}
+                />
+            </div>
         </div>
     )
 }
 
-export const UploadDialog = ({ onUpload, open, onOpenChange }: DialogProps) => {
+export function FileDialog({ open, onOpenChange }: DialogProps) {
+    const workspace = useTranslations("Workspace")
+
+    const [selectedFile, setSelectedFile] = useState<File | null>(null)
+    const [form, setForm] = useState<Form | null>(null)
+
+    const [state, setState] = useState<"success" | "failure">()
+    const [error, setError] = useState<string | null>(null)
+
+    const handleImport = async (file: File) => {
+        setSelectedFile(file)
+        setError(null)
+
+        try {
+            const text = await file.text()
+            const json = JSON.parse(text) as Form
+
+            setForm(json)
+            setState("success")
+        } catch {
+            setForm(null)
+            setState("failure")
+            setError("O arquivo JSON é inválido.")
+        }
+    }
+
+    const handleCreate = async () => {
+        if (!form) return
+
+        try {
+
+            const response = await formService.create({"form": form})
+
+            const data = response.data
+
+            console.log(data)
+
+        } catch (err) {
+
+        } finally {
+
+        }
+    }
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Import form</DialogTitle>
+                    <DialogTitle>{workspace("file up")}</DialogTitle>
                 </DialogHeader>
-                <div className="flex flex-col gap-2">
-                    <Field>
-                        <Label>Arquivo</Label>
-                        <JsonImport onImport={(json) => console.log(json)}/>
-                    </Field>
-                </div>
+
+                <JsonImport
+                    file={selectedFile}
+                    onImport={handleImport}
+                    failed={state === "failure"}
+                    errorMessage={error ?? "Could not process uploaded file."}
+                />
+
                 <DialogFooter>
-                    <DialogClose render={<Button variant="secondary">Cancel</Button>} />
-                    <Button variant="outline" onClick={() => {}}>Create</Button>
+                    <DialogClose render={(<Button variant="secondary">Cancel</Button>)} />
+
+                    <Button
+                        variant="outline"
+                        disabled={!form}
+                        onClick={handleCreate}
+                    >
+                        Create
+                    </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

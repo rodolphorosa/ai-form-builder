@@ -6,7 +6,11 @@ import { Form, FormSchema } from "@/types/form"
 const api = new ApiClient()
 
 export const formService = {
-    create(request: CreateRequest): Promise<ApiFormResponse> {
+    create(request: {form: Form}): Promise<ApiResponse<Form>> {
+        return api.post<ApiResponse<Form>>("/forms/create_from_json", request)
+    },
+
+    createWithAI(request: CreateRequest): Promise<ApiFormResponse> {
         return api.post<ApiFormResponse>("/forms/generate", request)
     },
 

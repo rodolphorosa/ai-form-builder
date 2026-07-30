@@ -1,5 +1,5 @@
 import { InputProps } from "@/types/inputs"
-import React, { FC, useEffect, useState } from "react"
+import { FC } from "react"
 
 import { Checkbox } from "@/components/ui/checkbox"
 import { EditableLabel, EditableText } from "./common"
@@ -8,11 +8,8 @@ import { Option } from "@/types/form"
 import { OptionsEditor } from "../form/optionEditor"
 
 export const CheckboxInput: FC<InputProps> = ({ item, editable, onChange }) => {
-    const [options, setOptions] = useState<Option[]>(item.options ?? [])
 
-    useEffect(() => {
-        onChange?.(["options"], options)
-    }, [options])
+    const options = item.options ?? []
 
     return (
         <div className="flex flex-col gap-1 w-full">
@@ -38,23 +35,20 @@ export const CheckboxInput: FC<InputProps> = ({ item, editable, onChange }) => {
                 <OptionsEditor 
                     options={options} 
                     type="checkbox" 
-                    onAdd={
-                        (option) => setOptions(
-                            prev => [...prev, option]
+                    onAdd={(option) => {
+                        onChange?.(["options"], [...options, option])
+                    }}
+
+                    onDelete={(option) => {
+                        onChange?.(["options"], [...options.filter(op => op.value !== option.value)])
+                    }}
+
+                    onEdit={(option) => {
+                        onChange?.(
+                            ["options"],
+                            [...options.map(op => (op.value == option.value ? option : op))]
                         )
-                    }
-                    onDelete={
-                        (option) => setOptions(
-                            prev => [...prev.filter(op => op.value !== option.value)]
-                        )
-                    }
-                    onEdit={
-                        (option) => setOptions(
-                            prev => [...prev.map(op => (
-                                op.value == option.value ? option : op
-                            ))]
-                        )
-                    }
+                    }}
                 />
             )}
         </div>

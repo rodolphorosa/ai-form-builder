@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from "react"
+import { FC } from "react"
 import { InputProps } from "@/types/inputs"
 
 import {
@@ -10,17 +10,11 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { EditableLabel } from "./common"
-import { Option } from "@/types/form"
 import { OptionsEditor } from "../form/optionEditor"
 
 
 export const SelectInput: FC<InputProps> = ({item, editable, onChange}) => {
-    // const { options } = item
-    const [options, setOptions] = useState<Option[]>(item.options ?? [])
-
-    useEffect(() => {
-        onChange?.(["options"], options)
-    }, [options])
+    const options = item.options ?? []
 
     return (
         <div className="flex flex-col gap-1">
@@ -31,27 +25,23 @@ export const SelectInput: FC<InputProps> = ({item, editable, onChange}) => {
                 onChange={(value) => onChange?.(["label"], value)}
             />
             {editable && (
-                // @ts-ignore
                 <OptionsEditor 
                     options={options} 
                     type="select" 
-                    onAdd={
-                        (option) => setOptions(
-                            prev => [...prev, option]
+                    onAdd={(option) => {
+                        onChange?.(["options"], [...options, option])
+                    }}
+
+                    onDelete={(option) => {
+                        onChange?.(["options"], [...options.filter(op => op.value !== option.value)])
+                    }}
+
+                    onEdit={(option) => {
+                        onChange?.(
+                            ["options"],
+                            [...options.map(op => (op.value == option.value ? option : op))]
                         )
-                    }
-                    onDelete={
-                        (option) => setOptions(
-                            prev => [...prev.filter(op => op.value !== option.value)]
-                        )
-                    }
-                    onEdit={
-                        (option) => setOptions(
-                            prev => [...prev.map(op => (
-                                op.value == option.value ? option : op
-                            ))]
-                        )
-                    }
+                    }}
                 />
             )}
             {!editable && (

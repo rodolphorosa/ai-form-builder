@@ -13,6 +13,61 @@ export const OptionsEditor = ({ options, type, onAdd, onDelete, onEdit }: {
     onDelete?: (option: Option) => void
     onEdit?: (option: Option) => void
 }) => {
+
+    const createOption = (): Option => {
+        const baseValue = "option"
+        const baseLabel = "Nova opção"
+
+        const getNextValue = () => {
+            let index = 1
+
+            while (
+                options.some(option =>
+                    option.value === (index === 1 ? baseValue : `${baseValue}${index}`)
+                )
+            ) {
+                index++
+            }
+
+            return index === 1 ? baseValue : `${baseValue}${index}`
+        }
+
+        const getNextLabel = () => {
+            let index = 1
+
+            while (
+                options.some(option =>
+                    option.label === (index === 1 ? baseLabel : `${baseLabel} ${index}`)
+                )
+            ) {
+                index++
+            }
+
+            return index === 1 ? baseLabel : `${baseLabel} ${index}`
+        }
+
+        return {
+            value: getNextValue(),
+            label: getNextLabel(),
+        }
+    }
+
+    const editOption = (currentOption: Option, value: string) => {
+        const exists = options.some(
+            option => 
+                option !== currentOption && 
+                option.label.trim().toLowerCase() === value.trim().toLowerCase()
+        )
+
+        if (!exists) {
+            onEdit?.({
+                value: currentOption.value,
+                label: value
+            })
+        }
+    }
+
+
     return (
         <div className="flex flex-col gap-2 w-full">
             <div className="flex flex-col gap-1 w-full">
@@ -36,11 +91,7 @@ export const OptionsEditor = ({ options, type, onAdd, onDelete, onEdit }: {
                                 text={option.label} 
                                 editable={true} 
                                 placeholder="Nova opção" 
-                                onChange={
-                                    (value) => onEdit?.(
-                                        { value: option.value, label: value }
-                                    )
-                                }
+                                onChange={(value) => editOption(option, value)}
                                 className="flex-1"
                             />
                             <Button 
@@ -62,7 +113,7 @@ export const OptionsEditor = ({ options, type, onAdd, onDelete, onEdit }: {
                 variant="outline" 
                 className="border-dashed w-fit text-xs font-normal cursor-pointer" 
                 size="sm"
-                onClick={() => onAdd?.({ value: "nova_opcao", label: "Nova opção"})}
+                onClick={() => onAdd?.(createOption())}
             >
                 <Plus className="h-3 w-3 shrink-0" />
                 Adicionar nova opção

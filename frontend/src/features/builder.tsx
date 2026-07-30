@@ -72,6 +72,8 @@ export const Builder = ({}: BuilderProps) => {
         past: [],
         future: []
     })
+
+    console.log(history.past)
     
     const [selectedItem, setSelectedItem] = useState<Item|null>(null)
     const [loading, setLoading] = useState<boolean>(false)
@@ -107,6 +109,7 @@ export const Builder = ({}: BuilderProps) => {
     }
 
     const onSchemaChange = (schema: FormSchema) => {
+        console.log("on schema change")
         const previous = workingForm
         
         setWorkingForm(prev => {

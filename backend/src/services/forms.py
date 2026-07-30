@@ -71,6 +71,26 @@ class FormService:
         return form
 
 
+    def create_from_json(self, form: FormSchema):
+        project_repository = ProjectRepository(self.db)
+
+        default_project = project_repository.get_default_project()
+
+        if not default_project:
+            raise Exception("Default project not found")
+
+        form_repository = FormRepository(self.db)
+
+        validated_schema = FormSchema.model_validate(form.schema)
+
+        return form_repository.create(
+            name=form.name,
+            description=form.description,
+            schema=validated_schema.model_dump(),
+            project_id=default_project.id
+        )
+
+
     async def generate_from_image(self, image: UploadFile, provider_type: ProviderType, model: str):
         provider = get_llm_provider(provider_type=provider_type, model=model)
 

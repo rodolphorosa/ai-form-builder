@@ -17,7 +17,7 @@ import { FormDropdown } from "./dropdown-menus/formOptions"
 import { ProjectDropdown } from "./dropdown-menus/projectOptions"
 import { CreateDialog } from "../dialogs/create"
 import { useRouter } from "@/i18n/navigation"
-import { UploadDialog } from "../dialogs/fileUpload"
+import { FileDialog } from "../dialogs/fileUpload"
 import { ImageDialog } from "../dialogs/imageUpload"
 
 
@@ -324,7 +324,7 @@ export const Workspace = () => {
                     </div>
                 </div>
                 <CreateDialog onCreate={onCreate} open={createOpen} onOpenChange={setCreateOpen} />
-                <UploadDialog onUpload={(form) => console.log(form)} open={importOpen} onOpenChange={setImportOpen}/>
+                <FileDialog open={importOpen} onOpenChange={setImportOpen}/>
                 <ImageDialog open={importImageOpen} onOpenChange={setImportImageOpen} />
             </div>
         </div>

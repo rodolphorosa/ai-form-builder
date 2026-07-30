@@ -9,6 +9,8 @@ import { Thinking } from "../inputs/common"
 import { useTranslations } from "next-intl"
 import { formService } from "@/api/form.service"
 import { useRouter } from "@/i18n/navigation"
+import { formatFileSize } from "./utils"
+import { FormAttachment } from "./attachment"
 
 interface DialogProps {
     open: boolean
@@ -20,73 +22,12 @@ interface ImageImportProps {
     image: File | null
 }
 
-interface Metadata {
-    name: string
-    size: number
-    type: string
-    lastModified: Date
-}
-
 type ImportState =
     | "idle"
     | "ready"
     | "loading"
     | "success"
-
-const formatFileSize = (bytes: number): string => {
-    if (bytes < 1024) {
-        return `${bytes} B`
-    }
-
-    if (bytes < 1024 * 1024) {
-        return `${(bytes / 1024).toFixed(1)} KB`
-    }
-
-    if (bytes < 1024 * 1024 * 1024) {
-        return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
-    }
-
-    return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`
-}
-
-const types: Record<string, string> = {
-    "image/jpeg": "JPEG",
-    "image/png": "PNG",
-}
-
-const ImageAttachment = ({ image, orientation }: { image: File, orientation?: "vertical" | "horizontal" }) => {
-    const metadata: Metadata = {
-        name: image.name,
-        size: image.size,
-        type: image.type,
-        lastModified: new Date(image.lastModified)
-    }
-
-    const preview = URL.createObjectURL(image)
-
-    return (
-        <Attachment orientation={orientation ?? "horizontal"} size="default" className="w-full">
-            <AttachmentMedia variant="image">
-                <img
-                    src={preview}
-                    alt={image?.name}
-                    className="rounded-md object-cover"
-                />
-            </AttachmentMedia>
-            <AttachmentContent>
-                <AttachmentTitle>{metadata.name}</AttachmentTitle>
-                <AttachmentDescription>
-                    {types[metadata.type]} · {formatFileSize(metadata.size)}
-                </AttachmentDescription>
-            </AttachmentContent>
-            <AttachmentActions>
-                <AttachmentAction>
-                    <X className="h-4 w-4 shrink-0"/>
-                </AttachmentAction>
-            </AttachmentActions>
-        </Attachment>
-    )
-}
+    | "failed"
 
 export const ImageImport = ({ onImport, image }: ImageImportProps) => {
     const inputRef = useRef<HTMLInputElement>(null)
@@ -109,7 +50,7 @@ export const ImageImport = ({ onImport, image }: ImageImportProps) => {
         <div className="flex flex-col gap-2">
             {image && (
                 <div className="flex flex-col gap-2">
-                    <ImageAttachment image={image} />
+                    <FormAttachment file={image} type="image" />
                     <div className="flex flex-row gap-1 items-center text-sm font-medium">
                         <div className="p-2 bg-muted rounded-full">
                             <Check className="h-4 w-4 shrink-0"/>
@@ -176,7 +117,7 @@ const FakeLoader = ({ image }: { image: File }) => {
 
     return (
         <div className="flex flex-col gap-2.5">
-            <ImageAttachment image={image} />
+            <FormAttachment file={image} type="image" />
             <div className="flex flex-col gap-1">
                 {status.slice(0, step).map((text) => (
                     <div
@@ -222,14 +163,13 @@ export const ImageDialog = ({ open, onOpenChange }: DialogProps) => {
             formData.append("model", "gpt-5")
 
             const response = await formService.createFromImage(formData)
-            // router.push(`/forms/${response.data.id}`)
-
             const data = response.data
             setForm(data.form)
             setMessage(data.message)
         
         } catch (err) {
-            console.log(err)
+            setState("failed")
+            setMessage("Could not create form from image.")
         } finally {
             setState("success")
         }
@@ -241,6 +181,7 @@ export const ImageDialog = ({ open, onOpenChange }: DialogProps) => {
                 <DialogHeader>
                     <DialogTitle>{workspace("image up")}</DialogTitle>
                 </DialogHeader>
+                
                 {(state === "idle" || state === "ready") && (
                     <ImageImport 
                         onImport={(image) => {
@@ -257,7 +198,7 @@ export const ImageDialog = ({ open, onOpenChange }: DialogProps) => {
 
                 {state === "success" && (
                     <div className="flex flex-col gap-2">
-                        <ImageAttachment image={image!} />
+                        <FormAttachment file={image!} type="image" />
                         <div className="flex flex-row gap-1 items-center text-sm font-medium">
                             <div className="p-2 bg-muted rounded-full">
                                 <Check className="h-4 w-4 shrink-0"/>
@@ -269,16 +210,33 @@ export const ImageDialog = ({ open, onOpenChange }: DialogProps) => {
                         </div>
                     </div>
                 )}
-                <DialogFooter>
-                    <DialogClose render={<Button variant="secondary">Cancel</Button>} />
-                    <Button 
-                        variant="outline" 
-                        onClick={onCreateFromImage}
-                        disabled={!image}
-                    >
-                        Create form
-                    </Button>
-                </DialogFooter>
+                
+                {["idle", "ready", "loading"].includes(state) && (
+                    <DialogFooter>
+                        <DialogClose render={<Button variant="secondary">Cancel</Button>} />
+                        <Button 
+                            variant="outline" 
+                            onClick={onCreateFromImage}
+                            disabled={!image}
+                        >
+                            Create form
+                        </Button>
+                    </DialogFooter>
+                )}
+                
+                {state === "success" && (
+                    <DialogFooter>
+                        <DialogClose render={<Button variant="secondary">Close</Button>} />
+                        <Button 
+                            variant="outline" 
+                            onClick={() => {
+                                router.push(`/forms/${form?.id}`)
+                            }}
+                        >
+                            Abrir formulário
+                        </Button>
+                    </DialogFooter>
+                )}
             </DialogContent>
         </Dialog>
     )

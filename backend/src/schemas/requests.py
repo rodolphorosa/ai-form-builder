@@ -1,8 +1,11 @@
 from pydantic import BaseModel, Field, ConfigDict
 from src.llm.factory import ProviderType
-from src.schemas.schema import FormSchema
+from src.schemas.schema import Form, FormSchema
 
 from uuid import UUID
+
+class JsonFormRequest(BaseModel):
+    form: Form
 
 
 class BlankRequest(BaseModel):
