@@ -3,7 +3,7 @@
 import { Form, FormSchema, Item, Project } from "@/types/form"
 import { useEffect, useState } from "react"
 import { Sidebar } from "./sidebar"
-import { Astroid, ChevronDown, EllipsisVertical, FilePlusCorner, FolderOpen, Form as FormIcon, Import } from "lucide-react"
+import { Astroid, ChevronDown, EllipsisVertical, File, FilePlusCorner, FileUp, FolderOpen, Form as FormIcon, ImageUp, Import } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useTranslations } from "next-intl"
 import { cn } from "@/lib/utils"
@@ -17,6 +17,8 @@ import { FormDropdown } from "./dropdown-menus/formOptions"
 import { ProjectDropdown } from "./dropdown-menus/projectOptions"
 import { CreateDialog } from "../dialogs/create"
 import { useRouter } from "@/i18n/navigation"
+import { UploadDialog } from "../dialogs/fileUpload"
+import { ImageDialog } from "../dialogs/imageUpload"
 
 
 interface CreationOption {
@@ -34,6 +36,8 @@ export const Workspace = () => {
     const [forms, setForms] = useState<Form[]>([])
 
     const [createOpen, setCreateOpen] = useState<boolean>(false)
+    const [importOpen, setImportOpen] = useState<boolean>(false)
+    const [importImageOpen, setImportImageOpen] = useState<boolean>(false)
 
     const workspace = useTranslations("Workspace")
 
@@ -46,17 +50,23 @@ export const Workspace = () => {
             href: "/forms/new"
         },
         {
-            icon: FilePlusCorner,
+            icon: File,
             title: workspace("blank"),
             description: "Comece do zero com um formulário em branco.",
             action: () => setCreateOpen(true)
         },
         {
-            icon: Import,
-            title: workspace("import"),
+            icon: FileUp,
+            title: workspace("file up"),
             description: "Importe um formulário a partir de um arquivo JSON.",
-            action: () => console.log("importar json")
+            action: () => setImportOpen(true)
         },
+        {
+            icon: ImageUp,
+            title: workspace("image up"),
+            description: "Importe um formulário a partir de uma foto ou desenho.",
+            action: () => setImportImageOpen(true)
+        }
     ]
 
     const getForms = async () => {
@@ -104,7 +114,6 @@ export const Workspace = () => {
     }
 
     const parseUpdateDate = (updatedAt: number) => {
-        console.log(updatedAt)
         return formatDistanceToNow(new Date(updatedAt), {
             addSuffix: true,
             locale: ptBR,
@@ -315,6 +324,8 @@ export const Workspace = () => {
                     </div>
                 </div>
                 <CreateDialog onCreate={onCreate} open={createOpen} onOpenChange={setCreateOpen} />
+                <UploadDialog onUpload={(form) => console.log(form)} open={importOpen} onOpenChange={setImportOpen}/>
+                <ImageDialog open={importImageOpen} onOpenChange={setImportImageOpen} />
             </div>
         </div>
     )

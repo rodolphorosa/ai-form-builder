@@ -6,11 +6,11 @@ const api = new ApiClient()
 
 export const projectService = {
     getById(id: string): Promise<ApiResponse<Project>> {
-        return api.get<ApiResponse<Project>>(`/api/projects/${id}`)
+        return api.get<ApiResponse<Project>>(`/projects/${id}`)
 
     },
 
     getAll(): Promise<ApiResponse<Project[]>> {
-        return api.get<ApiResponse<Project[]>>("/api/projects")
+        return api.get<ApiResponse<Project[]>>("/projects")
     }
 }

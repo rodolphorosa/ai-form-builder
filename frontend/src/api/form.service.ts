@@ -7,30 +7,34 @@ const api = new ApiClient()
 
 export const formService = {
     create(request: CreateRequest): Promise<ApiFormResponse> {
-        return api.post<ApiFormResponse>("/api/forms/generate", request)
+        return api.post<ApiFormResponse>("/forms/generate", request)
     },
 
     edit(request: EditRequest): Promise<ApiResponse<{ message: string, schema: FormSchema }>> {
-        return api.post<ApiResponse<{ message: string, schema: FormSchema }>>("/api/forms/edit", request)
+        return api.post<ApiResponse<{ message: string, schema: FormSchema }>>("/forms/edit", request)
     },
 
     suggest(request: SuggestionRequest): Promise<ApiResponse<{ suggestions: Suggestion[]}>> {
-        return api.post<ApiResponse<{ suggestions: Suggestion[]}>>("/api/suggestions/", request)
+        return api.post<ApiResponse<{ suggestions: Suggestion[]}>>("/suggestions/", request)
     },
 
     createBlank(request: Partial<Form>): Promise<ApiResponse<Form>> {
-        return api.post<ApiResponse<Form>>("/api/forms/create_blank", request)
+        return api.post<ApiResponse<Form>>("/forms/create_blank", request)
+    },
+
+    createFromImage(request: FormData): Promise<ApiResponse<{ message: string, form: Form}>> {
+        return api.postFormData<ApiResponse<{ message: string, form: Form}>>("/forms/generate_from_image", request)
     },
 
     getAll(): Promise<ApiResponse<Form[]>> {
-        return api.get<ApiResponse<Form[]>>("/api/forms")
+        return api.get<ApiResponse<Form[]>>("/forms")
     },
 
     getById(id: string): Promise<ApiResponse<Form>> {
-        return api.get<ApiResponse<Form>>(`/api/forms/${id}`)
+        return api.get<ApiResponse<Form>>(`/forms/${id}`)
     },
 
     update(id: string, form: UpdateFormRequest): Promise<ApiResponse<Form>> {
-        return api.patch<ApiResponse<Form>>(`/api/forms/${id}`, form)
+        return api.patch<ApiResponse<Form>>(`/forms/${id}`, form)
     }
 }

@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl"
 import { useEffect, useState } from "react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Collapsible, CollapsibleContent } from "@/components/ui/collapsible"
-import { EllipsisVertical, Form as FormIcon, Pencil, FolderOpen, Pin, Archive, Trash, Astroid, SquarePen, Search, User, CircleUser, Settings, LogOut, Trash2, House, FolderInput, FolderPlus, FolderSearch, Download, FileBraces, Copy, File } from "lucide-react"
+import { EllipsisVertical, Form as FormIcon, Pencil, FolderOpen, Pin, Archive, Trash, Astroid, SquarePen, Search, User, CircleUser, Settings, LogOut, Trash2, House, FolderInput, FolderPlus, FolderSearch, Download, FileBraces, Copy, File, LibraryBig } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -105,6 +105,10 @@ export const Sidebar = ({ forms, projects }: Props) => {
                         <div className="flex flex-row px-3 py-2 gap-2 text-sm font-normal items-center hover:bg-muted rounded-sm cursor-pointer">
                             <Search className="h-4 w-4" />
                             {tree("search")}
+                        </div>
+                        <div className="flex flex-row px-3 py-2 gap-2 text-sm font-normal items-center hover:bg-muted rounded-sm cursor-pointer">
+                            <LibraryBig className="h-4 w-4" />
+                            {tree("library")}
                         </div>
                         <div className="flex flex-row px-3 py-2 gap-2 text-sm font-normal items-center hover:bg-muted rounded-sm cursor-pointer">
                             <FolderOpen className="h-4 w-4" />

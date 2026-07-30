@@ -55,8 +55,6 @@ export const Builder = ({}: BuilderProps) => {
     const [committedForm, setCommittedForm] = useState<Form | null>(null)
     const [workingForm, setWorkingForm] = useState<Form | null>(null)
 
-    console.log("committed", committedForm)
-
     const { status } = useAutosave({
         value: workingForm,
         savedValue: committedForm,

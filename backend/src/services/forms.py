@@ -1,14 +1,17 @@
+from fastapi import UploadFile
+
 from datetime import datetime, timezone
 
 from sqlalchemy.orm import Session
 from sqlalchemy.dialects.postgresql import UUID
 
-from src.llm.services import generate_form_schema, edit_form_schema
+from src.llm.services import generate_form_schema, edit_form_schema, generate_from_image
 from src.repositories.form_repository import FormRepository
 from src.repositories.project_repository import ProjectRepository
 from src.api.deps import get_llm_provider
 from src.schemas.requests import EditRequest, FormRequest, UpdateFormRequest
 from src.schemas.schema import FormSchema
+from src.llm.factory import ProviderType
 
 
 class FormService:
@@ -66,6 +69,35 @@ class FormService:
         )
 
         return form
+
+
+    async def generate_from_image(self, image: UploadFile, provider_type: ProviderType, model: str):
+        provider = get_llm_provider(provider_type=provider_type, model=model)
+
+        content_type = image.content_type
+        image_bytes = await image.read()
+
+        response = generate_from_image(image_bytes, content_type, provider)
+
+        project_reposoitory = ProjectRepository(self.db)
+        
+        default_project = project_reposoitory.get_default_project()
+
+        if not default_project:
+            raise Exception("Default project not found")
+        
+        form_repository = FormRepository(self.db)
+
+        validated_schema = FormSchema.model_validate(response["schema"])
+        
+        form = form_repository.create(
+            name=response.get("title", "Unnamed form"),
+            description=response.get("description", None),
+            schema=validated_schema.model_dump(),
+            project_id=default_project.id
+        )
+
+        return { "response": response, "form": form }
     
 
     def edit_schema_with_ai(self, data: EditRequest):

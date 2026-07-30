@@ -62,7 +62,8 @@
     "projects": "Projetos",
     "recent": "Recentes",
     "move to project": "Mover para projeto",
-    "pinned": "Fixados"
+    "pinned": "Fixados",
+    "library": "Biblioteca"
   },
 
   "Workspace": {
@@ -70,6 +71,8 @@
     "blank": "Em branco",
     "import": "Importar",
     "archived": "Arquivados",
-    "trash": "Lixeira"
+    "trash": "Lixeira",
+    "file up": "Importar arquivo",
+    "image up": "Importar imagem"
   }
 }

@@ -1,0 +1,285 @@
+import { Attachment, AttachmentAction, AttachmentActions, AttachmentContent, AttachmentDescription, AttachmentMedia, AttachmentTitle } from "@/components/ui/attachment"
+import { Button } from "@/components/ui/button"
+import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { cn } from "@/lib/utils"
+import { Form } from "@/types/form"
+import { Check, CloudUpload, X } from "lucide-react"
+import { useEffect, useRef, useState } from "react"
+import { Thinking } from "../inputs/common"
+import { useTranslations } from "next-intl"
+import { formService } from "@/api/form.service"
+import { useRouter } from "@/i18n/navigation"
+
+interface DialogProps {
+    open: boolean
+    onOpenChange: (open: boolean) => void
+}
+
+interface ImageImportProps {
+    onImport: (image: File) => void
+    image: File | null
+}
+
+interface Metadata {
+    name: string
+    size: number
+    type: string
+    lastModified: Date
+}
+
+type ImportState =
+    | "idle"
+    | "ready"
+    | "loading"
+    | "success"
+
+const formatFileSize = (bytes: number): string => {
+    if (bytes < 1024) {
+        return `${bytes} B`
+    }
+
+    if (bytes < 1024 * 1024) {
+        return `${(bytes / 1024).toFixed(1)} KB`
+    }
+
+    if (bytes < 1024 * 1024 * 1024) {
+        return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+    }
+
+    return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`
+}
+
+const types: Record<string, string> = {
+    "image/jpeg": "JPEG",
+    "image/png": "PNG",
+}
+
+const ImageAttachment = ({ image, orientation }: { image: File, orientation?: "vertical" | "horizontal" }) => {
+    const metadata: Metadata = {
+        name: image.name,
+        size: image.size,
+        type: image.type,
+        lastModified: new Date(image.lastModified)
+    }
+
+    const preview = URL.createObjectURL(image)
+
+    return (
+        <Attachment orientation={orientation ?? "horizontal"} size="default" className="w-full">
+            <AttachmentMedia variant="image">
+                <img
+                    src={preview}
+                    alt={image?.name}
+                    className="rounded-md object-cover"
+                />
+            </AttachmentMedia>
+            <AttachmentContent>
+                <AttachmentTitle>{metadata.name}</AttachmentTitle>
+                <AttachmentDescription>
+                    {types[metadata.type]} · {formatFileSize(metadata.size)}
+                </AttachmentDescription>
+            </AttachmentContent>
+            <AttachmentActions>
+                <AttachmentAction>
+                    <X className="h-4 w-4 shrink-0"/>
+                </AttachmentAction>
+            </AttachmentActions>
+        </Attachment>
+    )
+}
+
+export const ImageImport = ({ onImport, image }: ImageImportProps) => {
+    const inputRef = useRef<HTMLInputElement>(null)
+
+    const importImage = (file?: File) => {
+        if (!file) return
+        onImport(file)
+    }
+
+    const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault()
+        importImage(e.dataTransfer.files[0])
+    }
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        importImage(e.target.files?.[0])
+    }
+
+    return (
+        <div className="flex flex-col gap-2">
+            {image && (
+                <div className="flex flex-col gap-2">
+                    <ImageAttachment image={image} />
+                    <div className="flex flex-row gap-1 items-center text-sm font-medium">
+                        <div className="p-2 bg-muted rounded-full">
+                            <Check className="h-4 w-4 shrink-0"/>
+                        </div>
+                        Imagem carregada com sucesso!
+                    </div>
+                </div>
+            )}
+            {!image && (
+                <div
+                    onDragOver={(e) => e.preventDefault()}
+                    onDrop={handleDrop}
+                    className={cn(
+                        "flex flex-col gap-2 items-center border-2 border-dashed rounded-lg p-8 text-center"
+                    )}
+                >
+                    <CloudUpload />
+                    <span className="text-sm font-normal text-muted-foreground">Arraste uma imagem aqui<br/>ou</span>
+                    <Button
+                        className="w-fit"
+                        onClick={() => inputRef.current?.click()}
+                    >
+                        Escolher imagem
+                    </Button>
+
+                    <input
+                        ref={inputRef}
+                        hidden
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                    />
+                </div>
+            )}
+        </div>
+    )
+}
+
+const FakeLoader = ({ image }: { image: File }) => {
+    const status = [
+        "Preparando imagem...",
+        "Analisando conteúdo...",
+        "Identificando campos e seções...",
+        "Gerando estrutura do formulário...",
+        "Finalizando...",
+    ]
+
+    const [step, setStep] = useState(0)
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setStep((current) => {
+                if (current >= status.length - 1) {
+                    clearInterval(interval)
+                    return current
+                }
+
+                return current + 1
+            })
+        }, 2000)
+
+        return () => clearInterval(interval)
+    }, [])
+
+    return (
+        <div className="flex flex-col gap-2.5">
+            <ImageAttachment image={image} />
+            <div className="flex flex-col gap-1">
+                {status.slice(0, step).map((text) => (
+                    <div
+                        key={text}
+                        className="flex items-center gap-2 text-sm justify-start"
+                    >
+                        <Check className="size-4 text-primary" />
+                        <span>{text}</span>
+                    </div>
+                ))}
+
+                {step < status.length && (
+                    <div className="justify-start">
+                        <Thinking step={status[step]} />
+                    </div>
+                )}
+            </div>
+        </div>
+    )
+}
+
+export const ImageDialog = ({ open, onOpenChange }: DialogProps) => {
+    const router = useRouter()
+
+    const [image, setImage] = useState<File | null>(null)
+    const [form, setForm] = useState<Form | null>(null)
+    const [message, setMessage] = useState<string | null>(null)
+
+    const [state, setState] = useState<ImportState>("idle")
+
+    const workspace = useTranslations("Workspace")
+
+    const onCreateFromImage = async () => {
+        if (!image) return
+
+        setState("loading")
+
+        try {
+            const formData = new FormData()
+
+            formData.append("image", image)
+            formData.append("provider", "openai")
+            formData.append("model", "gpt-5")
+
+            const response = await formService.createFromImage(formData)
+            // router.push(`/forms/${response.data.id}`)
+
+            const data = response.data
+            setForm(data.form)
+            setMessage(data.message)
+        
+        } catch (err) {
+            console.log(err)
+        } finally {
+            setState("success")
+        }
+    }
+
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>{workspace("image up")}</DialogTitle>
+                </DialogHeader>
+                {(state === "idle" || state === "ready") && (
+                    <ImageImport 
+                        onImport={(image) => {
+                            if (image) {
+                                setState("ready")
+                                setImage(image)
+                            }
+                        }} 
+                        image={image} 
+                    />
+                )}
+
+                {state === "loading" && <FakeLoader image={image!} />}
+
+                {state === "success" && (
+                    <div className="flex flex-col gap-2">
+                        <ImageAttachment image={image!} />
+                        <div className="flex flex-row gap-1 items-center text-sm font-medium">
+                            <div className="p-2 bg-muted rounded-full">
+                                <Check className="h-4 w-4 shrink-0"/>
+                            </div>
+                            Formulado criado com sucesso!
+                        </div>
+                        <div className="text-xs font-muted-foreground">
+                            {message}
+                        </div>
+                    </div>
+                )}
+                <DialogFooter>
+                    <DialogClose render={<Button variant="secondary">Cancel</Button>} />
+                    <Button 
+                        variant="outline" 
+                        onClick={onCreateFromImage}
+                        disabled={!image}
+                    >
+                        Create form
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    )
+}

@@ -4,6 +4,7 @@ import { Spinner } from "@/components/ui/spinner"
 import { Item } from "@/types/form"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
+import { Brain } from "lucide-react"
 
 interface EditableTextProps {
     text?: string
@@ -78,8 +79,8 @@ interface ThinkingProps {
 export const Thinking = ({ step }: ThinkingProps) => {
     return (
         <div className="sticky flex flex-row gap-2 self-end">
-            <Spinner />
-            <div>{step ?? "Thinking..."}</div>
+            <Spinner className="h-4 w-4 shrink-0" />
+            <div className="animate-pulse">{step ?? "Thinking..."}</div>
         </div>
     )
 }

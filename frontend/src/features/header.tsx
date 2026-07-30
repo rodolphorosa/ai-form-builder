@@ -26,9 +26,6 @@ interface HeaderProps {
 }
 
 export const Header = ({ undo, redo, undoDisabled, redoDisabled, mode, toggleMode, projects, updatedAt, status }: HeaderProps) => {
-
-    console.log("updated at", updatedAt)
-
     const common = useTranslations("Common")
 
     const parseUpdateDate = (updatedAt: number) => {
