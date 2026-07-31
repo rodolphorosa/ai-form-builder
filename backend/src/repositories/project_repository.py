@@ -15,8 +15,8 @@ class ProjectRepository:
         )
 
         self.db.add(project)
-        self.db.commmit()
-        self.db.refresh()
+        self.db.commit()
+        self.db.refresh(project)
 
         return project
 

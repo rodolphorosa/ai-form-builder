@@ -1,6 +1,6 @@
 "use client"
 
-import { Form, FormSchema, Item, Project } from "@/types/form"
+import { Form, FormSchema, Item, MoveAction, Project } from "@/types/form"
 import { useEffect, useState } from "react"
 import { Sidebar } from "./sidebar"
 import { Astroid, ChevronDown, EllipsisVertical, File, FilePlusCorner, FileUp, FolderOpen, Form as FormIcon, ImageUp, Import } from "lucide-react"
@@ -19,6 +19,8 @@ import { CreateDialog } from "../dialogs/create"
 import { useRouter } from "@/i18n/navigation"
 import { FileDialog } from "../dialogs/fileUpload"
 import { ImageDialog } from "../dialogs/imageUpload"
+import { ProjectCreate } from "../dialogs/project"
+import { UpdateFormRequest } from "@/api/types"
 
 
 interface CreationOption {
@@ -38,6 +40,9 @@ export const Workspace = () => {
     const [createOpen, setCreateOpen] = useState<boolean>(false)
     const [importOpen, setImportOpen] = useState<boolean>(false)
     const [importImageOpen, setImportImageOpen] = useState<boolean>(false)
+    const [projectCreateOpen, setProjectCreateOpen] = useState<boolean>(false)
+
+    const [moveAction, setMoveAction] = useState<MoveAction | undefined>()
 
     const workspace = useTranslations("Workspace")
 
@@ -197,6 +202,43 @@ export const Workspace = () => {
         }
     }
 
+    const onMove = (action: MoveAction) => {
+        if (action.type == "create") {
+            setProjectCreateOpen(true)
+            setMoveAction(action)
+        }
+
+        if (action.type == "project") {
+            onMoveProject(action.project, action.form)
+        }
+    }
+
+    const onCreateProject = async (name: string, description: string) => {
+        try {
+            const createResponse = await projectService.create(name, description)
+            const project = createResponse.data
+
+            const patch: UpdateFormRequest = { projectId: project.id }
+            await formService.update(moveAction!.form.id, patch)
+
+        } catch(err) {
+            console.error(err)
+
+        } finally {
+            setProjectCreateOpen(false)
+            setMoveAction(undefined)
+        }
+    }
+
+    const onMoveProject = async (project: Project, form: Form) => {
+        try {
+            const patch: UpdateFormRequest = { projectId: project.id }
+            await formService.update(form.id, patch)
+        } catch(err) {
+            console.error(err)
+        }
+    }
+
     const renderFormCard = (form: Form) => {
         return (
             <Link href={`/forms/${form.id}`}>
@@ -258,9 +300,10 @@ export const Workspace = () => {
                                 </div>
                             </div>
                             <FormDropdown 
+                                form={form}
                                 projects={projects}
                                 onRename={() => {}}
-                                onMove={() => []}
+                                onMove={(action) => onMove(action)}
                                 onExport={() => {}}
                                 onPin={() => {}}
                                 onArchive={() => {}}
@@ -326,6 +369,7 @@ export const Workspace = () => {
                 <CreateDialog onCreate={onCreate} open={createOpen} onOpenChange={setCreateOpen} />
                 <FileDialog open={importOpen} onOpenChange={setImportOpen}/>
                 <ImageDialog open={importImageOpen} onOpenChange={setImportImageOpen} />
+                <ProjectCreate open={projectCreateOpen} onOpenChange={setProjectCreateOpen} onCreate={onCreateProject} />
             </div>
         </div>
     )

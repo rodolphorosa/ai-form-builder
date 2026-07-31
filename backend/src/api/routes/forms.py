@@ -7,7 +7,7 @@ from src.database.session import get_db
 from src.database.models.form import Form
 from src.database.models.project import Project
 from src.schemas.form import FormResponse
-from src.schemas.requests import BlankRequest, FormRequest, EditRequest, UpdateFormRequest, JsonFormRequest
+from src.schemas.requests import BlankFormRequest, AIFormRequest, AIEditRequest, UpdateFormRequest, JsonFormRequest
 from src.services.forms import FormService, generate_form_schema
 from src.api.deps import get_llm_provider
 from src.llm.factory import ProviderType
@@ -44,7 +44,7 @@ def update_form(id: UUID, data: UpdateFormRequest, db: Session = Depends(get_db)
 
 
 @router.post('/create_with_ai')
-def create_with_ai(data: FormRequest, db: Session = Depends(get_db)):
+def create_with_ai(data: AIFormRequest, db: Session = Depends(get_db)):
     service = FormService(db)
 
     result = service.create_with_ai(data)
@@ -70,7 +70,7 @@ def create_from_json(data: JsonFormRequest, db: Session = Depends(get_db)):
 
 
 @router.post('/create_blank')
-def create_blank(data: BlankRequest, db: Session = Depends(get_db)):
+def create_blank(data: BlankFormRequest, db: Session = Depends(get_db)):
     service = FormService(db)
 
     form = service.create_blank(
@@ -106,7 +106,7 @@ async def create_from_image(
 
 
 @router.post('/edit')
-def edit_form(data: EditRequest, db: Session = Depends(get_db)):
+def edit_form(data: AIEditRequest, db: Session = Depends(get_db)):
     service = FormService(db)
 
     result = service.edit_schema_with_ai(data)

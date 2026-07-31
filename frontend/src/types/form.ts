@@ -109,3 +109,8 @@ export interface Form {
 }
 
 export type Path = (string | number)[]
+
+export type MoveAction = 
+    | { type: "create", form: Form }
+    | { type: "search", form: Form }
+    | { type: "project", form: Form, project: Project }

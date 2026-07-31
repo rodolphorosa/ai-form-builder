@@ -9,7 +9,7 @@ from src.llm.services import generate_form_schema, edit_form_schema, generate_fr
 from src.repositories.form_repository import FormRepository
 from src.repositories.project_repository import ProjectRepository
 from src.api.deps import get_llm_provider
-from src.schemas.requests import EditRequest, FormRequest, UpdateFormRequest
+from src.schemas.requests import AIEditRequest, AIFormRequest, UpdateFormRequest
 from src.schemas.schema import (
     Form, 
     FormSchema, 
@@ -82,7 +82,7 @@ class FormService:
         return FormSchema(sections=sections)
 
 
-    def create_with_ai(self, data: FormRequest):
+    def create_with_ai(self, data: AIFormRequest):
         provider = get_llm_provider(data.provider, data.model)
         response = generate_form_schema(data.prompt, provider)
 
@@ -191,7 +191,7 @@ class FormService:
         return { "response": response, "form": form }
     
 
-    def edit_schema_with_ai(self, data: EditRequest):
+    def edit_schema_with_ai(self, data: AIEditRequest):
         current_form = data.form
         current_schema = current_form.schema
 

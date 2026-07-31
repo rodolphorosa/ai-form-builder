@@ -12,5 +12,9 @@ export const projectService = {
 
     getAll(): Promise<ApiResponse<Project[]>> {
         return api.get<ApiResponse<Project[]>>("/projects")
+    },
+
+    create(name: string, description: string | null): Promise<ApiResponse<Project>> {
+        return api.post<ApiResponse<Project>>("/projects", { name: name, description: description })
     }
 }

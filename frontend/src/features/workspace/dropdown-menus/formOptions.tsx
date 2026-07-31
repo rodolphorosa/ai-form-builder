@@ -3,12 +3,14 @@ import { Button } from "@/components/ui/button"
 import { EllipsisVertical, Pencil, FolderInput, FolderPlus, FolderSearch, FolderOpen, Download, FileBraces, Pin, Archive, Copy, Trash } from "lucide-react"
 import { FaRegFilePdf } from "react-icons/fa"
 import { useTranslations } from "next-intl"
-import { Form, Project } from "@/types/form"
+import { Form, MoveAction, Project } from "@/types/form"
+
 
 interface Props {
+    form: Form,
     projects: Project[]
     onRename: () => void
-    onMove: () => void
+    onMove: (action: MoveAction) => void
     onExport: () => void
     onPin: () => void
     onArchive: () => void
@@ -18,6 +20,7 @@ interface Props {
 
 
 export const FormDropdown = ({
+    form,
     projects,
     onRename,
     onMove,
@@ -56,7 +59,12 @@ export const FormDropdown = ({
                         </DropdownMenuSubTrigger>
                         <DropdownMenuPortal>
                             <DropdownMenuSubContent>
-                                <DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={(e) => {
+                                        e.preventDefault()
+                                        onMove({ type: "create", form: form })
+                                    }}
+                                >
                                     <FolderPlus className="h-4 w-4 shrink-0" />
                                     <div className="text-sm font-medium truncate">
                                         Novo projeto
@@ -65,7 +73,12 @@ export const FormDropdown = ({
                                 {projects && projects.length > 0 && (
                                     <>
                                         <DropdownMenuSeparator />
-                                        <DropdownMenuItem>
+                                        <DropdownMenuItem
+                                            onClick={(e) => {
+                                                e.preventDefault()
+                                                onMove({ type: "search", form: form })
+                                            }}
+                                        >
                                             <FolderSearch className="h-4 w-4 shrink-0" />
                                             <div className="text-sm font-medium truncate">
                                                 Buscar projetos
@@ -77,7 +90,17 @@ export const FormDropdown = ({
                                 )}
                                 {projects?.slice(0, 3).map(project => {
                                     return (
-                                        <DropdownMenuItem key={project.id}>
+                                        <DropdownMenuItem 
+                                            key={project.id}
+                                            onClick={(e) => {
+                                                e.preventDefault()
+                                                onMove({ 
+                                                    type: "project", 
+                                                    form: form, 
+                                                    project: project 
+                                                })
+                                            }}
+                                        >
                                             <FolderOpen className="h-4 w-4 shrink-0" />
                                             <div className="text-sm font-medium truncate">
                                                 {project.name}
@@ -146,7 +169,6 @@ export const FormDropdown = ({
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
             </DropdownMenuContent>
-            
         </DropdownMenu>
     )
 }
