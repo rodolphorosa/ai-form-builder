@@ -63,8 +63,9 @@ export const Builder = ({}: BuilderProps) => {
         async onSave(form) {
             if (!form) return
 
-            await formService.update(form.id, createFormPatch())
-            setCommittedForm(form)
+            const response = await formService.update(form.id, createFormPatch())
+            setCommittedForm(response.data)
+            setWorkingForm(response.data)
         }
     })
 
@@ -72,8 +73,6 @@ export const Builder = ({}: BuilderProps) => {
         past: [],
         future: []
     })
-
-    console.log(history.past)
     
     const [selectedItem, setSelectedItem] = useState<Item|null>(null)
     const [loading, setLoading] = useState<boolean>(false)
@@ -108,8 +107,27 @@ export const Builder = ({}: BuilderProps) => {
         return patch
     }
 
+    const onFormChange = (form: Partial<Form>) => {
+        const previous = workingForm
+
+        setWorkingForm(prev => {
+            if (!prev) return null
+
+            return {
+                ...prev,
+                ...form
+            }
+        })
+
+        previous && setHistory(prev => ({
+            ...prev,
+            past: [...prev.past, previous],
+            future: []
+        }))
+
+    }
+
     const onSchemaChange = (schema: FormSchema) => {
-        console.log("on schema change")
         const previous = workingForm
         
         setWorkingForm(prev => {
@@ -245,6 +263,7 @@ export const Builder = ({}: BuilderProps) => {
                                 setCommittedForm(form)
                                 setWorkingForm(form)
                             }}
+                            onFormChange={(form) => onFormChange(form)}
                             onSchemaChange={(schema) => onSchemaChange(schema)}
                             promptRef={promptRef}
                             loading={loading}
@@ -288,6 +307,7 @@ export const Builder = ({}: BuilderProps) => {
                                 setCommittedForm(form)
                                 setWorkingForm(form)
                             }}
+                            onFormChange={(form) => onFormChange(form)}
                             onSchemaChange={(schema) => onSchemaChange(schema)}
                             promptRef={promptRef}
                             loading={loading}

@@ -7,7 +7,6 @@ from uuid import UUID
 class JsonFormRequest(BaseModel):
     form: Form
 
-
 class BlankRequest(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
@@ -22,10 +21,9 @@ class FormRequest(BaseModel):
 
 class EditRequest(BaseModel):
     prompt: str
-    schema: dict
+    form: Form
     provider: ProviderType
     model: str
-
 
 class SuggestionRequest(BaseModel):
     schema: dict

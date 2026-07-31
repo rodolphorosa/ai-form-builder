@@ -6,28 +6,28 @@ import { Form, FormSchema } from "@/types/form"
 const api = new ApiClient()
 
 export const formService = {
-    create(request: {form: Form}): Promise<ApiResponse<Form>> {
-        return api.post<ApiResponse<Form>>("/forms/create_from_json", request)
-    },
-
     createWithAI(request: CreateRequest): Promise<ApiFormResponse> {
-        return api.post<ApiFormResponse>("/forms/generate", request)
-    },
-
-    edit(request: EditRequest): Promise<ApiResponse<{ message: string, schema: FormSchema }>> {
-        return api.post<ApiResponse<{ message: string, schema: FormSchema }>>("/forms/edit", request)
-    },
-
-    suggest(request: SuggestionRequest): Promise<ApiResponse<{ suggestions: Suggestion[]}>> {
-        return api.post<ApiResponse<{ suggestions: Suggestion[]}>>("/suggestions/", request)
+        return api.post<ApiFormResponse>("/forms/create_with_ai", request)
     },
 
     createBlank(request: Partial<Form>): Promise<ApiResponse<Form>> {
         return api.post<ApiResponse<Form>>("/forms/create_blank", request)
     },
 
-    createFromImage(request: FormData): Promise<ApiResponse<{ message: string, form: Form}>> {
-        return api.postFormData<ApiResponse<{ message: string, form: Form}>>("/forms/generate_from_image", request)
+    create_from_json(request: {form: Form}): Promise<ApiResponse<Form>> {
+        return api.post<ApiResponse<Form>>("/forms/create_from_json", request)
+    },
+
+    createFromImage(request: FormData): Promise<ApiResponse<{ message: string, form: Form }>> {
+        return api.postFormData<ApiResponse<{ message: string, form: Form }>>("/forms/create_from_image", request)
+    },
+
+    edit(request: EditRequest): Promise<ApiResponse<{ message: string, form: Partial<Form> }>> {
+        return api.post<ApiResponse<{ message: string, form: Partial<Form> }>>("/forms/edit", request)
+    },
+
+    suggest(request: SuggestionRequest): Promise<ApiResponse<{ suggestions: Suggestion[] }>> {
+        return api.post<ApiResponse<{ suggestions: Suggestion[] }>>("/suggestions/", request)
     },
 
     getAll(): Promise<ApiResponse<Form[]>> {

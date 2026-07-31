@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 
 from enum import Enum
+from uuid import UUID
 
 class InputType(str, Enum):
     TEXT = "text"
@@ -17,6 +18,7 @@ class InputType(str, Enum):
     TEXTAREA = "textarea"
     FILE = "file"
 
+
 class Validation(BaseModel):
     minValue: int | None = None
     maxValue: int | None = None
@@ -24,16 +26,19 @@ class Validation(BaseModel):
     maxLength: int | None = None
     regex: str | None = None
 
+
 class Option(BaseModel):
     value: str
     label: str
+
 
 class UI(BaseModel):
     placeholder: str | None = None
     helpText: str | None = None
 
-class Item(BaseModel):
-    id: str
+
+class ItemBase(BaseModel):
+    name: str
     label: str
     type: InputType
     description: str | None = None
@@ -43,16 +48,44 @@ class Item(BaseModel):
     options: list[Option] | None = None
     ui: UI | None = None
 
-class Section(BaseModel):
+
+class Item(ItemBase):
     id: str
+
+
+class LLMItem(ItemBase):
+    pass
+
+
+class SectionBase(BaseModel):
+    name: str
     label: str
     description: str | None = None
+    
+
+class Section(SectionBase):
+    id: str
     items: list[Item]
+
+
+class LLMSection(SectionBase):
+    items: list[ItemBase]
+    
 
 class FormSchema(BaseModel):
     sections: list[Section]
+
+
+class LLMFormSchema(BaseModel):
+    sections: list[LLMSection]
+
 
 class Form(BaseModel):
     name: str
     description: str | None = None
     schema: FormSchema
+
+
+class IdRegistry(BaseModel):
+    sections: dict[str, UUID]
+    items: dict[str, UUID]

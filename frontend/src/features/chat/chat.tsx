@@ -17,6 +17,7 @@ interface ChatProps {
     setMode: (mode: ChatMode) => void
     form: Form | null
     onFormCreate: (form: Form) => void
+    onFormChange: (form: Partial<Form>) => void
     onSchemaChange: (schema: FormSchema) => void
     promptRef?: RefObject<HTMLTextAreaElement | null> | null
     loading?: boolean
@@ -70,6 +71,7 @@ export const Chat = ({
     setMode, 
     form, 
     onFormCreate, 
+    onFormChange,
     onSchemaChange, 
     promptRef, 
     loading, 
@@ -186,7 +188,7 @@ export const Chat = ({
         try {
             const { data } = await formService.edit({
                 prompt: prompt,
-                schema: form.schema,
+                form: form,
                 provider: "openai",
                 model: "gpt-4.1-nano"
             })
@@ -200,7 +202,8 @@ export const Chat = ({
                     type: "text"
                 }
             ])
-            onSchemaChange(data.schema)
+
+            onFormChange(data.form)
 
         } catch (error) {
             console.log("Failed to edit form", error)

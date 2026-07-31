@@ -12,6 +12,7 @@ import { useTranslations } from "next-intl"
 import { useRef, useState } from "react"
 import { FormAttachment } from "./attachment"
 import { formService } from "@/api/form.service"
+import { useRouter } from "@/i18n/navigation"
 
 interface DialogProps {
     open: boolean
@@ -91,6 +92,8 @@ export function FileDialog({ open, onOpenChange }: DialogProps) {
     const [state, setState] = useState<"success" | "failure">()
     const [error, setError] = useState<string | null>(null)
 
+    const router = useRouter()
+
     const handleImport = async (file: File) => {
         setSelectedFile(file)
         setError(null)
@@ -113,11 +116,11 @@ export function FileDialog({ open, onOpenChange }: DialogProps) {
 
         try {
 
-            const response = await formService.create({"form": form})
+            const response = await formService.create_from_json({"form": form})
 
             const data = response.data
 
-            console.log(data)
+            router.push(`/forms/${data.id}`)
 
         } catch (err) {
 

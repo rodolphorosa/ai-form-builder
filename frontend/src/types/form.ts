@@ -44,6 +44,7 @@ export interface Option<T extends OptionValue = string> {
 
 interface ComponentBase {
     id: string
+    name: string
     label: string
     description?: string
     ui?: Ui
@@ -67,6 +68,7 @@ export type SectionItem = Item | Group
 
 export interface Section {
     id: string
+    name: string
     label: string
     description?: string
     items: Item[]

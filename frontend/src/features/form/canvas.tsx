@@ -85,7 +85,8 @@ export const Canvas = ({ form, onPropertyChange }: CanvasProps) => {
                         onClick={() => {
                             const item: Item = {
                                 id: "id",
-                                label: "untitled",
+                                name: "untitled",
+                                label: "Untitled",
                                 type: "text",
                                 required: false,
                                 disabled: false,

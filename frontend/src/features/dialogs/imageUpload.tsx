@@ -160,7 +160,7 @@ export const ImageDialog = ({ open, onOpenChange }: DialogProps) => {
 
             formData.append("image", image)
             formData.append("provider", "openai")
-            formData.append("model", "gpt-5")
+            formData.append("model", "gpt-5.6-terra")
 
             const response = await formService.createFromImage(formData)
             const data = response.data

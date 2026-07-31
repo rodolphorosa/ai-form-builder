@@ -33,11 +33,21 @@ def get_form(id: UUID, db: Session = Depends(get_db)):
 
     return { "data": FormResponse.from_model(form) }
 
-@router.post('/generate')
-def generate_form(data: FormRequest, db: Session = Depends(get_db)):
+
+@router.patch('/{id}')
+def update_form(id: UUID, data: UpdateFormRequest, db: Session = Depends(get_db)):
     service = FormService(db)
 
-    result = service.generate(data)
+    form = service.update(id, data)
+
+    return { "data": FormResponse.from_model(form) }
+
+
+@router.post('/create_with_ai')
+def create_with_ai(data: FormRequest, db: Session = Depends(get_db)):
+    service = FormService(db)
+
+    result = service.create_with_ai(data)
 
     llm_response = result["response"]
     form = result["form"]
@@ -48,6 +58,7 @@ def generate_form(data: FormRequest, db: Session = Depends(get_db)):
             "form": FormResponse.from_model(form)
         }
     }
+
 
 @router.post('/create_from_json')
 def create_from_json(data: JsonFormRequest, db: Session = Depends(get_db)):
@@ -71,26 +82,8 @@ def create_blank(data: BlankRequest, db: Session = Depends(get_db)):
     return { "data": FormResponse.from_model(form) }
     
 
-@router.post('/edit')
-def edit_form(data: EditRequest, db: Session = Depends(get_db)):
-    service = FormService(db)
-
-    result = service.edit_schema_with_ai(data)
-
-    return { "data": result }
-
-
-@router.patch('/{id}')
-def update_form(id: UUID, data: UpdateFormRequest, db: Session = Depends(get_db)):
-    service = FormService(db)
-
-    form = service.update(id, data)
-
-    return { "data": FormResponse.from_model(form) }
-
-
-@router.post('/generate_from_image')
-async def generate_from_image(
+@router.post('/create_from_image')
+async def create_from_image(
     image: UploadFile = File(...), 
     provider: ProviderType = ApiForm(...),
     model: str = ApiForm(...),
@@ -98,7 +91,7 @@ async def generate_from_image(
 ):
     service = FormService(db)
 
-    result = await service.generate_from_image(image, provider, model)
+    result = await service.create_from_image(image, provider, model)
 
     llm_response = result["response"]
 
@@ -108,5 +101,28 @@ async def generate_from_image(
         "data": {
             "message": llm_response["message"],
             "form": FormResponse.from_model(form)
+        }
+    }
+
+
+@router.post('/edit')
+def edit_form(data: EditRequest, db: Session = Depends(get_db)):
+    service = FormService(db)
+
+    result = service.edit_schema_with_ai(data)
+
+    message = result["message"]
+    title = result["title"]
+    description = result["description"]
+    schema = result["schema"]
+
+    return {
+        "data": {
+            "message": message,
+            "form": {
+                "name": title,
+                "description": description,
+                "schema": schema
+            }
         }
     }

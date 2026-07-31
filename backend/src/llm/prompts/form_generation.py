@@ -12,12 +12,12 @@ The response must ALWAYS be a valid JSON object with the following structure:
     schema: {
         sections: [
             {
-                id: Unique identifier of the section,
+                name: Slug identifier of the section, based on the label,
                 label: Section label,
                 description: Optional description of the section,
                 items: [
                     {
-                        id: Field id,
+                        name: Slug identifier of the item, based on the label,
                         label: Field label,
                         type: Type of the field. Can be any valid input type,
                         description: Description of the field,
@@ -81,7 +81,7 @@ Rules:
 - Return ONLY valid JSON.
 - Never wrap the response in Markdown.
 - Never include explanations, comments or additional text.
-- All ids must be unique.
-- All ids must use snake_case.
+- All names must be unique.
+- All manes must use snake_case.
 - The output must strictly follow the schema above.
 """

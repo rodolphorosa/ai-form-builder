@@ -9,7 +9,7 @@ interface BaseRequest {
 
 export type CreateRequest = BaseRequest
 export interface EditRequest extends BaseRequest {
-    schema: FormSchema
+    form: Form
 }
 
 export interface SuggestionRequest {
