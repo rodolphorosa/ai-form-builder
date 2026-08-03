@@ -9,6 +9,7 @@
     "export": "Export",
     "archive": "Archive",
     "delete": "Delete",
+    "duplicate": "Duplicar",
 
     "text": "Short text",
     "email": "E-mail",

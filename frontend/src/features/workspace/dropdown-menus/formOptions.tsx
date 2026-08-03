@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { EllipsisVertical, Pencil, FolderInput, FolderPlus, FolderSearch, FolderOpen, Download, FileBraces, Pin, Archive, Copy, Trash } from "lucide-react"
 import { FaRegFilePdf } from "react-icons/fa"
 import { useTranslations } from "next-intl"
-import { Form, MoveAction, Project } from "@/types/form"
+import { Form, FormUpdateAction, MoveAction, Project } from "@/types/form"
 
 
 interface Props {
@@ -12,10 +12,10 @@ interface Props {
     onRename: () => void
     onMove: (action: MoveAction) => void
     onExport: () => void
-    onPin: () => void
-    onArchive: () => void
+    onPinUnpin: (action: FormUpdateAction) => void
+    onArchive: (action: FormUpdateAction) => void
     onDuplicate: () => void
-    onDelete: () => void
+    onDelete: (action: FormUpdateAction) => void
 }
 
 
@@ -25,7 +25,7 @@ export const FormDropdown = ({
     onRename,
     onMove,
     onExport,
-    onPin,
+    onPinUnpin,
     onArchive,
     onDuplicate,
     onDelete
@@ -140,13 +140,26 @@ export const FormDropdown = ({
                     </DropdownMenuSub>
                 </DropdownMenuGroup>
                 <DropdownMenuGroup>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem
+                        onClick={(e) => {
+                            e.preventDefault()
+                            onPinUnpin({ 
+                                type: form?.pinned ? "unpin" : "pin", 
+                                form: form
+                            })
+                        }}
+                    >
                         <Pin />
                         <div className="text-sm font-medium truncate">
-                            {common("pin")}
+                            {form?.pinned ? common("unpin") : common("pin")}
                         </div>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem
+                        onClick={(e) => {
+                            e.preventDefault()
+                            onArchive({ type: "archive", form: form })
+                        }}
+                    >
                         <Archive />
                         <div className="text-sm font-medium truncate">
                             {common("archive")}
@@ -155,13 +168,19 @@ export const FormDropdown = ({
                     <DropdownMenuItem>
                         <Copy className="h-4 w-4 shrink-0" />
                         <div className="text-sm font-medium truncate">
-                            Duplicar
+                            {common("duplicate")}
                         </div>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                    <DropdownMenuItem variant="destructive">
+                    <DropdownMenuItem 
+                        variant="destructive"
+                        onClick={(e) => {
+                            e.preventDefault()
+                            onDelete({ type: "delete", form: form })
+                        }}
+                    >
                         <Trash />
                         <div className="text-sm font-medium truncate">
                             {common("delete")}

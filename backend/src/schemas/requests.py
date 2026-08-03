@@ -40,11 +40,11 @@ class SuggestionRequest(BaseModel):
 class UpdateFormRequest(BaseModel):
     name: str | None = None
     description: str | None = None
-    project_id: UUID | None = Field(alias="projectId")
+    project_id: UUID | None = Field(None, alias="projectId")
     schema: FormSchema | None = None
-    pinned: bool | None = None
-    archived: bool | None = None
-    deleted: bool | None = None
+    is_pinned: bool | None = Field(None, alias="pinned")
+    is_archived: bool | None = Field(None, alias="archived")
+    is_deleted: bool | None = Field(None, alias="deleted")
 
 
 class ProjectRequest(BaseModel):

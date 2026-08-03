@@ -114,3 +114,17 @@ export type MoveAction =
     | { type: "create", form: Form }
     | { type: "search", form: Form }
     | { type: "project", form: Form, project: Project }
+
+
+
+export type FormUpdateAction = 
+    | { type: "pin", form: Form }
+    | { type: "unpin", form: Form }
+    | { type: "archive", form: Form }
+    | { type: "delete", form: Form }
+
+
+export type FormUpdateParams = 
+    | { form: Form, attribute: "pinned", value: boolean }
+    | { form: Form,  attribute: "archived", value: boolean }
+    | { form: Form, attribute: "deleted", value: boolean }

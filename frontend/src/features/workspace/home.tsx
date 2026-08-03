@@ -1,6 +1,6 @@
 "use client"
 
-import { Form, FormSchema, Item, MoveAction, Project } from "@/types/form"
+import { Form, FormSchema, FormUpdateAction, FormUpdateParams, Item, MoveAction, Project } from "@/types/form"
 import { useEffect, useState } from "react"
 import { Sidebar } from "./sidebar"
 import { Astroid, ChevronDown, EllipsisVertical, File, FilePlusCorner, FileUp, FolderOpen, Form as FormIcon, ImageUp, Import } from "lucide-react"
@@ -202,14 +202,14 @@ export const Workspace = () => {
         }
     }
 
-    const onMove = (action: MoveAction) => {
+    const onMoveForm = (action: MoveAction) => {
         if (action.type == "create") {
             setProjectCreateOpen(true)
             setMoveAction(action)
         }
 
         if (action.type == "project") {
-            onMoveProject(action.project, action.form)
+            moveForm(action.project, action.form)
         }
     }
 
@@ -230,12 +230,64 @@ export const Workspace = () => {
         }
     }
 
-    const onMoveProject = async (project: Project, form: Form) => {
+    const moveForm = async (project: Project, form: Form) => {
         try {
             const patch: UpdateFormRequest = { projectId: project.id }
             await formService.update(form.id, patch)
         } catch(err) {
             console.error(err)
+        }
+    }
+
+    const updateForm = async (params: FormUpdateParams) => {
+        const attr = params.attribute
+        const value = params.value
+        const form = params.form
+        
+        try {
+            const patch: UpdateFormRequest = {}
+            patch[attr] = value
+
+            await formService.update(form.id, patch)
+
+        } catch(err) {
+
+        } finally {
+
+        }
+    }
+
+    const onUpdateForm = (action: FormUpdateAction) => {
+        if (action.type == "pin") {
+            updateForm({
+                form: action.form, 
+                attribute: "pinned", 
+                value: true
+            })
+        }
+        
+        if (action.type == "unpin") {
+            updateForm({
+                form: action.form, 
+                attribute: "pinned", 
+                value: false
+            })
+        }
+        
+        if (action.type == "archive") {
+            updateForm({
+                form: action.form, 
+                attribute: "archived", 
+                value: true
+            })
+        }
+
+        if (action.type == "delete") {
+            updateForm({
+                form: action.form,
+                attribute: "deleted",
+                value: true
+            })
         }
     }
 
@@ -303,12 +355,12 @@ export const Workspace = () => {
                                 form={form}
                                 projects={projects}
                                 onRename={() => {}}
-                                onMove={(action) => onMove(action)}
+                                onMove={(action) => onMoveForm(action)}
                                 onExport={() => {}}
-                                onPin={() => {}}
-                                onArchive={() => {}}
+                                onPinUnpin={(action) => onUpdateForm(action)}
+                                onArchive={(action) => onUpdateForm(action)}
                                 onDuplicate={() => []}
-                                onDelete={() => {}}
+                                onDelete={(action) => onUpdateForm(action)}
                             />
                         </div>
                     </div>

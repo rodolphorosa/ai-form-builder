@@ -43,11 +43,12 @@ export const Sidebar = ({ forms, projects }: Props) => {
                         <span className="truncate">{form.name}</span>
                     </div>
                     <FormDropdown 
+                        form={form}
                         projects={projects}
                         onRename={() => {}}
                         onMove={() => []}
                         onExport={() => {}}
-                        onPin={() => {}}
+                        onPinUnpin={() => {}}
                         onArchive={() => {}}
                         onDuplicate={() => []}
                         onDelete={() => {}}
