@@ -10,7 +10,7 @@ import { useTranslations } from "next-intl"
 import { formService } from "@/api/form.service"
 import { useRouter } from "@/i18n/navigation"
 import { formatFileSize } from "./utils"
-import { FormAttachment } from "./attachment"
+import { FileAttachment } from "./attachment"
 
 interface DialogProps {
     open: boolean
@@ -50,7 +50,7 @@ export const ImageImport = ({ onImport, image }: ImageImportProps) => {
         <div className="flex flex-col gap-2">
             {image && (
                 <div className="flex flex-col gap-2">
-                    <FormAttachment file={image} type="image" />
+                    <FileAttachment file={image} type="image" />
                     <div className="flex flex-row gap-1 items-center text-sm font-medium">
                         <div className="p-2 bg-muted rounded-full">
                             <Check className="h-4 w-4 shrink-0"/>
@@ -117,7 +117,7 @@ const FakeLoader = ({ image }: { image: File }) => {
 
     return (
         <div className="flex flex-col gap-2.5">
-            <FormAttachment file={image} type="image" />
+            <FileAttachment file={image} type="image" />
             <div className="flex flex-col gap-1">
                 {status.slice(0, step).map((text) => (
                     <div
@@ -198,7 +198,7 @@ export const ImageDialog = ({ open, onOpenChange }: DialogProps) => {
 
                 {state === "success" && (
                     <div className="flex flex-col gap-2">
-                        <FormAttachment file={image!} type="image" />
+                        <FileAttachment file={image!} type="image" />
                         <div className="flex flex-row gap-1 items-center text-sm font-medium">
                             <div className="p-2 bg-muted rounded-full">
                                 <Check className="h-4 w-4 shrink-0"/>

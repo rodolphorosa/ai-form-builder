@@ -1,10 +1,11 @@
 import { Attachment, AttachmentAction, AttachmentActions, AttachmentContent, AttachmentDescription, AttachmentMedia, AttachmentTitle } from "@/components/ui/attachment"
 import { FileBraces, X } from "lucide-react"
+import { FaRegFilePdf } from "react-icons/fa"
 import { formatFileSize } from "./utils"
 
 interface AttachmentProps {
     file: File
-    type: "json" | "image"
+    type: "json" | "image" | "pdf"
     orientation?: "vertical" | "horizontal"
     failed?: boolean
     errorMessage?: string
@@ -20,10 +21,11 @@ interface Metadata {
 const types: Record<string, string> = {
     "image/jpeg": "JPEG",
     "image/png": "PNG",
-    "application/json": "JSON"
+    "application/json": "JSON",
+    "application/pdf": "PDF",
 }
 
-export const FormAttachment = ({ file, type, orientation, failed, errorMessage }: AttachmentProps) => {
+export const FileAttachment = ({ file, type, orientation, failed, errorMessage }: AttachmentProps) => {
     const metadata: Metadata = {
         name: file.name,
         size: file.size,
@@ -50,6 +52,9 @@ export const FormAttachment = ({ file, type, orientation, failed, errorMessage }
                 )}
                 {type === "json" && (
                     <FileBraces className="h-4 w-4 shrink-0" />
+                )}
+                {type === "pdf" && (
+                    <FaRegFilePdf className="h-4 w-4 shrink-0" />
                 )}
             </AttachmentMedia>
             <AttachmentContent>

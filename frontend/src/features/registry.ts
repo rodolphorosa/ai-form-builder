@@ -8,9 +8,30 @@ import { RadioInput } from "./inputs/radio"
 import { SelectInput } from "./inputs/select"
 import { TextInput } from "./inputs/text"
 import { TextareaInput } from "./inputs/textarea"
+import { RatingInput } from "./inputs/rating"
+import { FileInput } from "./inputs/file"
 
-import { Calendar, CalendarClock, CircleDot, Container, Hash, Link, List, Lock, Mail, Phone, SquareCheck, Text, TextAlignStart, TextInitial, Type } from "lucide-react"
+import { 
+    Calendar, 
+    CalendarClock, 
+    CircleDot, 
+    Container, 
+    Hash, 
+    Link, 
+    List, 
+    Lock, 
+    Mail, 
+    Phone, 
+    SquareCheck, 
+    Star, 
+    Text, 
+    TextAlignStart, 
+    TextInitial, 
+    Type, 
+    File as FileIcon, 
+    FileUp} from "lucide-react"
 import { InputProps, State } from "../types/inputs"
+
 
 export const itemStrategies: Record<InputType, React.ComponentType<InputProps>> = {
     text: TextInput,
@@ -24,7 +45,9 @@ export const itemStrategies: Record<InputType, React.ComponentType<InputProps>> 
     datetime: DatetimeInput,
     select: SelectInput,
     radio: RadioInput,
-    checkbox: CheckboxInput
+    checkbox: CheckboxInput,
+    rating: RatingInput,
+    file: FileInput
 }
 
 export const strategyIcons: Record<InputType, React.ComponentType> = {
@@ -40,7 +63,8 @@ export const strategyIcons: Record<InputType, React.ComponentType> = {
     select: List,
     radio: CircleDot,
     checkbox: SquareCheck,
-    // group: Container
+    rating: Star,
+    file: FileUp,
 }
 
 export const typesNames: Record<InputType, string> = {
@@ -56,7 +80,8 @@ export const typesNames: Record<InputType, string> = {
     select: "Select",
     radio: "Radio",
     checkbox: "Checkbox",
-    group: "Group"
+    rating: "Rating",
+    file: "File"
 }
 
 export const operations: Record<string, string> = {

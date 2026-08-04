@@ -23,6 +23,13 @@
     "select": "Lista de seleção",
     "radio": "Botão de opção",
     "checkbox": "Caixa de seleção",
+    "rating": "Avaliação",
+    "file": "Arquivo",
+
+    "new question": "Nova pergunta",
+    "new section": "Nova seção",
+
+    "copy": "Cópia",
 
     "chat-create": "Descreva o formulário que você deseja",
     "chat-edit": "Descreva uma alteração no formulário",

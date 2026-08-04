@@ -17,6 +17,7 @@ class InputType(str, Enum):
     CHECKBOX = "checkbox"
     TEXTAREA = "textarea"
     FILE = "file"
+    RATING = "rating"
 
 
 class Validation(BaseModel):
@@ -25,6 +26,10 @@ class Validation(BaseModel):
     minLength: int | None = None
     maxLength: int | None = None
     regex: str | None = None
+    maxSize: int | None = None
+    minFiles: int | None = None
+    maxFiles: int | None = None
+    acceptedTypes: list[str] | None = None
 
 
 class Option(BaseModel):

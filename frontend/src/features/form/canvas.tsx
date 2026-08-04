@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils"
 import { Form, Item, Path, Section } from "@/types/form"
 import { useEffect, useRef, useState } from "react"
-import { Copy, GripVertical, Layers, Plus } from "lucide-react"
+import { ChevronDown, ChevronUp, Copy, GripVertical, Layers, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { EditableText } from "../inputs/common"
 import { EditableComponent } from "./editable"
@@ -11,8 +11,9 @@ import { Separator } from "@/components/ui/separator"
 import { useSortable } from "@dnd-kit/react/sortable"
 import { DragDropProvider, useDroppable } from "@dnd-kit/react"
 import { move } from "@dnd-kit/helpers"
-import { ItemsBySection, recordToSections, sectionsToRecord } from "./utils"
+import { isSystemGeneratedName, ItemsBySection, recordToSections, sectionsToRecord, slugify } from "./utils"
 import React from "react"
+import { useTranslations } from "next-intl"
 
 interface CanvasProps {
     form: Form
@@ -28,6 +29,8 @@ const SortableItem = ({
     selected,
     basePath,
     onPropertyChange,
+    onDelete,
+    onDuplicate,
     itemRef,
 }: {
     item: Item
@@ -38,6 +41,8 @@ const SortableItem = ({
     selected: boolean
     basePath: Path
     onPropertyChange: (path: Path, value: unknown) => void
+    onDelete: () => void
+    onDuplicate: () => void
     itemRef?: (el: HTMLDivElement | null) => void
 }) => {
     const { ref, handleRef } = useSortable({
@@ -73,6 +78,8 @@ const SortableItem = ({
                 selected={selected}
                 sections={sections}
                 onChange={(path, value) => onPropertyChange([...basePath, ...path], value)}
+                onDelete={onDelete}
+                onDuplicate={onDuplicate}
             />
         </div>
     )
@@ -105,6 +112,8 @@ export const Canvas = ({ form, onPropertyChange }: CanvasProps) => {
     const [selectedItem, setSelectedItem] = useState<Item | null>(null)
     const [selectedSection, setSelectedSection] = useState<Section | null>(null)
     const [titleFocused, setTitleFocused] = useState<boolean>(false)
+
+    const common = useTranslations("Common")
 
     const [itemsBySection, setItemsBySection] = useState<ItemsBySection>(() =>
         sectionsToRecord(form.schema.sections)
@@ -152,6 +161,18 @@ export const Canvas = ({ form, onPropertyChange }: CanvasProps) => {
         })
     }
 
+    const createItemCopy = (item: Item): Item => {
+        var copy = structuredClone(item)
+
+        const randomId = crypto.randomUUID()
+        
+        copy.id = randomId
+        copy.name = isSystemGeneratedName(item.name) ? `field_${randomId.slice(0, 8)}` : `${item.name}_copy`
+        copy.label = `${item.label} (${common("copy")})`
+        
+        return copy
+    }
+
     const renderSection = (section: Section, index: number) => {
         const isSelected = section.id === selectedSection?.id
         const basePath = ["schema", "sections", index]
@@ -168,7 +189,13 @@ export const Canvas = ({ form, onPropertyChange }: CanvasProps) => {
                                 : "pointer-events-none opacity-0 group-hover:opacity-50"
                         )}
                     >
-                        <Button variant="outline" size="icon">
+                        <Button variant="ghost" size="icon">
+                            <ChevronUp className="h-4 w-4 shrink-0" />
+                        </Button>
+                        <Button variant="ghost" size="icon">
+                            <ChevronDown className="h-4 w-4 shrink-0" />
+                        </Button>
+                        <Button variant="ghost" size="icon">
                             <Copy className="h-4 w-4 shrink-0" />
                         </Button>
                     </div>
@@ -181,7 +208,20 @@ export const Canvas = ({ form, onPropertyChange }: CanvasProps) => {
                             placeholder="Untitled section"
                             editable={isSelected}
                             className="font-medium"
-                            onChange={(label) => onPropertyChange([...basePath, "label"], label)}
+                            onChange={(label) => {
+                                if(isSystemGeneratedName(section.name)) {
+                                    onPropertyChange(
+                                        basePath, 
+                                        {
+                                            ...section, 
+                                            label: label, 
+                                            name: slugify(label)
+                                        }
+                                    )
+                                } else {
+                                    onPropertyChange([...basePath, "label"], label)
+                                }
+                            }}
                         />
                         <EditableText
                             text={section.description}
@@ -207,6 +247,20 @@ export const Canvas = ({ form, onPropertyChange }: CanvasProps) => {
                             selected={item.id === selectedItem?.id}
                             basePath={[...basePath, "items", itemIndex]}
                             onPropertyChange={onPropertyChange}
+                            onDelete={() => {
+                                onPropertyChange(
+                                    [...basePath, "items"], 
+                                    items.filter(it => it.id !== item.id)
+                                )
+                            }}
+                            onDuplicate={() => {
+                                const copy = createItemCopy(item)
+
+                                onPropertyChange(
+                                    [...basePath, "items"],
+                                    [...items, copy]
+                                )
+                            }}
                             itemRef={(el) => {
                                 itemRefs.current[item.id] = el
                             }}
@@ -217,6 +271,22 @@ export const Canvas = ({ form, onPropertyChange }: CanvasProps) => {
                     <Button
                         variant="outline"
                         className="w-fit p-4 gap-2 cursor-pointer text-sm font-normal text-muted-foreground border-dashed self-left"
+                        onClick={(e) => {
+                            e.preventDefault()
+
+                            const randomId = crypto.randomUUID()
+
+                            const item: Item = {
+                                id: randomId,
+                                name: `field_${randomId.slice(0, 8)}`,
+                                label: common("new question"),
+                                required: false,
+                                disabled: false,
+                                type: "text"
+                            }
+
+                            onPropertyChange([...basePath, "items"], [...items, item])
+                        }}
                     >
                         <Plus className="h4 w-4 shrink-0" />
                         <span>Adicionar campo nessa seção</span>
@@ -269,6 +339,20 @@ export const Canvas = ({ form, onPropertyChange }: CanvasProps) => {
                     <Button
                         variant="outline"
                         className="w-full p-4 gap-2 cursor-pointer text-sm font-normal text-muted-foreground border-dashed self-center"
+                        onClick={(e) => {
+                            e.preventDefault()
+
+                            const randomId = crypto.randomUUID()
+
+                            const section: Section = {
+                                id: randomId,
+                                name: `section_${randomId.slice(0, 8)}`,
+                                label: common("new section"),
+                                items: []
+                            }
+
+                            onPropertyChange(["schema", "sections"], [...form.schema.sections, section])
+                        }}
                     >
                         <Layers className="h4 w-4 shrink-0" />
                         <span>Adicionar seção</span>

@@ -51,6 +51,10 @@ The response must ALWAYS be a valid JSON object with the following structure:
                             minLength: Minimum number of characters,
                             maxLength: Maximum number of characters,
                             regex: Regex of the field
+                            maxSize: Maximum size of uploaded files,
+                            minFiles: Minimum number of files to be uploaded,
+                            maxFiles: Maximum number of files to be uploaded,
+                            acceptedTypes: [list accepted of mimetypes]
                         },
                         options: [
                             {
@@ -82,6 +86,8 @@ Valid input types:
 - select
 - radio
 - checkbox
+- rating 
+- file 
 
 General guidelines:
 - Infer the most appropriate field type from the user's request.

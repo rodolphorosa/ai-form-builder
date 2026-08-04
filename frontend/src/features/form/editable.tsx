@@ -2,16 +2,19 @@ import { InputType, Item, Option, Path, Section } from "@/types/form"
 import { useTranslations } from "next-intl"
 import { itemStrategies, strategyIcons } from "../registry"
 import { cn } from "@/lib/utils"
-import { ArrowDownToLine, ArrowRightLeft, ArrowUpToLine, Asterisk, Astroid, Check, Copy, EllipsisVertical, GitBranch, Layers, Pencil, Sparkles, Trash } from "lucide-react"
+import { ArrowDownToLine, ArrowRightLeft, ArrowUpToLine, Asterisk, Astroid, Check, Copy, EllipsisVertical, FolderInput, GitBranch, Layers, Pencil, PencilSparkles, Settings, Settings2, Sparkles, Trash, WandSparkles, Wrench } from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
+import { isSystemGeneratedName, slugify } from "./utils"
 
 interface EditableProps {
     item: Item
     selected: boolean
     onChange: (path: Path, value: unknown) => void
+    onDelete: () => void
+    onDuplicate: () => void
     sections?: Section[]
 }
 
@@ -86,7 +89,7 @@ const TypeSelect = ({ type, onSelect }: { type: InputType, onSelect: (type: Inpu
     )
 }
 
-export const EditableComponent = ({ item, selected, onChange, sections }: EditableProps) => {
+export const EditableComponent = ({ item, selected, onChange, onDelete, onDuplicate, sections }: EditableProps) => {
     const t = useTranslations("Tree")
     
     const Component = itemStrategies[item.type]
@@ -116,59 +119,72 @@ export const EditableComponent = ({ item, selected, onChange, sections }: Editab
                         }}
                     />
                     <Separator orientation="vertical" />
+                    <div className="flex flex-row">
+                        <Button 
+                            className="border-0 cursor-pointer"
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => {
+                                onChange(["required"], !item.required)
+                            }}
+                        >
+                            <Asterisk className="h-3 w-3 shrink-0" />
+                        </Button>
+                        <Button 
+                            className="border-0 cursor-pointer"
+                            variant="outline" 
+                            size="sm"
+                            onClick={onDuplicate}
+                        >
+                            <Copy className="h-3 w-3 shrink-0" />
+                        </Button>
+                        
+                        <DropdownMenu>
+                            <DropdownMenuTrigger render={(
+                                <Button 
+                                    className="border-0 cursor-pointer"
+                                    variant="outline" 
+                                    size="sm"
+                                >
+                                    <FolderInput className="h-3 w-3 shrink-0"/>
+                                </Button>
+                            )} />
+                            <DropdownMenuContent className="w-auto shadow-lg">
+                                <DropdownMenuGroup>
+                                    <DropdownMenuLabel>
+                                        Mover para
+                                    </DropdownMenuLabel>
+                                    {sections?.map(section => (
+                                        <DropdownMenuItem className="text-xs">
+                                            <Layers className="h-3 w-3 shrink-0" />
+                                            {section.label}
+                                        </DropdownMenuItem>
+                                    ))}
+                                </DropdownMenuGroup>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                        <Button 
+                            className="border-0 cursor-pointer"
+                            variant="outline" 
+                            size="sm"
+                        >
+                            <Settings className="h-3 w-3 shrink-0"/>
+                        </Button>
+                    </div>
+                    <Separator orientation="vertical" />
                     <Button 
                         className="border-0 cursor-pointer"
                         variant="outline" 
                         size="sm"
-                        onClick={() => {
-                            onChange(["required"], !item.required)
-                        }}
                     >
-                        <Asterisk className="h-3 w-3 shrink-0" />
-                    </Button>
-                    <Button 
-                        className="border-0 cursor-pointer"
-                        variant="outline" 
-                        size="sm"
-                    >
-                        <Copy className="h-3 w-3 shrink-0" />
-                    </Button>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger render={(
-                            <Button 
-                                className="border-0 cursor-pointer"
-                                variant="outline" 
-                                size="sm"
-                            >
-                                <ArrowRightLeft className="h-3 w-3 shrink-0"/>
-                            </Button>
-                        )} />
-                        <DropdownMenuContent className="w-auto shadow-lg">
-                            <DropdownMenuGroup>
-                                <DropdownMenuLabel>
-                                    Mover para
-                                </DropdownMenuLabel>
-                                {sections?.map(section => (
-                                    <DropdownMenuItem className="text-xs">
-                                        <Layers className="h-3 w-3 shrink-0" />
-                                        {section.label}
-                                    </DropdownMenuItem>
-                                ))}
-                            </DropdownMenuGroup>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                    <Button 
-                        className="border-0 cursor-pointer"
-                        variant="outline" 
-                        size="sm"
-                    >
-                        <Sparkles className="h-3 w-3 shrink-0"/>
+                        <WandSparkles className="h-3 w-3 shrink-0"/>
                     </Button>
                     <Separator orientation="vertical" />
                     <Button 
                         className="border-0 cursor-pointer bg-card"
                         variant="destructive" 
                         size="sm"
+                        onClick={onDelete}
                     >
                         <Trash className="h-3 w-3 shrink-0" />
                     </Button>
@@ -177,7 +193,18 @@ export const EditableComponent = ({ item, selected, onChange, sections }: Editab
             <Component 
                 item={item} 
                 editable={selected} 
-                onChange={(path, value) => onChange(path, value)} 
+                onChange={(path, value) => onChange(path, value)}
+                onChangeLabel={(value) => {
+                    if(isSystemGeneratedName(item.name)) {
+                        onChange([], {
+                            ...item, 
+                            label: value, 
+                            name: slugify(value)
+                        })
+                    } else {
+                        onChange(["label"], value)
+                    }
+                }}
             />
             <div className="w-fit flex flex-row gap-1 p-2 items-center border rounded-sm text-xs font-normal bg-muted/50 cursor-pointer">
                 <GitBranch className="h-3 w-3 shrink-0" />

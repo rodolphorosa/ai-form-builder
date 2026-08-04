@@ -4,6 +4,7 @@ export interface InputProps {
     item: Item
     editable?: boolean
     onChange?: (path: Path, value: string | Option[]) => void
+    onChangeLabel?: (value: string) => void
 }
 
 export interface LabelProps {

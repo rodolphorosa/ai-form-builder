@@ -10,7 +10,7 @@ import {
 import { Form } from "@/types/form"
 import { useTranslations } from "next-intl"
 import { useRef, useState } from "react"
-import { FormAttachment } from "./attachment"
+import { FileAttachment } from "./attachment"
 import { formService } from "@/api/form.service"
 import { useRouter } from "@/i18n/navigation"
 
@@ -54,7 +54,7 @@ function JsonImport({ file, onImport, failed, errorMessage }: JsonImportProps) {
 
     return (
         <div className="flex flex-col gap-2">
-            {file && <FormAttachment file={file} type="json" failed={failed} errorMessage={errorMessage} />}
+            {file && <FileAttachment file={file} type="json" failed={failed} errorMessage={errorMessage} />}
 
             <div
                 className="flex flex-col items-center gap-2 rounded-lg border-2 border-dashed p-8 text-center"

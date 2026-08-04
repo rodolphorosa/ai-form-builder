@@ -12,7 +12,9 @@ export const InputTypes = {
     DATETIME: "datetime", 
     SELECT: "select", 
     RADIO: "radio", 
-    CHECKBOX: "checkbox"
+    CHECKBOX: "checkbox",
+    RATING: "rating",
+    FILE: "file"
 }
 
 export type InputType = typeof InputTypes[keyof typeof InputTypes]
@@ -30,6 +32,10 @@ interface ValidationRules {
     minLength: number
     maxLength: number
     regex: string
+    maxSize: number
+    minFiles: number
+    maxFiles: number
+    acceptedTypes: string[]
 }
 
 export type Validation = Partial<ValidationRules>

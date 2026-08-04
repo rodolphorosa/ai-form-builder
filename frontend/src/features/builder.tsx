@@ -199,7 +199,7 @@ export const Builder = ({}: BuilderProps) => {
 
         }
     }
-
+    
     const onPropertyChange = (path: Path, value: unknown) => {
         if (!workingForm) return
 

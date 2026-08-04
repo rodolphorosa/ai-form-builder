@@ -6,7 +6,7 @@ export const slugify = (text: string) =>
         .replace(/\p{Diacritic}/gu, "")
         .toLowerCase()
         .trim()
-        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/[^a-z0-9]+/g, "_")
         .replace(/^-+|-+$/g, "")
 
 export type ItemsBySection = Record<string, Item[]>
@@ -28,4 +28,8 @@ export const moveSortable = <T>(array: T[], from: number, to: number): T[] => {
     copy.splice(to, 0, removed)
 
     return copy
+}
+
+export const isSystemGeneratedName = (name: string) => {
+    return /^(?:field|section|option)_[a-z0-9]+$/.test(name)
 }
