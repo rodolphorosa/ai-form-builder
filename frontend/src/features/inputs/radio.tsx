@@ -51,6 +51,8 @@ export const RadioInput: FC<InputProps> = ({ item, editable, onChange }) => {
                             [...options.map(op => (op.value == option.value ? option : op))]
                         )
                     }}
+
+                    onSort={(sorted) => onChange?.(["options"], sorted)}
                 />
             )}
             {!editable && (
