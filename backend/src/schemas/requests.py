@@ -29,10 +29,8 @@ class AIEditRequest(BaseModel):
     model: str
 
 
-class SuggestionRequest(BaseModel):
-    schema: dict
+class AISuggestionRequest(BaseModel):
     subject: dict
-    context: str
     provider: ProviderType
     model: str
 

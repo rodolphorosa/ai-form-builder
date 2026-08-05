@@ -7,7 +7,7 @@ from src.database.session import get_db
 from src.database.models.form import Form
 from src.database.models.project import Project
 from src.schemas.form import FormResponse
-from src.schemas.requests import BlankFormRequest, AIFormRequest, AIEditRequest, UpdateFormRequest, JsonFormRequest, SendMessageRequest
+from src.schemas.requests import AISuggestionRequest, BlankFormRequest, AIFormRequest, AIEditRequest, UpdateFormRequest, JsonFormRequest, SendMessageRequest
 from src.services.forms import FormService, generate_form_schema
 from src.services.chat import ChatService
 
@@ -144,7 +144,7 @@ def get_conversation(id: UUID, db: Session = Depends(get_db)):
         }
     }
 
-@router.post(f'/{id}/conversation/messages')
+@router.post('/{id}/conversation/messages')
 def send_message(
     id: UUID, 
     data: SendMessageRequest, 
@@ -160,3 +160,16 @@ def send_message(
     )
 
     return { "data": MessageResponse.from_model(message) }
+
+
+@router.post('/{id}/suggestions')
+def get_suggestions(
+    id: UUID, 
+    data: AISuggestionRequest, 
+    db: Session = Depends(get_db)
+):
+    service = FormService(db)
+
+    suggestions = service.request_suggestions(data)
+
+    return { "data": suggestions }

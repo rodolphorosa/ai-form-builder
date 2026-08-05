@@ -22,7 +22,11 @@ The field has the following structure:
         maxValue: Maximum value,
         minLength: Minimum number of characters,
         maxLength: Maximum number of characters,
-        regex: Regex of the field
+        regex: Regex of the field,
+        maxSize: Maximum size of uploaded files,
+        minFiles: Minimum number of files to be uploaded,
+        maxFiles: Maximum number of files to be uploaded,
+        acceptedTypes: [list accepted of mimetypes]
     },
     options: [
         {
@@ -47,7 +51,7 @@ Return suggestions using the following structure:
             changes: [
                 {
                     op: "add" | "remove" | "replace",
-                    property: string,
+                    path: the path to the property,
                     value: string | number | boolean | option
                 },
             ]
@@ -75,5 +79,46 @@ OPERATION RULES:
 - replace: Use when changing the value of an existing property.
 - add: Use when suggesting a new element inside a collection (applied only to options).
 - remove: Use when suggesting removal of an existing element inside a collection (applied only to options).
+
+VALID INPUT TYPES:
+- text
+- email
+- password
+- phone
+- url
+- textarea
+- number
+- date
+- datetime
+- select
+- radio
+- checkbox
+- rating 
+- file
+
+VALID PATHS:
+
+label
+type
+description
+required
+disabled
+
+validation/minValue
+validation/maxValue
+validation/minLength
+validation/maxLength
+validation/regex
+validation/maxSize
+validation/minFiles
+validation/maxFiles
+validation/acceptedTypes
+
+ui/placeholder
+ui/helpText
+
+options/{index}
+options/{index}/label
+options/{index}/value
 
 """

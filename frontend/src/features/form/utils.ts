@@ -33,3 +33,15 @@ export const moveSortable = <T>(array: T[], from: number, to: number): T[] => {
 export const isSystemGeneratedName = (name: string) => {
     return /^(?:field|section|option)_[a-z0-9]+$/.test(name)
 }
+
+export function isObject(value: unknown): value is Record<string, unknown> {
+    return (
+        value !== null &&
+        typeof value === "object" &&
+        !Array.isArray(value)
+    )
+}
+
+export function isArray(value: unknown): value is unknown[] {
+    return Array.isArray(value)
+}

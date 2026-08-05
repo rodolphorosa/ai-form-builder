@@ -27,8 +27,8 @@ export const formService = {
         return api.post<ApiResponse<{ message: string, form: Partial<Form> }>>("/forms/edit", request)
     },
 
-    suggest(request: SuggestionRequest): Promise<ApiResponse<{ suggestions: Suggestion[] }>> {
-        return api.post<ApiResponse<{ suggestions: Suggestion[] }>>("/suggestions/", request)
+    suggest(id: string, request: SuggestionRequest): Promise<ApiResponse<{ suggestions: Suggestion[] }>> {
+        return api.post<ApiResponse<{ suggestions: Suggestion[] }>>(`/forms/${id}/suggestions/`, request)
     },
 
     getAll(): Promise<ApiResponse<Form[]>> {

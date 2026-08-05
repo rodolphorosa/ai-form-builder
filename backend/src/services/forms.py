@@ -5,13 +5,23 @@ from datetime import datetime, timezone
 from sqlalchemy.orm import Session
 from sqlalchemy.dialects.postgresql import UUID
 
-from src.llm.services import generate_form_schema, edit_form_schema, generate_from_image
+from src.llm.services import (
+    generate_form_schema, 
+    edit_form_schema, 
+    generate_from_image,
+    get_improvement_suggestions
+)
 from src.repositories.form_repository import FormRepository
 from src.repositories.project_repository import ProjectRepository
 from src.repositories.conversation_repository import ConversationRepository
 from src.repositories.message_repository import MessageRepository
 from src.api.deps import get_llm_provider
-from src.schemas.requests import AIEditRequest, AIFormRequest, UpdateFormRequest
+from src.schemas.requests import (
+    AIEditRequest, 
+    AIFormRequest, 
+    AISuggestionRequest, 
+    UpdateFormRequest
+)
 from src.schemas.schema import (
     Form, 
     FormSchema, 
@@ -286,3 +296,15 @@ class FormService:
         form.updated_at = datetime.now(timezone.utc)
 
         return repository.save(form)
+
+
+    def request_suggestions(self, data: AISuggestionRequest):
+        provider = get_llm_provider(data.provider, data.model)
+
+        prompt = f"""
+            Suggest improvements to {data.subject["label"]}.
+            Current field: \n\n {data.subject}
+            \n\n
+        """
+
+        return get_improvement_suggestions(prompt=prompt, provider=provider)

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { ChevronRight, RefreshCcw, Sparkles, Trash2 } from "lucide-react"
+import { Check, ChevronRight, Lightbulb, RefreshCcw, Sparkles, Trash2, X } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Thinking } from "../../inputs/common"
 import { Progress } from "@/components/ui/progress"
@@ -9,11 +9,7 @@ import { formService } from "@/api/form.service"
 import { Suggestion } from "@/types/ai"
 import { Item, FormSchema } from "@/types/form"
 
-interface SuggestionsProps {
-    item: Item
-    schema: FormSchema | null
-    context: "properties" | "options" | "validation"
-}
+
 
 interface NoSuggestionsProps {
     loading: boolean
@@ -83,100 +79,98 @@ const NoSuggestions = ({ loading, onCreate}: NoSuggestionsProps) => {
     )
 }
 
-export const Suggestions = ({ item, schema, context }: SuggestionsProps) => {
-    const [suggestions, setSuggestions] = useState<Suggestion[]>([])
-    const [loading, setLoading] = useState<boolean>(false)
-    
-    const [suggestion, setSuggestion] = useState<Suggestion | null>()
+interface SuggestionsProps {
+    suggestions: Suggestion[],
+    onApply?: (suggestion: Suggestion) => void
+    onDiscard?: (suggestion: Suggestion) => void
+    onApplyAll?: () => void
+    onDiscardAll?: () => void
+}
 
-    const suggest = async () => {
-        if (!item || !schema) return
+export const Suggestions = ({ 
+    suggestions, 
+    onApply, 
+    onDiscard, 
+    onApplyAll, 
+    onDiscardAll 
+}: SuggestionsProps) => {
+    const [selectedSuggestionId, setSelectedSuggestionId] = useState<string | null>(null)
 
-        setLoading(true)
-
-        try {
-            const { data } = await formService.suggest({
-                schema: schema,
-                subject: item,
-                context: context,
-                provider: "openai",
-                model: "gpt-4.1-nano"
-            })
-
-            setSuggestions(data.suggestions)
-        
-        } catch (error) {
-            console.error("Failed to generate form", error)
-        } finally {
-            setLoading(false)
-        }
-    }
+    const selectedSuggestion =
+        suggestions.find(s => s.id === selectedSuggestionId) ?? null
 
     const navigateBack = () => {
-        setSuggestion(null)
+        setSelectedSuggestionId(null)
     }
 
-    if (suggestions.length == 0) {
-        return <NoSuggestions loading={loading} onCreate={suggest} />
-    }
-
-    if (suggestion) {
+    if (selectedSuggestion) {
         return (
             <SuggestionCard 
-                suggestion={suggestion} 
-                applyChanges={() => {}}
-                backToSuggestions={true}
+                suggestion={selectedSuggestion} 
+                onApply={() => onApply?.(selectedSuggestion)}
+                onDiscard={() => onDiscard?.(selectedSuggestion)}
                 navigateBack={navigateBack}
             />
         )
     }
 
     return (
-        <div className="flex flex-col gap-4 p-4 rounded-4xl border shadow-sm">
-            <div className="flex flex-row p-1 justify-between items-center text-xs">
-                <div className="flex flex-row gap-2 items-center">
-                    <Sparkles className="h-4 w-4" />
-                    <div className="font-semibold">AI Suggestions</div>
-                </div>
-                <div>
-                    Suggestions ({suggestions.length})
+        <div className="
+            flex 
+            flex-col 
+            p-4 
+            gap-3 
+            border 
+            border-yellow-400 
+            bg-yellow-400/10 
+            rounded-lg"
+        >
+            <div className="flex flex-row gap-2 items-center text-yellow-600">
+                <Lightbulb className="h-3 w-3 shrink-0" />
+                <div className="text-xs font-medium">
+                    Suggestions
                 </div>
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-0.5">
                 {suggestions.map(suggestion => {
                     return (
                         <div 
                             className="
-                                flex flex-row items-center justify-between 
-                                rounded-4xl border
+                                flex flex-row 
+                                items-center justify-between 
+                                rounded-lg border border-yellow-400 bg-card
                                 text-xs
-                                cursor-pointer p-1"
+                                cursor-pointer py-1.5 px-2.5"
 
-                            onClick={() => setSuggestion(suggestion)}
+                            onClick={() => setSelectedSuggestionId(suggestion.id)}
                             >
                             <div className="flex flex-row items-center gap-1">
-                                <div className="rounded-lg p-2">
-                                    <Sparkles className="h-4 w-4" />
-                                </div>
-                                <div>
+                                <Lightbulb className="h-3 w-3 shrink-0" />
+                                <span>
                                     {suggestion.title}
-                                </div>
+                                </span>
                             </div>
-                            <ChevronRight className="h-4 w-4" />
+                            <ChevronRight className="h-3 w-3 shrink-0" />
                         </div>    
                     )
                 })}
             </div>
-            <div className="flex flex-row gap-1 justify-end">
-                <Button variant="ghost" className="border-none shadow-sm">
-                    <RefreshCcw />
-                    Regenerate
+            {/* <div className="flex flex-row gap-0.5 justify-end">
+                <Button 
+                    variant="ghost"
+                    className="text-xs"
+                >
+                    <X className="h-3 w-3 shrink-0" />
+                    Discard all
                 </Button>
-                <Button className="border-none shadow-sm">
-                    <Trash2 />
-                    Dismiss all
+                <Button
+                    variant="ghost"
+                    className="text-xs"
+                >
+                    <Check className="h-3 w-3 shrink-0" />
+                    Apply all
                 </Button>
-            </div>
+            </div> */}
         </div>
     )
 }

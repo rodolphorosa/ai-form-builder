@@ -13,9 +13,7 @@ export interface EditRequest extends BaseRequest {
 }
 
 export interface SuggestionRequest {
-    schema: FormSchema
     subject: Section | Item
-    context: "properties" | "options" | "validation" | "logic"
     provider: ProviderType
     model: string
 }

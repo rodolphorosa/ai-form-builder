@@ -7,7 +7,15 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import { isSystemGeneratedName, slugify } from "./utils"
+import { isArray, isObject, isSystemGeneratedName, slugify } from "./utils"
+import { formService } from "@/api/form.service"
+import { id } from "date-fns/locale"
+import { useState } from "react"
+import { Suggestion } from "@/types/ai"
+import { SuggestionCard } from "../menus/suggestions/card"
+
+import { set, get, isEqual } from "lodash"
+import { Suggestions } from "../menus/suggestions/suggestions"
 
 interface EditableProps {
     item: Item
@@ -91,6 +99,100 @@ const TypeSelect = ({ type, onSelect }: { type: InputType, onSelect: (type: Inpu
 
 export const EditableComponent = ({ item, selected, onChange, onDelete, onDuplicate, sections }: EditableProps) => {
     const t = useTranslations("Tree")
+
+    const [suggestions, setSuggestions] = useState<Suggestion[]>([])
+
+    const [loading, setLoading] = useState<boolean>(false)
+
+    const onRequestSuggestions = async (item: Item) => {
+        setLoading(true)
+
+        try {
+            const response = await formService.suggest(
+                item.id, 
+                { 
+                    subject: item, 
+                    provider: "openai", 
+                    model: "gpt-4.1-nano" 
+                }
+            )
+
+            const responseSuggestions = response.data.suggestions
+
+            setSuggestions(responseSuggestions.map(suggestion => {
+                return {
+                    ...suggestion,
+                    id: crypto.randomUUID(),
+                    status: "pending"
+                }
+            }))
+        
+        } catch(err) {
+            console.log(err)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const applySuggestion = (suggestion: Suggestion) => {
+        const copy = structuredClone(item)
+
+        for (const change of suggestion.changes) {
+            const { op, path, value } = change
+        
+            const segments = path.split("/")
+            const current = get(copy, segments)
+        
+            switch (op) {
+                case "replace":
+                    set(copy, segments, value)
+                    break
+        
+                case "add":
+                    if (current == null) {
+                        set(copy, segments, value)
+                    } else if (isArray(current)) {
+                        const values = isArray(value) ? value : [value]
+                        
+                        set(copy, segments, [...current, ...values])
+                    }
+                    break
+        
+                case "remove":
+                    if (isArray(current)) {
+                        const values = isArray(value) ? value : [value]
+                        
+                        set(
+                            copy,
+                            segments,
+                            // @ts-ignore
+                            current.filter(it => !values.includes(it))
+                        )
+                    }
+                    break
+            }
+        }
+
+        onChange([], copy)
+        
+        setSuggestions(prev =>
+            prev.map(it =>
+                it.id === suggestion.id
+                    ? { ...it, status: "approved" }
+                    : it
+            )
+        )
+    }
+
+    const discardSuggestion = (suggestion: Suggestion) => {
+        setSuggestions(prev =>
+            prev.map(it =>
+                it.id === suggestion.id
+                    ? { ...it, status: "discarded" }
+                    : it
+            )
+        )
+    }
     
     const Component = itemStrategies[item.type]
 
@@ -100,7 +202,9 @@ export const EditableComponent = ({ item, selected, onChange, onDelete, onDuplic
         <div
             className={cn(
                 "relative flex flex-col gap-2 border border-transparent p-4 rounded-md transition-colors",
-                selected ? "rounded-l-lg bg-card border-ring" : "hover:border-border hover:bg-card"
+                selected ? "rounded-l-lg bg-card border-ring" : "hover:border-border hover:bg-card",
+                loading && "animate-pulse"
+
             )}
         >
             <div 
@@ -173,9 +277,13 @@ export const EditableComponent = ({ item, selected, onChange, onDelete, onDuplic
                     </div>
                     <Separator orientation="vertical" />
                     <Button 
-                        className="border-0 cursor-pointer"
+                        className="border-0 cursor-pointer text-indigo-400"
                         variant="outline" 
                         size="sm"
+                        onClick={(e) => {
+                            e.preventDefault()
+                            onRequestSuggestions(item)
+                        }}
                     >
                         <WandSparkles className="h-3 w-3 shrink-0"/>
                     </Button>
@@ -210,6 +318,22 @@ export const EditableComponent = ({ item, selected, onChange, onDelete, onDuplic
                 <GitBranch className="h-3 w-3 shrink-0" />
                 Lógica condicional ativa
             </div>
+            {suggestions.length > 0 && (
+                // <div className="flex flex-col gap-1">
+                //     {suggestions.map(suggestion => (
+                //         <SuggestionCard 
+                //             suggestion={suggestion} 
+                //             onApply={() => applySuggestion(item, suggestion)} 
+                //             onDiscard={() => discardSuggestion(suggestion)}
+                //         />
+                //     ))}
+                // </div>
+                <Suggestions 
+                    suggestions={suggestions} 
+                    onApply={(suggestion) => applySuggestion(suggestion)}
+                    onDiscard={(suggestion) => discardSuggestion(suggestion)}
+                />
+            )}
         </div>
     )
 }

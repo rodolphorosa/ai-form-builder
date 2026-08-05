@@ -2,9 +2,10 @@ import json
 import base64
 
 from src.llm.providers.base import BaseProvider
-from src.llm.prompts.form_generation import SYSTEM_PROMPT as CREATION_PROMPT
-from src.llm.prompts.schema_edition import SYSTEM_PROMPT as EDITION_PROMPT
-from src.llm.prompts.image_parsing import SYSTEM_PROMPT as IMAGE_PROMPT
+from src.llm.prompts.suggestions import SYSTEM_PROMPT as SUGGESTION_PROMPT
+from src.llm.prompts.creation import SYSTEM_PROMPT as CREATION_PROMPT
+from src.llm.prompts.editions import SYSTEM_PROMPT as EDITION_PROMPT
+from src.llm.prompts.image import SYSTEM_PROMPT as IMAGE_PROMPT
 
 def generate_form_schema(prompt: str, provider: BaseProvider):
     messages = [
@@ -34,7 +35,7 @@ def generate_from_image(image: bytes, content_type: str, provider: BaseProvider)
     image_url = f"data:{content_type};base64,{encoded_image}"
 
     messages = [
-        {"role": "system", "content": EDITION_PROMPT},
+        {"role": "system", "content": IMAGE_PROMPT},
         {
             "role": "user",
             "content": [
@@ -54,6 +55,17 @@ def generate_from_image(image: bytes, content_type: str, provider: BaseProvider)
 
     response = provider.chat(messages=messages)
 
+    parsed = json.loads(response)
+
+    return parsed
+
+
+def get_improvement_suggestions(prompt: str, provider: BaseProvider):
+    messages = [
+        {"role": "system", "content": SUGGESTION_PROMPT},
+        {"role": "user", "content": prompt}
+    ]
+    response = provider.chat(messages=messages)
     parsed = json.loads(response)
 
     return parsed

@@ -220,6 +220,7 @@ export const REGEX = {
 export const propertyNames: Record<string, string> = {
     title: "title",
     label: "label",
+    type:  "type",
     description: "description",
     placeholder: "placeholder",
     helpText: "help text",
@@ -230,4 +231,6 @@ export const propertyNames: Record<string, string> = {
     minLength: "minimum length",
     maxLength: "maximum length",
     regex: "regex",
+    validation: "validation",
+    options: "options"
 }
