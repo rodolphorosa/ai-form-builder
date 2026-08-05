@@ -3,14 +3,12 @@ import { Astroid, Bot, BriefcaseBusiness, Check, GraduationCap, Maximize, Minimi
 import { RefObject, useEffect, useRef, useState } from "react"
 import { PromptArea } from "../promptArea"
 import { Form, FormSchema } from "../../types/form"
-import { Thinking } from "../inputs/common"
 import { formService } from "../../api/form.service"
-import { ApiFormResponse } from "../../api/types"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { ChatMode } from "@/types/ai"
-import { Message, SuggestionStatus } from "@/types/chat"
-import { SuggestionMessage, TextMessage, ThinkingMessage } from "./messages"
+import { Message } from "@/types/chat"
+import { TextMessage, ThinkingMessage } from "./messages"
 
 interface ChatProps {
     mode: ChatMode
@@ -81,54 +79,43 @@ export const Chat = ({
     
     const scrollRef = useRef<HTMLDivElement>(null)
 
+    const getConversation = async () => {
+        try {
+            
+            if(!form) return
+            
+            const response = await formService.getConversation(form?.id)
+
+            setMessages(response.data.messages)
+        
+        } catch(err) {
+
+        }
+    }
+
+    useEffect(() => {
+        getConversation()
+    }, [form])
+
     useEffect(() => {
         scrollRef.current?.scrollIntoView({
             behavior: "smooth"
         })
     }, [messages])
 
-    const applySuggestion = (message: Message) => {
-        onSchemaChange(message.suggestion?.schema!)
-        updateMessage(message.id, "applied")
-    }
-
-    const discardSuggestion = (message: Message) => {
-        onSchemaChange(message.suggestion?.previousSchema!)
-        updateMessage(message.id, "discarded")
-    }
-    
-    const updateMessage = (id: string, status: SuggestionStatus) => {
-        setMessages(messages => 
-            messages.map(message => 
-                message.id === id ? {
-                    ...message, 
-                    suggestion: {
-                        ...message.suggestion!,
-                        status: status
-                    }
-                } : message
-            ))
-    }
-
     const renderMessageStrategy = (message: Message) => {
         switch(message.type) {
-            case "suggestion":
-                return (
-                    <SuggestionMessage 
-                        message={message} 
-                        onApply={() => applySuggestion(message)} 
-                        onDiscard={() => discardSuggestion(message)} 
-                    />
-                )
             case "text":
                 return <TextMessage message={message} />
             case "thinking":
                 return <ThinkingMessage message={message} />
+            default:
+                return <TextMessage message={message} />
         }
     }
 
     const renderMessage = (message: Message) => {
-        const isUser = message.user === "user";
+        const isUser = message.role === "user";
 
         return (
             <div
@@ -168,8 +155,8 @@ export const Chat = ({
                 ...prev, 
                 {
                     id: crypto.randomUUID(),
-                    user: "model",
-                    text: data.message,
+                    role: "assistant",
+                    content: data.message,
                     type: "text"
                 }
             ])
@@ -197,8 +184,8 @@ export const Chat = ({
                 ...prev, 
                 {
                     id: crypto.randomUUID(),
-                    user: "model",
-                    text: data.message,
+                    role: "assistant",
+                    content: data.message,
                     type: "text"
                 }
             ])
@@ -218,8 +205,8 @@ export const Chat = ({
             ...prev,
             { 
                 id: crypto.randomUUID(), 
-                user: "user", 
-                text: prompt, 
+                role: "user", 
+                content: prompt, 
                 type: "text" 
             }
         ])
@@ -268,7 +255,6 @@ export const Chat = ({
         )
     }
 
-
     const renderChat = () => {
         const chat = (
             <>
@@ -278,8 +264,8 @@ export const Chat = ({
                         {messages.length > 0 && messages.map(message => renderMessage(message))}
                         {loading && renderMessage({
                             id: crypto.randomUUID(),
-                            user: "model",
-                            text: form ? "Editing your form..." : "Creating form...",
+                            role: "assistant",
+                            content: form ? "Editing your form..." : "Creating form...",
                             type: "thinking"
                         })}
                         <div ref={scrollRef} />
@@ -306,8 +292,8 @@ export const Chat = ({
                                     ...prev,
                                     { 
                                         id: crypto.randomUUID(), 
-                                        user: "user", 
-                                        text: message, 
+                                        role: "user", 
+                                        content: message, 
                                         type: "text" 
                                     }
                                 ])

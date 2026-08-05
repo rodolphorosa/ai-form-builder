@@ -1,20 +1,15 @@
 import { FormSchema } from "./form"
 
 export type SuggestionStatus = "pending" | "applied" | "discarded" | "expired"
-export type MessageTypes = "text" | "thinking" | "suggestion"
+export type MessageTypes = "text" | "thinking"
 
-export type UserTypes = "user" | "model"
+export type Roles = "user" | "assistant"
 
 export interface Message {
     id: string
-    user: UserTypes
-    text: string
-
-    type: MessageTypes
-
-    suggestion?: {
-        previousSchema: FormSchema | null
-        schema: FormSchema
-        status: SuggestionStatus
-    }
+    role: Roles
+    content: string
+    createdAt?: number
+    snapshot?: FormSchema
+    type?: MessageTypes
 }

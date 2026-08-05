@@ -8,6 +8,8 @@ from sqlalchemy.dialects.postgresql import UUID
 from src.llm.services import generate_form_schema, edit_form_schema, generate_from_image
 from src.repositories.form_repository import FormRepository
 from src.repositories.project_repository import ProjectRepository
+from src.repositories.conversation_repository import ConversationRepository
+from src.repositories.message_repository import MessageRepository
 from src.api.deps import get_llm_provider
 from src.schemas.requests import AIEditRequest, AIFormRequest, UpdateFormRequest
 from src.schemas.schema import (
@@ -87,6 +89,8 @@ class FormService:
         response = generate_form_schema(data.prompt, provider)
 
         project_reposoitory = ProjectRepository(self.db)
+        conversation_repository = ConversationRepository(self.db)
+        message_repository = MessageRepository(self.db)
 
         default_project = project_reposoitory.get_default_project()
 
@@ -105,6 +109,11 @@ class FormService:
             schema=form_schema.model_dump(),
             project_id=default_project.id
         )
+
+        conversation = conversation_repository.create(form_id=form.id)
+
+        message_repository.create(conversation_id=conversation.id, role="user", content=data.prompt)
+        message_repository.create(conversation_id=conversation.id, role="assistant", content=response["message"])
 
         return { "response": response, "form": form }
     

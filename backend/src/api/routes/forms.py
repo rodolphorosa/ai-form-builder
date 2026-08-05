@@ -7,13 +7,17 @@ from src.database.session import get_db
 from src.database.models.form import Form
 from src.database.models.project import Project
 from src.schemas.form import FormResponse
-from src.schemas.requests import BlankFormRequest, AIFormRequest, AIEditRequest, UpdateFormRequest, JsonFormRequest
+from src.schemas.requests import BlankFormRequest, AIFormRequest, AIEditRequest, UpdateFormRequest, JsonFormRequest, SendMessageRequest
 from src.services.forms import FormService, generate_form_schema
+from src.services.chat import ChatService
+
 from src.api.deps import get_llm_provider
 from src.llm.factory import ProviderType
 
 from src.repositories.form_repository import FormRepository
 from src.repositories.project_repository import ProjectRepository
+
+from src.schemas.message import MessageResponse
 
 router = APIRouter(prefix="/forms", tags=["Forms"])
 
@@ -126,3 +130,33 @@ def edit_form(data: AIEditRequest, db: Session = Depends(get_db)):
             }
         }
     }
+
+@router.get('/{id}/conversation')
+def get_conversation(id: UUID, db: Session = Depends(get_db)):
+    service = ChatService(db)
+
+    conversation = service.get_conversation(form_id=id)
+
+    return {
+        "data": {
+            "id": conversation["id"],
+            "messages": [MessageResponse.from_model(message) for message in conversation["messages"]]
+        }
+    }
+
+@router.post(f'/{id}/conversation/messages')
+def send_message(
+    id: UUID, 
+    data: SendMessageRequest, 
+    db: Session = Depends(get_db)
+):
+    service = ChatService(db)
+
+    message = service.create_message(
+        form_id=id,
+        role=data.role,
+        content=data.content,
+        snapshot=data.snapshot
+    )
+
+    return { "data": MessageResponse.from_model(message) }

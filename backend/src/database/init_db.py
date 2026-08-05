@@ -5,6 +5,8 @@ from sqlalchemy.orm import Session
 
 from src.database.models.project import Project
 from src.database.models.form import Form
+from src.database.models.conversation import Conversation
+from src.database.models.message import Message
 
 def create_default_project():
     with Session(engine) as session:

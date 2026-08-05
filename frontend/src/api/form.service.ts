@@ -2,6 +2,7 @@ import { CreateRequest, ApiFormResponse, EditRequest, SuggestionRequest, ApiResp
 import { ApiClient } from "./client"
 import { Suggestion } from "@/types/ai"
 import { Form, FormSchema } from "@/types/form"
+import { Message } from "@/types/chat"
 
 const api = new ApiClient()
 
@@ -40,5 +41,9 @@ export const formService = {
 
     update(id: string, form: UpdateFormRequest): Promise<ApiResponse<Form>> {
         return api.patch<ApiResponse<Form>>(`/forms/${id}`, form)
+    },
+
+    getConversation(id: string): Promise<ApiResponse<{ id: string, messages: Message[] }>> {
+        return api.get<ApiResponse<{ id: string, messages: Message[] }>>(`/forms/${id}/conversation`)
     }
 }

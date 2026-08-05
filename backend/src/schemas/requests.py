@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field, ConfigDict
 from src.llm.factory import ProviderType
-from src.schemas.schema import Form, FormSchema
+from src.schemas.schema import Form, FormSchema, Role
 
 from uuid import UUID
 
@@ -50,3 +50,9 @@ class UpdateFormRequest(BaseModel):
 class ProjectRequest(BaseModel):
     name: str
     description: str | None = None
+
+
+class SendMessageRequest(BaseModel):
+    role: Role
+    content: str
+    snapshot: FormSchema | None = None

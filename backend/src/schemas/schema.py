@@ -3,6 +3,10 @@ from pydantic import BaseModel
 from enum import Enum
 from uuid import UUID
 
+class Role(str, Enum):
+    USER = "user"
+    ASSISTANT = "assistant"
+
 class InputType(str, Enum):
     TEXT = "text"
     EMAIL = "email"
