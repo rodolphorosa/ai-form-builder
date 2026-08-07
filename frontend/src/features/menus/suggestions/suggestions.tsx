@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { Check, ChevronRight, Lightbulb, RefreshCcw, Sparkles, Trash2, X } from "lucide-react"
+import { Check, CheckCheck, ChevronRight, Lightbulb, RefreshCcw, Sparkles, Trash2, X } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Thinking } from "../../inputs/common"
 import { Progress } from "@/components/ui/progress"
@@ -121,31 +121,41 @@ export const Suggestions = ({
             p-4 
             gap-3 
             border 
-            border-yellow-400 
-            bg-yellow-400/10 
+            border-indigo-400 
+            bg-indigo-400/10 
             rounded-lg"
         >
-            <div className="flex flex-row gap-2 items-center text-yellow-600">
+            <div className="flex flex-row gap-2 items-center text-indigo-600">
                 <Lightbulb className="h-3 w-3 shrink-0" />
                 <div className="text-xs font-medium">
                     Suggestions
                 </div>
             </div>
-            <div className="flex flex-col gap-0.5">
+            <div className="flex flex-col gap-1">
                 {suggestions.map(suggestion => {
                     return (
                         <div 
                             className="
                                 flex flex-row 
                                 items-center justify-between 
-                                rounded-lg border border-yellow-400 bg-card
+                                rounded-lg border border-indigo-400 bg-card
                                 text-xs
                                 cursor-pointer py-1.5 px-2.5"
 
                             onClick={() => setSelectedSuggestionId(suggestion.id)}
                             >
                             <div className="flex flex-row items-center gap-1">
-                                <Lightbulb className="h-3 w-3 shrink-0" />
+                                {suggestion.status == "pending" && (
+                                    <Lightbulb className="h-3 w-3 shrink-0" />
+                                )}
+
+                                {suggestion.status == "approved" && (
+                                    <CheckCheck className="h-3 w-3 shrink-0" />
+                                )}
+
+                                {suggestion.status == "discarded" && (
+                                    <X className="h-3 w-3 shrink-0" />
+                                )}
                                 <span>
                                     {suggestion.title}
                                 </span>
@@ -155,22 +165,6 @@ export const Suggestions = ({
                     )
                 })}
             </div>
-            {/* <div className="flex flex-row gap-0.5 justify-end">
-                <Button 
-                    variant="ghost"
-                    className="text-xs"
-                >
-                    <X className="h-3 w-3 shrink-0" />
-                    Discard all
-                </Button>
-                <Button
-                    variant="ghost"
-                    className="text-xs"
-                >
-                    <Check className="h-3 w-3 shrink-0" />
-                    Apply all
-                </Button>
-            </div> */}
         </div>
     )
 }

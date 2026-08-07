@@ -26,4 +26,10 @@ class MessageRepository:
 
 
     def get_messages_by_conversation(self, conversation_id: UUID):
-        return self.db.query(Message).filter(Message.conversation_id == conversation_id).all()
+        return (
+            self.db
+            .query(Message)
+            .filter(Message.conversation_id == conversation_id)
+            .order_by(Message.created_at.asc())
+            .all()
+        )

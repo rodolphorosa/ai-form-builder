@@ -1,6 +1,6 @@
 "use client"
 
-import {FC, useEffect, useRef, useState} from "react"
+import { FC, useEffect, useRef, useState, useTransition } from "react"
 import { Form, FormSchema, Item, Path, Project, SectionItem } from "../types/form"
 import { FormRenderer } from "./form/form"
 import { Header } from "./header"
@@ -20,40 +20,43 @@ import { PropertyPath } from "lodash"
 import cloneDeep from "lodash/cloneDeep"
 import { useAutosave } from "@/hooks/use-autosave"
 import { UpdateFormRequest } from "@/api/types"
+import { useRouter } from "@/i18n/navigation"
 
 interface BuilderProps {
 }
 
 export const Builder = ({}: BuilderProps) => {
+    const router = useRouter()
+
+    const [isPending, startTransition] = useTransition()
+
     const [projects, setProjects] = useState<Project[]>([])
+    const [committedForm, setCommittedForm] = useState<Form | null>(null)
+    const [workingForm, setWorkingForm] = useState<Form | null>(null)
 
     const params = useParams()
     const id = params.id as string
 
     useEffect(() => {
         if (!id) return
-
-        const loadForm = async () => {
-            try {
-                setLoading(true)
-
-                const response = await formService.getById(id)
-
-                setCommittedForm(response.data)
-                setWorkingForm(response.data)
-            } catch (err) {
-                console.error(err)
-            } finally {
-                setLoading(false)
-            }
-        }
-
+    
         loadForm()
     }, [id])
-    
-    
-    const [committedForm, setCommittedForm] = useState<Form | null>(null)
-    const [workingForm, setWorkingForm] = useState<Form | null>(null)
+
+    const loadForm = async () => {
+        try {
+            setLoading(true)
+
+            const response = await formService.getById(id)
+
+            setCommittedForm(response.data)
+            setWorkingForm(response.data)
+        } catch (err) {
+            console.error(err)
+        } finally {
+            setLoading(false)
+        }
+    }
 
     const { status } = useAutosave({
         value: workingForm,
@@ -247,7 +250,7 @@ export const Builder = ({}: BuilderProps) => {
                         />
                         <div className="flex-1 overflow-y-auto">
                             <div className="p-8 w-[85%] mx-auto">
-                                {loading && <FormSkeleton />}
+                                {(loading || !workingForm) && <FormSkeleton />}
                                 {!loading && workingForm && renderMode === "edit" && <Canvas form={workingForm} onPropertyChange={onPropertyChange} />}
                                 {!loading && workingForm && renderMode === "preview" && <FormRenderer form={workingForm} />}
                             </div>
@@ -262,6 +265,9 @@ export const Builder = ({}: BuilderProps) => {
                             onFormCreate={(form) => {
                                 setCommittedForm(form)
                                 setWorkingForm(form)
+                                startTransition(() => {
+                                    router.replace(`/forms/${form.id}`)
+                                })
                             }}
                             onFormChange={(form) => onFormChange(form)}
                             onSchemaChange={(schema) => onSchemaChange(schema)}
@@ -306,6 +312,9 @@ export const Builder = ({}: BuilderProps) => {
                             onFormCreate={(form) => {
                                 setCommittedForm(form)
                                 setWorkingForm(form)
+                                startTransition(() => {
+                                    router.replace(`/forms/${form.id}`)
+                                })
                             }}
                             onFormChange={(form) => onFormChange(form)}
                             onSchemaChange={(schema) => onSchemaChange(schema)}

@@ -3,7 +3,7 @@
 import { useState } from "react"
 
 import { Button } from "@/components/ui/button"
-import { Archive, Copy, Download, EllipsisVertical, Eye, FileBraces, FolderInput, FolderOpen, FolderPlus, FolderSearch, Pencil, Pin, Redo, Trash, Undo } from "lucide-react"
+import { Archive, Copy, Download, EllipsisVertical, Eye, FileBraces, FolderInput, FolderOpen, FolderPlus, FolderSearch, Moon, Pencil, Pin, Redo, Sun, Trash, Undo } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useTranslations } from "next-intl";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
@@ -28,6 +28,16 @@ interface HeaderProps {
 export const Header = ({ undo, redo, undoDisabled, redoDisabled, mode, toggleMode, projects, updatedAt, status }: HeaderProps) => {
     const common = useTranslations("Common")
 
+    const { theme, setTheme } = useTheme()
+
+    const toggleTheme = () => {
+        if (theme === "dark") {
+            setTheme("light")
+        } else {
+            setTheme("dark")
+        }
+    }
+
     const parseUpdateDate = (updatedAt: number) => {
         return formatDistanceToNow(new Date(updatedAt), {
             addSuffix: true,
@@ -51,6 +61,9 @@ export const Header = ({ undo, redo, undoDisabled, redoDisabled, mode, toggleMod
                 </Button>
                 <Button variant="ghost" size="icon" onClick={toggleMode}>
                     { mode === "edit" ? <Eye className="h-4 w-4" /> : <Pencil className="h-4 w-4" />}
+                </Button>
+                <Button variant="ghost" onClick={toggleTheme}>
+                    { theme === "light" ? <Sun className="h-4 w-4"/> : <Moon /> }
                 </Button>
                 <DropdownMenu>
                     <DropdownMenuTrigger 

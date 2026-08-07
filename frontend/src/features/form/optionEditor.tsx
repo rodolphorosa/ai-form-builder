@@ -144,10 +144,16 @@ export const OptionsEditor = ({
         )
 
         if (!exists) {
-            onEdit?.({
+            const edited = {
                 value: currentOption.value,
                 label: value,
-            })
+            }
+            
+            setLocalOptions((prev) =>
+                prev.map((opt) => (opt.value === currentOption.value ? edited : opt))
+            )
+
+            onEdit?.(edited)
         }
     }
 
@@ -202,7 +208,13 @@ export const OptionsEditor = ({
                     variant="outline"
                     className="border-dashed w-fit text-xs font-normal cursor-pointer"
                     size="sm"
-                    onClick={() => onAdd?.(createOption())}
+                    onClick={() => {
+                        const option = createOption()
+
+                        setLocalOptions(prev => [...prev, option])
+
+                        onAdd?.(option)
+                    }}
                 >
                     <Plus className="h-3 w-3 shrink-0" />
                     Adicionar nova opção

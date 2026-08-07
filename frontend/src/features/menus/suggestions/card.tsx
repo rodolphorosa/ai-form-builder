@@ -80,13 +80,13 @@ export const SuggestionCard = ({ suggestion, onApply, onDiscard, navigateBack }:
             p-4 
             gap-3 
             border 
-            border-yellow-400 
-            bg-yellow-400/10 
+            border-indigo-400 
+            bg-indigo-400/10 
             rounded-lg"
         >
             <div className="flex flex-col gap-2">
                 <div className="flex flex-row gap-2 justify-between items-center text-xs">
-                    <div className="flex flex-row gap-2 items-center text-yellow-600">
+                    <div className="flex flex-row gap-2 items-center text-indigo-600">
                         <Lightbulb className="h-3 w-3 shrink-0" />
                         <div className="text-xs font-medium">
                             Suggestion

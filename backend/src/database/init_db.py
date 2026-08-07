@@ -7,6 +7,8 @@ from src.database.models.project import Project
 from src.database.models.form import Form
 from src.database.models.conversation import Conversation
 from src.database.models.message import Message
+from src.database.models.system_setting import SystemSettings
+from src.database.models.user_setting import UserSettings
 
 def create_default_project():
     with Session(engine) as session:

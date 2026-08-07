@@ -3,7 +3,7 @@
 import { Form, FormSchema, FormUpdateAction, FormUpdateParams, Item, MoveAction, Project } from "@/types/form"
 import { useEffect, useState } from "react"
 import { Sidebar } from "./sidebar"
-import { Astroid, ChevronDown, EllipsisVertical, File, FilePlusCorner, FileUp, FolderOpen, Form as FormIcon, ImageUp, Import } from "lucide-react"
+import { Astroid, ChevronDown, EllipsisVertical, File, FilePlusCorner, FileUp, FolderOpen, Form as FormIcon, ImageUp, Import, SparkleIcon, SparklesIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useTranslations } from "next-intl"
 import { cn } from "@/lib/utils"
@@ -347,7 +347,7 @@ export const Workspace = () => {
                                     {projects.find(it => it.id === form.projectId)?.name ?? "Sem projeto"}
                                 </div>
                                 
-                                <div className="text-xs font-normal text-muted-foreground self-start">
+                                <div className="text-xs font-normal text-muted-foreground self-start truncate">
                                     {common("edited")} {parseUpdateDate(form.updatedAt)}
                                 </div>
                             </div>
@@ -381,7 +381,7 @@ export const Workspace = () => {
                         <div className="text-xs text-muted-foreground truncate">
                             3 formulários
                         </div>
-                        <div className="text-xs font-normal text-muted-foreground self-start">
+                        <div className="text-xs font-normal text-muted-foreground self-start truncate">
                             {common("updated")} {parseUpdateDate(project.updatedAt)}
                         </div>
                     </div>
@@ -401,19 +401,54 @@ export const Workspace = () => {
             <Sidebar forms={forms} projects={projects} />
             <div className="flex flex-col p-8 gap-8 overflow-y-auto mx-auto">
                 <div className="flex flex-col gap-2">
+                    <span className="text-2xl flex flex-row gap-2 items-center">
+                        <Astroid className="text-indigo-600 fill-indigo-600/10" />
+                        O que você quer criar hoje?
+                    </span>
+                    <span className="text-lg">
+                        Use a IA para gerar um formulário em segundos, comece do zero ou importe um formulário existente.
+                    </span>
+                </div>
+                <div className="flex flex-col gap-2">
                     <div className="text-sm font-medium">Criar novo formulário</div>
                     <div className="flex flex-wrap gap-4 items-start content-start">
                         {options.map(option => renderOptionCard(option))}
                     </div>
                 </div>
-                <div className="flex flex-col gap-2">
-                    <div className="text-sm font-medium">Continue de onde parou</div>
+                <div className="flex flex-col gap-2 w-auto">
+                    <div 
+                        className="
+                            w-full 
+                            flex flex-row 
+                            items-center justify-between 
+                            text-sm font-medium"
+                        >
+                        <span>Continue de onde parou</span>
+                        {forms.length > 4 && (
+                            <span className="text-muted-foreground cursor-pointer">
+                                Ver mais
+                            </span>
+                        )}
+                    </div>
                     <div className="flex flex-wrap gap-4 items-start content-start ">
                         {forms.slice(0, 4).map(form => renderFormCard(form))}
                     </div>
                 </div>
-                <div className="flex flex-col gap-2">
-                    <div className="text-sm font-medium">Seus projetos recentes</div>
+                <div className="flex flex-col gap-2 w-auto">
+                    <div 
+                        className="
+                            w-full 
+                            flex flex-row 
+                            items-center justify-between 
+                            text-sm font-medium"
+                        >
+                        <span>Seus projetos recentes</span>
+                        {projects.length > 4 && (
+                            <span className="text-muted-foreground cursor-pointer">
+                                Ver mais
+                            </span>
+                        )}
+                    </div>
                     <div className="flex flex-wrap gap-4 items-start content-start ">
                         {projects.slice(0, 4).map(project => renderProjectCard(project))}
                     </div>

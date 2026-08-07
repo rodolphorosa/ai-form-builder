@@ -138,6 +138,8 @@ class FormService:
         
         form_repository = FormRepository(self.db)
 
+        conversation_repository = ConversationRepository(self.db)
+
         schema = FormSchema(
             sections=[
                 {
@@ -156,6 +158,8 @@ class FormService:
             project_id=project_id
         )
 
+        conversation_repository.create(form_id=form.id)
+
         return form
 
 
@@ -168,15 +172,20 @@ class FormService:
             raise Exception("Default project not found")
 
         form_repository = FormRepository(self.db)
+        conversation_repository = ConversationRepository(self.db)
 
         validated_schema = FormSchema.model_validate(form.schema)
 
-        return form_repository.create(
+        form = form_repository.create(
             name=form.name,
             description=form.description,
             schema=validated_schema.model_dump(),
             project_id=default_project.id
         )
+
+        conversation_repository.create(form_id=form.id)
+
+        return form
 
 
     async def create_from_image(self, image: UploadFile, provider_type: ProviderType, model: str):
@@ -195,6 +204,7 @@ class FormService:
             raise Exception("Default project not found")
         
         form_repository = FormRepository(self.db)
+        conversation_repository = ConversationRepository(self.db)
 
         llm_schema = LLMFormSchema.model_validate(response["schema"])
         
@@ -206,6 +216,8 @@ class FormService:
             schema=form_schema.model_dump(),
             project_id=default_project.id
         )
+
+        conversation_repository.create(form_id=form.id)
 
         return { "response": response, "form": form }
     
@@ -270,6 +282,14 @@ class FormService:
         message = response["message"]
         title = response["title"]
         description = response["description"]
+
+        conversation_repository = ConversationRepository(self.db)
+        message_repository = MessageRepository(self.db)
+
+        conversation = conversation_repository.get_conversation_by_form(form_id=current_form.id)
+
+        message_repository.create(conversation_id=conversation.id, role="user", content=data.prompt, snapshot=None)
+        message_repository.create(conversation_id=conversation.id, role="assistant", content=message, snapshot=current_schema.model_dump())
 
         return { "message": message, "title": title, "description": description, "schema": form_schema }
 

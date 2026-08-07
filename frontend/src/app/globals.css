@@ -49,6 +49,16 @@
   --shadow-surface: 0 0 8px rgb(0 0 0 / 0.05);
 }
 
+@keyframes shine {
+  from {
+      transform: translateX(0);
+  }
+
+  to {
+      transform: translateX(400%);
+  }
+}
+
 :root {
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.148 0.004 228.8);

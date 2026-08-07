@@ -3,7 +3,7 @@ import { Item, Option, Path } from "./form";
 export interface InputProps {
     item: Item
     editable?: boolean
-    onChange?: (path: Path, value: string | Option[]) => void
+    onChange?: (path: Path, value: string | Option | Option[]) => void
     onChangeLabel?: (value: string) => void
 }
 

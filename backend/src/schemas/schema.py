@@ -90,6 +90,7 @@ class LLMFormSchema(BaseModel):
 
 
 class Form(BaseModel):
+    id: UUID
     name: str
     description: str | None = None
     schema: FormSchema

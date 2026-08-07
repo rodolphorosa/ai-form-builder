@@ -37,9 +37,11 @@ export const SelectInput: FC<InputProps> = ({item, editable, onChange}) => {
                     }}
 
                     onEdit={(option) => {
+                        const optionIndex = options.findIndex(opt => opt.value == option.value)
+
                         onChange?.(
-                            ["options"],
-                            [...options.map(op => (op.value == option.value ? option : op))]
+                            ["options", optionIndex],
+                            option
                         )
                     }}
 

@@ -203,10 +203,25 @@ export const EditableComponent = ({ item, selected, onChange, onDelete, onDuplic
             className={cn(
                 "relative flex flex-col gap-2 border border-transparent p-4 rounded-md transition-colors",
                 selected ? "rounded-l-lg bg-card border-ring" : "hover:border-border hover:bg-card",
-                loading && "animate-pulse"
-
+                // loading && "opacity-50"
             )}
         >
+            {loading && (
+                <div className="absolute inset-0 rounded-md overflow-hidden pointer-events-none">
+                    <div className="
+                        absolute
+                        -left-full
+                        top-0
+                        h-full
+                        w-1/2
+                        bg-gradient-to-r
+                        from-transparent
+                        via-indigo-400/20
+                        to-transparent
+                        animate-[shine_2s_linear_infinite]
+                    " />
+                </div>
+            )}
             <div 
                 className={cn(
                     "absolute left-1/2 -top-5 -translate-x-1/2 z-10 transition-all duration-200 rounded-lg shadow-lg",
@@ -277,7 +292,7 @@ export const EditableComponent = ({ item, selected, onChange, onDelete, onDuplic
                     </div>
                     <Separator orientation="vertical" />
                     <Button 
-                        className="border-0 cursor-pointer text-indigo-400"
+                        className="border-0 cursor-pointer"
                         variant="outline" 
                         size="sm"
                         onClick={(e) => {
@@ -285,7 +300,7 @@ export const EditableComponent = ({ item, selected, onChange, onDelete, onDuplic
                             onRequestSuggestions(item)
                         }}
                     >
-                        <WandSparkles className="h-3 w-3 shrink-0"/>
+                        <WandSparkles className="h-3 w-3 shrink-0 text-indigo-400"/>
                     </Button>
                     <Separator orientation="vertical" />
                     <Button 
@@ -319,15 +334,6 @@ export const EditableComponent = ({ item, selected, onChange, onDelete, onDuplic
                 Lógica condicional ativa
             </div>
             {suggestions.length > 0 && (
-                // <div className="flex flex-col gap-1">
-                //     {suggestions.map(suggestion => (
-                //         <SuggestionCard 
-                //             suggestion={suggestion} 
-                //             onApply={() => applySuggestion(item, suggestion)} 
-                //             onDiscard={() => discardSuggestion(suggestion)}
-                //         />
-                //     ))}
-                // </div>
                 <Suggestions 
                     suggestions={suggestions} 
                     onApply={(suggestion) => applySuggestion(suggestion)}
