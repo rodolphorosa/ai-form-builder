@@ -21,6 +21,7 @@ import { FileDialog } from "../dialogs/fileUpload"
 import { ImageDialog } from "../dialogs/imageUpload"
 import { ProjectCreate } from "../dialogs/project"
 import { UpdateFormRequest } from "@/api/types"
+import { userService } from "@/api/user.service"
 
 
 interface CreationOption {
@@ -98,10 +99,25 @@ export const Workspace = () => {
         }
     }
 
+    const login = async () => {
+        try {
+
+            const response = await userService.login("admin@example.com", "admin")
+
+            console.log(response.data)
+
+        } catch(err) {
+            console.log(err)
+
+        }
+    }
+
     useEffect(() => {
 
         getForms()
         getProjects()
+
+        login()
 
     }, [])
 

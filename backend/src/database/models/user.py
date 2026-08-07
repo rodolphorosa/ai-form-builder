@@ -1,14 +1,14 @@
 from datetime import datetime, timezone
 from uuid import uuid4
 
-from sqlalchemy import DateTime, ForeignKey, String
+from sqlalchemy import DateTime, String
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column
 
 from src.database.base import Base
 
-class UserSettings(Base):
-    __tablename__ = "user_settings"
+class User(Base):
+    __tablename__ = "users"
 
     id: Mapped[str] = mapped_column(
         UUID(as_uuid=True),
@@ -16,8 +16,13 @@ class UserSettings(Base):
         default=uuid4,
     )
 
-    settings: Mapped[dict] = mapped_column(
-        JSONB,
+    name: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False
+    )
+
+    email: Mapped[str] = mapped_column(
+        String(255),
         nullable=False
     )
 
@@ -26,14 +31,7 @@ class UserSettings(Base):
         nullable=False
     )
 
-    updated_at: Mapped[datetime] = mapped_column(
-        default=lambda: datetime.now(timezone.utc),
-        onupdate=lambda: datetime.now(timezone.utc),
-        nullable=False
-    )
-
-    user_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("users.id"),
+    password: Mapped[str] = mapped_column(
+        String(255),
         nullable=False
     )

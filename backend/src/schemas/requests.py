@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field, ConfigDict
 from src.llm.factory import ProviderType
 from src.schemas.schema import Form, FormSchema, Role
+from src.schemas.user_settings import AI, Appearance
 
 from uuid import UUID
 
@@ -54,3 +55,13 @@ class SendMessageRequest(BaseModel):
     role: Role
     content: str
     snapshot: FormSchema | None = None
+
+
+class UserSettingsRequest(BaseModel):
+    ai: dict | None = None
+    appearance: dict | None = None
+
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str
