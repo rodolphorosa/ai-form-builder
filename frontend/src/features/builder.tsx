@@ -296,7 +296,7 @@ export const Builder = ({}: BuilderProps) => {
                             status={status}
                         />
                         <div className="flex-1 w-full overflow-y-auto">
-                            <div className="p-8 w-[65%] mx-auto">
+                            <div className="p-8 w-[65%] min-w-[420px] mx-auto">
                                 {loading && <FormSkeleton />}
                                 {!loading && workingForm && renderMode === "edit" && <Canvas form={workingForm} onPropertyChange={onPropertyChange} />}
                                 {!loading && workingForm && renderMode === "preview" && <FormRenderer form={workingForm} />}

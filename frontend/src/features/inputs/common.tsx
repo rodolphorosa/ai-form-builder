@@ -1,4 +1,4 @@
-import React, {FC, useRef, useState} from "react"
+import React, {FC, useEffect, useRef, useState} from "react"
 import { LabelProps } from "@/types/inputs"
 import { Spinner } from "@/components/ui/spinner"
 import { Item } from "@/types/form"
@@ -86,4 +86,25 @@ export const Thinking = ({ step }: ThinkingProps) => {
             <div className="animate-pulse">{step ?? "Thinking..."}</div>
         </div>
     )
+}
+
+export const TypingText = ({ text }: { text: string }) => {
+    const [typingText, setTypingText] = useState("")
+
+    useEffect(() => {
+        let index = 0
+
+        const interval = setInterval(() => {
+            setTypingText(text.slice(0, index + 1))
+            index++
+
+            if (index === text.length) {
+                clearInterval(interval)
+            }
+        }, 50)
+
+        return () => clearInterval(interval)
+    }, [text])
+
+    return <div>{typingText}</div>
 }

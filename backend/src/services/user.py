@@ -1,10 +1,6 @@
-from datetime import datetime, timezone
-
 from sqlalchemy.orm import Session
-from sqlalchemy.dialects.postgresql import UUID
 
 from src.repositories.user_settings_repository import UserSettingsRepository
-from src.schemas.requests import UserSettingsRequest
 from src.repositories.user_repository import UserRepository
 
 from uuid import uuid4
