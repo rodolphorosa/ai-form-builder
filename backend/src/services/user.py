@@ -5,6 +5,9 @@ from src.repositories.user_repository import UserRepository
 
 from uuid import uuid4
 
+from pwdlib import PasswordHash
+
+password_hash = PasswordHash.recommended()
 
 class UserService:
     def __init__(self, db: Session):
@@ -39,3 +42,17 @@ class UserService:
         settings = settings_repository.get_by_user(user_id=user.id)
 
         return { "user": user, "settings": settings }
+
+
+    def login(self, email: str, password: str):
+        repository = UserRepository(self.db)
+
+        user = repository.get_by_email(email)
+
+        if not user:
+            raise Exception("Invalid email or password")
+
+        if not password_hash.verify(password, user.password):
+            raise Exception("Invalid email or user")
+
+        return { "user": user }

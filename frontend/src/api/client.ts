@@ -5,10 +5,13 @@ export class ApiClient {
         'Accept': 'application/json',
         'Content-Type': 'application/json' 
     }
+
+    private readonly options: RequestInit = { credentials: "include", }
     
     async post<T>(url: string, body: unknown): Promise<T> {
         
         const response = await fetch(`${API_URL}${url}`, {
+            ...this.options,
             method: "POST",
             headers: this.headers,
             body: JSON.stringify(body)
@@ -19,6 +22,7 @@ export class ApiClient {
 
     async postFormData<T>(url: string, body: FormData): Promise<T> {
         const response = await fetch(`${API_URL}${url}`, {
+            ...this.options,
             method: "POST",
             body
         })
@@ -28,6 +32,7 @@ export class ApiClient {
 
     async get<T>(url: string): Promise<T> {
         const response = await fetch(`${API_URL}${url}`, {
+            ...this.options,
             method: "GET",
             headers: this.headers
         })
@@ -37,6 +42,7 @@ export class ApiClient {
 
     async patch<T>(url: string, patch: unknown): Promise<T> {
         const response = await fetch(`${API_URL}${url}`, {
+            ...this.options,
             method: "PATCH",
             headers: this.headers,
             body: JSON.stringify(patch)

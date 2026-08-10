@@ -17,5 +17,5 @@ export interface User {
     id: string
     name: string
     email: string
-    settings: UserSettings
+    createdAt: number
 }

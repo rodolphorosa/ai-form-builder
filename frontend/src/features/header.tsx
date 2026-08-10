@@ -62,9 +62,6 @@ export const Header = ({ undo, redo, undoDisabled, redoDisabled, mode, toggleMod
                 <Button variant="ghost" size="icon" onClick={toggleMode}>
                     { mode === "edit" ? <Eye className="h-4 w-4" /> : <Pencil className="h-4 w-4" />}
                 </Button>
-                <Button variant="ghost" onClick={toggleTheme}>
-                    { theme === "light" ? <Sun className="h-4 w-4"/> : <Moon /> }
-                </Button>
                 <DropdownMenu>
                     <DropdownMenuTrigger 
                         render={

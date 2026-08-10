@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from "motion/react"
 import { useEffect, useState } from "react"
 import { Thinking, TypingText } from "../inputs/common"
 import { Skeleton } from "@/components/ui/skeleton"
+import { authService } from "@/api/auth.service"
 
 
 const Prompt = () => {
@@ -242,6 +243,38 @@ type Step = "prompt" | "thinking" | "response" | "created"
 export const Login = () => {
     const [step, setStep] = useState<Step>("prompt")
 
+    const [email, setEmail] = useState<string>("")
+    const [password, setPassword] = useState<string>("")
+
+    const login = async () => {
+        try {
+            const response = await authService.login(email, password)
+
+            console.log(response.data)
+
+        } catch(err) {
+            console.log(err)
+        }
+    }
+
+    const getUser = async () => {
+        try {
+            const response = await authService.getMe()
+
+            console.log(response)
+
+        } catch(err) {
+
+        }
+    }
+
+    const onLogin = () => {
+        if (email.trim().length === 0 || password.trim().length === 0) return
+
+        login()
+        // getUser()
+    }
+
     useEffect(() => {
         let cancelled = false
     
@@ -293,7 +326,7 @@ export const Login = () => {
                             E-mail
                         </FieldLabel>
                         <InputGroup>
-                            <InputGroupInput type="email" placeholder="seu@email.com" />
+                            <InputGroupInput type="email" placeholder="seu@email.com" onChange={(e) => setEmail(e.target.value ?? "")}/>
                             <InputGroupAddon>
                                 <Mail />
                             </InputGroupAddon>
@@ -305,7 +338,7 @@ export const Login = () => {
                             Senha
                         </FieldLabel>
                         <InputGroup>
-                            <InputGroupInput type="password" placeholder="Digite sua senha" />
+                            <InputGroupInput type="password" placeholder="Digite sua senha" onChange={(e) => setPassword(e.target.value ?? "")}/>
                             <InputGroupAddon>
                                 <Lock />
                             </InputGroupAddon>
@@ -315,7 +348,13 @@ export const Login = () => {
                         </InputGroup>
                     </Field>
 
-                    <Button className="p-6 cursor-pointer bg-indigo-400 hover:bg-indigo-400/25">
+                    <Button 
+                        className="p-6 cursor-pointer bg-indigo-400 hover:bg-indigo-400/25"
+                        onClick={(e) => {
+                            e.preventDefault()
+                            onLogin()
+                        }}
+                    >
                         Entrar
                     </Button>
 

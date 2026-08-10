@@ -14,6 +14,7 @@ from src.database.models.message import Message
 from src.database.models.system_setting import SystemSettings
 from src.database.models.user_setting import UserSettings
 from src.database.models.user import User
+from src.database.models.session import Session as UserSession
 
 from src.schemas.user_settings import UserSettingsJson
 

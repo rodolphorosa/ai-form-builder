@@ -29,18 +29,3 @@ router = APIRouter(prefix="/users", tags=["Users"])
 @router.get('/{id}')
 def get_user(id: UUID, db: Session = Depends(get_db)):
     service = UserService(db)
-
-
-@router.post('/login')
-def login(data: LoginRequest, db: Session = Depends(get_db)):
-
-    service = UserService(db)
-
-    result = service.get_user_and_settings(email=data.email)
-
-    user = result["user"]
-    settings = result["settings"]
-
-    return {
-        "data": UserResponse.from_model(user=user, settings=settings)
-    }
