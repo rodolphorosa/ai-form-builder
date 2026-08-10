@@ -1,28 +1,14 @@
-import os
-
-from dotenv import load_dotenv
-
-from src.database.base import Base
-from src.database.session import engine
+from pwdlib import PasswordHash
 
 from sqlalchemy.orm import Session
-
-from src.database.models.project import Project
-from src.database.models.form import Form
-from src.database.models.conversation import Conversation
-from src.database.models.message import Message
-from src.database.models.system_setting import SystemSettings
+from src.database.session import engine
 from src.database.models.user_setting import UserSettings
 from src.database.models.user import User
-from src.database.models.session import Session as UserSession
-
+from src.database.models.project import Project
 from src.schemas.user_settings import UserSettingsJson
-
-from pwdlib import PasswordHash
 
 from src.core.config import settings
 
-load_dotenv(override=True)
 password_hash = PasswordHash.recommended()
 
 def create_default_data():
@@ -60,9 +46,19 @@ def create_default_data():
 
             session.add(user_settings)
 
+        default_project = (
+            session.query(Project)
+            .filter(Project.is_system == True)
+            .first()
+        )
+
+        if not default_project:
+            default_project = Project(
+                name="My Forms",
+                user_id=user.id,
+                is_system=True
+            )
+
+            session.add(default_project)
+
         session.commit()
-
-
-def init_db():
-    Base.metadata.create_all(bind=engine)
-    create_default_data()

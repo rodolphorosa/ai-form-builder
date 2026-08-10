@@ -5,11 +5,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from src.api.router import api_router
-from src.database.init_db import init_db
+from src.database.seed import create_default_data
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    init_db()
+    create_default_data()
     yield
 
 app = FastAPI(
