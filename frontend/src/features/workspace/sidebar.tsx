@@ -14,6 +14,7 @@ import { FaRegFilePdf } from "react-icons/fa"
 import { FormDropdown } from "./dropdown-menus/formOptions"
 import { ProjectDropdown } from "./dropdown-menus/projectOptions"
 import { cn } from "@/lib/utils"
+import { SettingsDialog } from "../dialogs/settings/settings"
 
 interface Props {
     forms: Form[]
@@ -33,6 +34,8 @@ export const Sidebar = ({ forms, projects }: Props) => {
     const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
         setHasScroll(e.currentTarget.scrollTop > 0)
     }
+
+    const [showSettings, setShowSettings] = useState<boolean>(false)
 
     const renderRecent = (form: Form, displayIcon: boolean = false) => {
         return (
@@ -182,7 +185,7 @@ export const Sidebar = ({ forms, projects }: Props) => {
                                 <CircleUser className="h-4 w-4" />
                                 {tree("profile")}
                             </DropdownMenuItem>
-                            <DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setShowSettings(!showSettings)}>
                                 <Settings className="h-4 w-4" />
                                 {tree("settings")}
                             </DropdownMenuItem>
@@ -197,6 +200,7 @@ export const Sidebar = ({ forms, projects }: Props) => {
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
+            <SettingsDialog open={showSettings} onOpenChange={setShowSettings}/>
         </div>
     )
 }

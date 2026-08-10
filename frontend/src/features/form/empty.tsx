@@ -9,7 +9,7 @@ import {
 
 import { FilePlusCorner } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { CreateDialog } from "../dialogs/create"
+import { CreateDialog } from "../dialogs/form"
 import { FormSchema } from "../../types/form"
 
 interface EmptyRendererProps {

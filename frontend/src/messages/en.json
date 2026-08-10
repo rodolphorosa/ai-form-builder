@@ -82,5 +82,31 @@
     "trash": "Lixeira",
     "file up": "Import file",
     "image up": "Import image"
+  },
+
+  "Theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  
+  "Languages": {
+    "pt": "Portuguese",
+    "en": "English",
+    "es": "Spanish",
+    "fr": "French",
+    "de": "German"
+  },
+
+  "Settings": {
+    "account": "Account",
+    "appearance": "Appearance",
+    "editor": "Editor",
+    "form": "Form",
+    "ai": "AI",
+    "theme": "Theme",
+    "language": "Language",
+    "preferred provider": "Preferred provider",
+    "preferred model": "Preferred model"
   }
 }

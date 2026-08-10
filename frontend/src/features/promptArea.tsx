@@ -24,7 +24,7 @@ export const PromptArea = ({
         <div className="
             flex flex-col 
             items-start gap-1 p-4 w-full 
-            rounded-4xl border border-border bg-muted"
+            rounded-4xl border-border bg-muted"
         >
             <div className="w-full self-end">
                 <Textarea 
@@ -44,7 +44,7 @@ export const PromptArea = ({
                 />
             </div>
             <div className="w-full flex flex-row justify-between self-end">
-                <Button className="rounded-full" variant="outline" size="icon">
+                <Button className="rounded-full bg-transparent" variant="ghost" size="icon">
                     <Paperclip />
                 </Button>
                 <div className="flex flex-row gap-2">

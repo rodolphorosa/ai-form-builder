@@ -82,5 +82,31 @@
     "trash": "Lixeira",
     "file up": "Importar arquivo",
     "image up": "Importar imagem"
+  },
+
+  "Theme": {
+    "light": "Claro",
+    "dark": "Escuro",
+    "system": "Sistema"
+  },
+  
+  "Languages": {
+    "pt": "Português",
+    "en": "Inglês",
+    "es": "Espanhol",
+    "fr": "Francês",
+    "de": "Alemão"
+  },
+
+  "Settings": {
+    "account": "Conta",
+    "appearance": "Aparência",
+    "editor": "Editor",
+    "form": "Formulário",
+    "ai": "IA",
+    "theme": "Tema",
+    "language": "Idioma",
+    "preferred provider": "Provedor preferido",
+    "preferred model": "Modelo preferido"
   }
 }

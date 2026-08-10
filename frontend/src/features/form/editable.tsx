@@ -89,7 +89,7 @@ const TypeSelect = ({ type, onSelect }: { type: InputType, onSelect: (type: Inpu
                     <Button variant="outline" className="border-0 cursor-pointer">{renderTrigger(currentOption)}</Button>
                 }
             />
-            <PopoverContent align="start" className="w-max min-w-[120px] p-1 gap-0.5 shadow-lg">
+            <PopoverContent align="start" className="w-max min-w-[120px] mt-1 p-1 gap-0.5 shadow-sm">
                 {options?.map((item) => renderTypeOption(item))}
             </PopoverContent>
 
@@ -224,13 +224,13 @@ export const EditableComponent = ({ item, selected, onChange, onDelete, onDuplic
             )}
             <div 
                 className={cn(
-                    "absolute left-1/2 -top-5 -translate-x-1/2 z-10 transition-all duration-200 rounded-lg shadow-lg",
+                    "absolute left-1/2 -top-5 -translate-x-1/2 z-10 transition-all duration-200 rounded-lg",
                     selected
                         ? "opacity-100"
                         : "pointer-events-none opacity-0 group-hover:opacity-50"
                 )}
             >
-                <div className="flex flex-row gap-0.5 p-1 items-center border border-border rounded-lg bg-card">
+                <div className="flex flex-row gap-0.5 p-1 items-center border border-ring rounded-lg bg-card">
                     <TypeSelect 
                         type={item.type} 
                         onSelect={(type) => {

@@ -223,7 +223,7 @@ const Brand = () => {
                         <span className="text-5xl font-extrabold">
                             Crie formulários com 
                         </span>
-                        <span className="text-6xl font-extrabold text-indigo-400">
+                        <span className="text-6xl font-black text-indigo-400">
                             <a className="underline">inteligência artificial</a>.
                         </span>
                     </div>
