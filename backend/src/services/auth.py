@@ -31,6 +31,12 @@ class AuthService:
         if not password_hash.verify(password, user.password):
             raise Exception("Invalid email or user")
 
+        token = self.create_user_session(user)
+
+        return { "user": user, "token":  token }
+
+    
+    def create_user_session(self, user: User) -> str:
         session_repository = SessionRepository(self.db)
 
         token = secrets.token_urlsafe(32)
@@ -45,7 +51,8 @@ class AuthService:
             expires_at=datetime.now(timezone.utc) + timedelta(days=30)
         )
 
-        return { "user": user, "token":  token }
+        return token
+
 
 
     async def get_user_from_session(

@@ -2,7 +2,6 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from src.database.session import get_db
-from src.database.models.project import Project
 from src.database.models.user import User
 from src.schemas.project import ProjectResponse
 from src.schemas.requests import ProjectRequest
@@ -17,13 +16,9 @@ def get_projects(
     current_user: User = Depends(get_current_user), 
     db: Session = Depends(get_db)
 ):
+    service = ProjectService(db)
 
-    projects = (
-        db.query(Project)
-        .filter(Project.user_id == current_user.id)
-        .filter(Project.is_deleted == False)
-        .all()
-    )
+    projects = service.get_by_user(user=current_user)
     
     return { 
         "data": [ProjectResponse.from_model(project) for project in projects]

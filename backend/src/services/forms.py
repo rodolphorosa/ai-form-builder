@@ -34,6 +34,7 @@ from src.schemas.schema import (
 )
 from src.llm.factory import ProviderType
 from src.database.models.user import User
+from src.domain.exceptions.form import FormAccessDenied, FormNotFound
 
 from uuid import uuid4
 
@@ -295,13 +296,19 @@ class FormService:
         return { "message": message, "title": title, "description": description, "schema": form_schema }
 
 
-    def get_form(self, id: UUID):
+    def get_form(self, user: User, id: UUID):
         form_repository = FormRepository(self.db)
+        project_reposity = ProjectRepository(self.db)
 
         form = form_repository.get_by_id(id)
 
         if not form:
-            raise Exception("Form not found")
+            raise FormNotFound()
+
+        project = project_reposity.get_by_id(form.project_id)
+
+        if user.id != project.user_id:
+            raise FormAccessDenied()
 
         return form
 

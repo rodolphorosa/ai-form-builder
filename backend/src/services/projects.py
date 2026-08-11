@@ -33,7 +33,12 @@ class ProjectService:
     def __init__(self, db: Session):
         self.db = db
 
-
+    
     def create(self, user: User, name: str, description: str | None):
         repository = ProjectRepository(self.db)
         return repository.create(user, name, description)
+
+    
+    def get_by_user(self, user: User):
+        repository = ProjectRepository(self.db)
+        return repository.get_all(user=user)

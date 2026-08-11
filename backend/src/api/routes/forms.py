@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, UploadFile, File, Form as ApiForm
+from fastapi import APIRouter, Depends, UploadFile, File, Form as ApiForm, HTTPException
 from sqlalchemy.orm import Session
 
 from uuid import UUID
@@ -20,6 +20,8 @@ from src.repositories.project_repository import ProjectRepository
 
 from src.schemas.message import MessageResponse
 
+from src.domain.exceptions.form import FormAccessDenied, FormNotFound
+
 router = APIRouter(prefix="/forms", tags=["Forms"])
 
 @router.get('')
@@ -31,10 +33,25 @@ def get_forms(current_user: User = Depends(get_current_user), db: Session = Depe
 
 
 @router.get('/{id}')
-def get_form(id: UUID, db: Session = Depends(get_db)):
+def get_form(
+    id: UUID, 
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
     service = FormService(db)
 
-    form = service.get_form(id)
+    try:
+        form = service.get_form(current_user, id)
+    except FormNotFound:
+        raise HTTPException(
+            status_code=404,
+            detail="Form not found"
+        )
+    except FormAccessDenied:
+        raise HTTPException(
+            status_code=403,
+            detail="Unauthorized"
+        )
 
     return { "data": FormResponse.from_model(form) }
 

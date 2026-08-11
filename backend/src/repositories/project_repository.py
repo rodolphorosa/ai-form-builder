@@ -1,3 +1,4 @@
+from os import name
 from sqlalchemy.orm import Session
 from sqlalchemy.dialects.postgresql import UUID
 
@@ -23,6 +24,20 @@ class ProjectRepository:
         return project
 
 
+    def create_user_default_project(self, user: User) -> Project:
+        project = Project(
+            name="My forms",
+            user_id=user.id,
+            is_system=True
+        )
+
+        self.db.add(project)
+        self.db.commit()
+        self.db.refresh(project)
+
+        return project
+
+
     def get_default_project(self, user: User) -> Project | None:
         return (
             self.db.query(Project)
@@ -32,9 +47,10 @@ class ProjectRepository:
         )
     
 
-    def get_all(self) -> list[Project]:
+    def get_all(self, user: User) -> list[Project]:
         return (
             self.db.query(Project)
+            .filter(Project.user_id == user.id)
             .filter(Project.is_deleted == False)
             .all()
         )

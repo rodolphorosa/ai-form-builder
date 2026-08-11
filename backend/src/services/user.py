@@ -2,6 +2,9 @@ from sqlalchemy.orm import Session
 
 from src.repositories.user_settings_repository import UserSettingsRepository
 from src.repositories.user_repository import UserRepository
+from src.repositories.project_repository import ProjectRepository
+
+from src.services.auth import AuthService
 
 from uuid import uuid4
 
@@ -15,6 +18,7 @@ class UserService:
 
     def create_user(self, name: str, email: str, password: str):
         user_repository = UserRepository(self.db)
+        project_repository = ProjectRepository(self.db)
 
         user = user_repository.create(
             name=name, 
@@ -22,11 +26,13 @@ class UserService:
             password=password
         )
 
+        project_repository.create_user_default_project(user)
+
         settings_repository = UserSettingsRepository(self.db)
 
-        settings = settings_repository.create(user_id=user.id)
+        settings_repository.create(user_id=user.id)
 
-        return { "user": user, "settings": settings }
+        return user
 
 
     def get_user_and_settings(self, email: str):
