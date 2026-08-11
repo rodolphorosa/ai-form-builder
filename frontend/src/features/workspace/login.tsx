@@ -4,13 +4,17 @@ import { Button } from "@/components/ui/button"
 import { Field, FieldLabel } from "@/components/ui/field"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
 import { Spinner } from "@/components/ui/spinner"
-import { ArrowUp, Astroid, ChevronDown, Eye, Lock, Mail, Paperclip, Sparkles } from "lucide-react"
+import { AlertCircle, ArrowUp, Astroid, ChevronDown, Eye, Lock, Mail, Paperclip, Router, Sparkles, User } from "lucide-react"
 
 import { motion, AnimatePresence } from "motion/react"
 import { useEffect, useState } from "react"
 import { Thinking, TypingText } from "../inputs/common"
 import { Skeleton } from "@/components/ui/skeleton"
 import { authService } from "@/api/auth.service"
+import { userService } from "@/api/user.service"
+import { useRouter } from "@/i18n/navigation"
+import { useAuth } from "@/contexts/auth-context"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 
 const Prompt = () => {
@@ -238,33 +242,249 @@ const Brand = () => {
     )
 }
 
+const LoginPage = ({
+    onChangeEmail,
+    onChangePassword,
+    onLogin,
+    onCreateUser,
+    error
+}:{
+    onChangeEmail: (email: string) => void
+    onChangePassword: (password: string) => void
+    onLogin: () => void
+    onCreateUser: () => void
+    error?: string | null
+}) => {
+    return (
+        <div className="flex flex-col gap-8 px-32 my-auto">
+            <div className="flex flex-col gap-2">
+                <div className="text-4xl font-semibold">
+                    Bem vindo!
+                </div>
+                <div className="text-lg font-muted-foreground">
+                    Entre para acessar seus projetos e formulários.
+                </div>
+            </div>
+            <div className="flex flex-col gap-6">
+                <Field>
+                    <FieldLabel htmlFor="email">
+                        E-mail
+                    </FieldLabel>
+                    <InputGroup>
+                        <InputGroupInput 
+                            type="email" 
+                            placeholder="seu@email.com" 
+                            onChange={(e) => onChangeEmail(e.target.value ?? "")}
+                        />
+                        <InputGroupAddon>
+                            <Mail />
+                        </InputGroupAddon>
+                    </InputGroup>
+                </Field>
+
+                <Field>
+                    <FieldLabel htmlFor="password">
+                        Senha
+                    </FieldLabel>
+                    <InputGroup>
+                        <InputGroupInput 
+                            type="password" 
+                            placeholder="Digite sua senha" 
+                            onChange={(e) => onChangePassword(e.target.value ?? "")}
+                        />
+                        <InputGroupAddon>
+                            <Lock />
+                        </InputGroupAddon>
+                        <InputGroupAddon align="inline-end">
+                            <Eye className="cursor-pointer" />
+                        </InputGroupAddon>
+                    </InputGroup>
+                </Field>
+
+                {error && (
+                    <Alert variant="destructive">
+                        <AlertCircle />
+                        <AlertTitle>Login failed</AlertTitle>
+                        <AlertDescription>
+                            Invalid user or email.
+                        </AlertDescription>
+                    </Alert>
+                )}
+
+                <Button 
+                    className="p-6 cursor-pointer bg-indigo-400 hover:bg-indigo-400/25"
+                    onClick={(e) => {
+                        e.preventDefault()
+                        onLogin()
+                    }}
+                >
+                    Entrar
+                </Button>
+
+                <div className="self-center">
+                    Não tem conta? <a className="text-indigo-400 cursor-pointer" onClick={onCreateUser}>Criar uma.</a>
+                </div>
+
+            </div>
+        </div>
+    )
+}
+
+const CreatePage = ({
+    onChangeName,
+    onChangeEmail,
+    onChangePassword,
+    onChangeConfirmation,
+    onLogin,
+    onCreateUser,
+    error
+}: {
+    onChangeName: (name: string) => void
+    onChangeEmail: (email: string) => void
+    onChangePassword: (password: string) => void
+    onChangeConfirmation: (confirmation: string) => void
+    onLogin: () => void
+    onCreateUser: () => void
+    error?: string
+}) => {
+    return (
+        <div className="flex flex-col gap-8 px-32 my-auto">
+            <div className="flex flex-col gap-2">
+                <div className="text-4xl font-semibold">
+                    Crie sua conta
+                </div>
+                <div className="text-lg font-muted-foreground">
+                    Comece a criar formulários em segundos.
+                </div>
+            </div>
+            <div className="flex flex-col gap-6">
+                <Field>
+                    <FieldLabel htmlFor="name">
+                        Nome
+                    </FieldLabel>
+                    <InputGroup>
+                        <InputGroupInput 
+                            type="text"
+                            placeholder="Seu nome"
+                            onChange={(e) => onChangeName(e.target.value ?? "")}
+                        />
+                        <InputGroupAddon>
+                            <User />
+                        </InputGroupAddon>
+                    </InputGroup>
+                </Field>
+                <Field>
+                    <FieldLabel htmlFor="email">
+                        E-mail
+                    </FieldLabel>
+                    <InputGroup>
+                        <InputGroupInput 
+                            type="email" 
+                            placeholder="seu@email.com" 
+                            onChange={(e) => onChangeEmail(e.target.value ?? "")}
+                        />
+                        <InputGroupAddon>
+                            <Mail />
+                        </InputGroupAddon>
+                    </InputGroup>
+                </Field>
+                <Field>
+                    <FieldLabel htmlFor="password">
+                        Senha
+                    </FieldLabel>
+                    <InputGroup>
+                        <InputGroupInput 
+                            type="password" 
+                            placeholder="Digite sua senha" 
+                            onChange={(e) => onChangePassword(e.target.value ?? "")}
+                        />
+                        <InputGroupAddon>
+                            <Lock />
+                        </InputGroupAddon>
+                        <InputGroupAddon align="inline-end">
+                            <Eye className="cursor-pointer" />
+                        </InputGroupAddon>
+                    </InputGroup>
+                </Field>
+                <Field>
+                    <FieldLabel htmlFor="password">
+                        Senha
+                    </FieldLabel>
+                    <InputGroup>
+                        <InputGroupInput 
+                            type="password" 
+                            placeholder="Confirme sua senha" 
+                            onChange={(e) => onChangeConfirmation(e.target.value ?? "")}
+                        />
+                        <InputGroupAddon>
+                            <Lock />
+                        </InputGroupAddon>
+                        <InputGroupAddon align="inline-end">
+                            <Eye className="cursor-pointer" />
+                        </InputGroupAddon>
+                    </InputGroup>
+                </Field>
+
+                <Button 
+                    className="p-6 cursor-pointer bg-indigo-400 hover:bg-indigo-400/25"
+                    onClick={(e) => {
+                        e.preventDefault()
+                        onCreateUser()
+                    }}
+                >
+                    Create
+                </Button>
+
+                <div className="self-center">
+                    Já tem uma conta? <a className="text-indigo-400 cursor-pointer" onClick={onLogin}>Entrar.</a>
+                </div>
+            </div>
+        </div>
+    )
+}
+
 type Step = "prompt" | "thinking" | "response" | "created"
 
 export const Login = () => {
+    const router = useRouter()
+    const { refreshUser } = useAuth()
+    
     const [step, setStep] = useState<Step>("prompt")
 
+    const [name, setName] = useState<string>("")
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
+    const [confirmation, setConfirmation] = useState<string>("")
+
+    const [mode, setMode] = useState<"login" | "create">("login")
+
+    const [error, setError] = useState<string | null>()
 
     const login = async () => {
         try {
-            const response = await authService.login(email, password)
-
-            console.log(response.data)
+            await authService.login(email, password)
+            await refreshUser()
+            router.push("/")
 
         } catch(err) {
             console.log(err)
+            // @ts-ignore
+            setError(err)
         }
     }
 
-    const getUser = async () => {
+    const create = async () => {
         try {
-            const response = await authService.getMe()
-
-            console.log(response)
+            await userService.create({
+                name: name,
+                email: email,
+                password: password
+            })
+            await refreshUser()
+            router.push("/")
 
         } catch(err) {
-
+            console.log(err)
         }
     }
 
@@ -272,7 +492,18 @@ export const Login = () => {
         if (email.trim().length === 0 || password.trim().length === 0) return
 
         login()
-        // getUser()
+    }
+
+    const onCreate = () => {
+        if (
+            name.trim().length === 0 || 
+            email.trim().length === 0 || 
+            password.trim().length === 0 || 
+            confirmation.trim().length === 0 || 
+            password !== confirmation
+        ) return
+
+        create()
     }
 
     useEffect(() => {
@@ -310,60 +541,30 @@ export const Login = () => {
     return (
         <div className="grid grid-cols-2 h-screen w-screen">
             <Brand />
+            {mode == "login" && 
+                (
+                    <LoginPage 
+                        onChangeEmail={setEmail} 
+                        onChangePassword={setPassword} 
+                        onLogin={onLogin} 
+                        onCreateUser={() => setMode("create")} 
+                        error={error}
+                    />
+                )
+            }
+            {mode == "create" && 
+                (
+                    <CreatePage 
+                        onChangeName={setName}
+                        onChangeEmail={setEmail} 
+                        onChangePassword={setPassword} 
+                        onChangeConfirmation={setConfirmation} 
+                        onLogin={() => setMode("login")}
+                        onCreateUser={onCreate}
+                    />
+                )
+            }
             
-            <div className="flex flex-col gap-8 px-32 my-auto">
-                <div className="flex flex-col gap-2">
-                    <div className="text-4xl font-semibold">
-                        Bem vindo!
-                    </div>
-                    <div className="text-lg font-muted-foreground">
-                        Entre para acessar seus projetos e formulários.
-                    </div>
-                </div>
-                <div className="flex flex-col gap-6">
-                    <Field>
-                        <FieldLabel htmlFor="email">
-                            E-mail
-                        </FieldLabel>
-                        <InputGroup>
-                            <InputGroupInput type="email" placeholder="seu@email.com" onChange={(e) => setEmail(e.target.value ?? "")}/>
-                            <InputGroupAddon>
-                                <Mail />
-                            </InputGroupAddon>
-                        </InputGroup>
-                    </Field>
-
-                    <Field>
-                        <FieldLabel htmlFor="password">
-                            Senha
-                        </FieldLabel>
-                        <InputGroup>
-                            <InputGroupInput type="password" placeholder="Digite sua senha" onChange={(e) => setPassword(e.target.value ?? "")}/>
-                            <InputGroupAddon>
-                                <Lock />
-                            </InputGroupAddon>
-                            <InputGroupAddon align="inline-end">
-                                <Eye className="cursor-pointer" />
-                            </InputGroupAddon>
-                        </InputGroup>
-                    </Field>
-
-                    <Button 
-                        className="p-6 cursor-pointer bg-indigo-400 hover:bg-indigo-400/25"
-                        onClick={(e) => {
-                            e.preventDefault()
-                            onLogin()
-                        }}
-                    >
-                        Entrar
-                    </Button>
-
-                    <div className="self-center">
-                        Não tem conta? <a className="text-indigo-400 cursor-pointer">Criar uma.</a>
-                    </div>
-
-                </div>
-            </div>
         </div>
     )
 }

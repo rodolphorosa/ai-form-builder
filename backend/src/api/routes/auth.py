@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Response
+from fastapi import APIRouter, Depends, Request, Response, HTTPException
 from sqlalchemy.orm import Session
 
 from src.database.session import get_db
@@ -18,7 +18,13 @@ def login(data: LoginRequest, response: Response, db: Session = Depends(get_db))
 
     service = AuthService(db)
 
-    result = service.login(email=data.email, password=data.password)
+    try:
+        result = service.login(email=data.email, password=data.password)
+    except Exception as e:
+        raise HTTPException(
+            status_code=401,
+            detail=str(e)
+        )
 
     user = result["user"]
     token = result["token"]
@@ -37,13 +43,31 @@ def login(data: LoginRequest, response: Response, db: Session = Depends(get_db))
     }
 
 
-@router.post('/logout')
-def logout(db: Session = Depends(get_db)):
-    pass
+@router.post("/logout")
+def logout(
+    request: Request,
+    response: Response,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    service = AuthService(db)
+    token = request.cookies.get("session")
+
+    if token:
+        service.logout(token, user)
+
+    response.delete_cookie(
+        key="session",
+        httponly=True,
+        secure=False,
+        samesite="lax",
+    )
+
+    return { "message": "Logged out successfully" }
 
 
 @router.get('/me')
 def get_me(
     current_user: User = Depends(get_current_user)
 ):
-    return current_user
+    return { "data": current_user }

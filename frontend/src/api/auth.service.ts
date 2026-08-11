@@ -9,7 +9,11 @@ export const authService = {
         return api.post<ApiResponse<User>>("/auth/login", { email: email, password: password })
     },
 
-    getMe(): Promise<User> {
-        return api.get<User>("/auth/me")
+    logout(): Promise<{ message: string }> {
+        return api.post<{ message: string }>("/auth/logout", {})
+    },
+
+    getMe(): Promise<ApiResponse<User>> {
+        return api.get<ApiResponse<User>>("/auth/me")
     }
 }

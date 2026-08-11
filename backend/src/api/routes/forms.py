@@ -6,12 +6,13 @@ from uuid import UUID
 from src.database.session import get_db
 from src.database.models.form import Form
 from src.database.models.project import Project
+from src.database.models.user import User
 from src.schemas.form import FormResponse
 from src.schemas.requests import AISuggestionRequest, BlankFormRequest, AIFormRequest, AIEditRequest, UpdateFormRequest, JsonFormRequest, SendMessageRequest
 from src.services.forms import FormService, generate_form_schema
 from src.services.chat import ChatService
 
-from src.api.deps import get_llm_provider
+from src.api.deps import get_current_user, get_llm_provider
 from src.llm.factory import ProviderType
 
 from src.repositories.form_repository import FormRepository
@@ -22,9 +23,9 @@ from src.schemas.message import MessageResponse
 router = APIRouter(prefix="/forms", tags=["Forms"])
 
 @router.get('')
-def get_forms(db: Session = Depends(get_db)):
+def get_forms(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     form_repository = FormRepository(db)
-    forms = form_repository.get_all()
+    forms = form_repository.get_by_user(user_id=current_user.id)
     
     return { "data": [FormResponse.from_model(f) for f in forms] }
 

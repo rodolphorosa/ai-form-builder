@@ -15,6 +15,7 @@ import { FormDropdown } from "./dropdown-menus/formOptions"
 import { ProjectDropdown } from "./dropdown-menus/projectOptions"
 import { cn } from "@/lib/utils"
 import { SettingsDialog } from "../dialogs/settings/settings"
+import { useAuth } from "@/contexts/auth-context"
 
 interface Props {
     forms: Form[]
@@ -22,6 +23,8 @@ interface Props {
 }
 
 export const Sidebar = ({ forms, projects }: Props) => {
+    const { user, logout } = useAuth()
+
     const tree = useTranslations("Tree")
     const common = useTranslations("Common")
     const workspace = useTranslations("Workspace")
@@ -162,8 +165,13 @@ export const Sidebar = ({ forms, projects }: Props) => {
                                     <User className="h-4 w-4" />
                                 </AvatarFallback>
                             </Avatar>
-                            <div className="text-sm font-medium truncate">
-                                Rodolpho Rosa da Silva
+                            <div className="flex flex-col gap-0.5">
+                                <div className="text-sm font-medium truncate">
+                                    {user?.name}
+                                </div>
+                                <div className="text-xs text-muted-foreground truncate">
+                                    {user?.email}
+                                </div>
                             </div>
                         </div>
                     }/>
@@ -175,8 +183,8 @@ export const Sidebar = ({ forms, projects }: Props) => {
                                 </AvatarFallback>
                             </Avatar>
                             <div className="flex flex-col gap-1">
-                                <div className="text-sm font-medium">Rodolpho Rosa da Silva</div>
-                                <div className="text-xs text-muted-foreground">rodolphorosa05@gmail.com</div>
+                                <div className="text-sm font-medium">{user?.name}</div>
+                                <div className="text-xs text-muted-foreground">{user?.email}</div>
                             </div>
                         </div>
                         <DropdownMenuSeparator />
@@ -192,7 +200,7 @@ export const Sidebar = ({ forms, projects }: Props) => {
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
-                            <DropdownMenuItem variant="destructive">
+                            <DropdownMenuItem variant="destructive" onClick={logout}>
                                 <LogOut className="h-4 w-4" />
                                 {tree("logout")}
                             </DropdownMenuItem>

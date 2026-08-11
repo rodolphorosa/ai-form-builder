@@ -23,6 +23,7 @@ from src.schemas.schema import (
 )
 
 from src.database.models.project import Project
+from src.database.models.user import User
 from src.llm.factory import ProviderType
 
 from uuid import uuid4
@@ -33,6 +34,6 @@ class ProjectService:
         self.db = db
 
 
-    def create(self, name: str, description: str | None):
+    def create(self, user: User, name: str, description: str | None):
         repository = ProjectRepository(self.db)
-        return repository.create(name, description)
+        return repository.create(user, name, description)

@@ -78,5 +78,16 @@ class AuthService:
         return result.scalar_one_or_none()
 
 
-    def logout(self, email: str):
-        pass
+    def logout(self, token: str, user: User):
+        token_hash = hashlib.sha256(
+            token.encode()
+        ).hexdigest()
+
+        session = self.db.query(UserSession).filter(
+            UserSession.token_hash == token_hash,
+            UserSession.user_id == user.id,
+        ).first()
+
+        if session:
+            self.db.delete(session)
+            self.db.commit()

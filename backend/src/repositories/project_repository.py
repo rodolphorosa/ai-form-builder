@@ -2,16 +2,18 @@ from sqlalchemy.orm import Session
 from sqlalchemy.dialects.postgresql import UUID
 
 from src.database.models.project import Project
+from src.database.models.user import User
 
 class ProjectRepository:
     def __init__(self, db: Session):
         self.db = db
 
 
-    def create(self, name: str, description: str | None) -> Project:
+    def create(self, user: User, name: str, description: str | None) -> Project:
         project = Project(
             name=name,
-            description=description
+            description=description,
+            user_id=user.id
         )
 
         self.db.add(project)

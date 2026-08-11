@@ -22,6 +22,8 @@ import { ImageDialog } from "../dialogs/imageUpload"
 import { ProjectCreate } from "../dialogs/project"
 import { UpdateFormRequest } from "@/api/types"
 import { userService } from "@/api/user.service"
+import { authService } from "@/api/auth.service"
+import { useAuth } from "@/contexts/auth-context"
 
 
 interface CreationOption {
@@ -34,6 +36,16 @@ interface CreationOption {
 
 export const Workspace = () => {
     const router = useRouter()
+    const { user, isLoading, isAuthenticated } = useAuth()
+
+    console.log(isLoading, isAuthenticated)
+
+    useEffect(() => {
+        if (!isLoading && !isAuthenticated) {
+            router.replace("/login")
+        }
+    }, [isLoading, isAuthenticated, router])
+    
     
     const [projects, setProjects] = useState<Project[]>([])
     const [forms, setForms] = useState<Form[]>([])
@@ -99,26 +111,9 @@ export const Workspace = () => {
         }
     }
 
-    const login = async () => {
-        try {
-
-            const response = await userService.login("admin@example.com", "admin")
-
-            console.log(response.data)
-
-        } catch(err) {
-            console.log(err)
-
-        }
-    }
-
     useEffect(() => {
-
         getForms()
         getProjects()
-
-        login()
-
     }, [])
 
 
@@ -410,6 +405,10 @@ export const Workspace = () => {
                 </div>
             </div>
         )
+    }
+
+    if (isLoading || !isAuthenticated) {
+        return null
     }
 
     return (

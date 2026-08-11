@@ -1,7 +1,10 @@
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 from sqlalchemy.dialects.postgresql import UUID
 
 from src.database.models.form import Form
+from src.database.models.project import Project
+from src.database.models.user import User
 
 class FormRepository:
     def __init__(self, db: Session):
@@ -47,6 +50,18 @@ class FormRepository:
 
     def get_by_project(self, project_id: UUID) -> list[Form]:
         return self.db.query(Form).filter(Form.project_id == project_id).all()
+
+    def get_by_user(self, user_id: UUID) -> list[Form]:
+        stmt = (
+            select(Form)
+            .join(Project, Form.project_id == Project.id)
+            .where(Project.user_id == user_id)
+        )
+
+        result = self.db.execute(stmt)
+        forms = result.scalars().all()
+
+        return forms
     
 
     def delete(self, form: Form):

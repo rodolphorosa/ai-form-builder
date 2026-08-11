@@ -6,8 +6,6 @@ import { Login } from "@/features/workspace/login";
 
 export default function Home() {
   return (
-    // <Builder />
     <Workspace />
-    // <Login />
   );
 }

@@ -53,8 +53,8 @@ export class ApiClient {
 
     private async handleResponse<T>(response: Response): Promise<T> {
         if (!response.ok) {
-            const error = await response.text()
-            throw new Error("Request failed " + error)
+            const error = await response.json()
+            throw new Error(error.detail)
         }
 
         return response.json() as Promise<T>

@@ -20,7 +20,7 @@ class UserSettingsRepository:
 
         self.db.add(settings)
         self.db.commit()
-        self.db.refresh()
+        self.db.refresh(settings)
 
         return settings
 

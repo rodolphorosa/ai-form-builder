@@ -4,8 +4,14 @@ import { ApiResponse } from "./types"
 
 const api = new ApiClient()
 
+interface UserRequest {
+    name: string,
+    email: string,
+    password: string
+}
+
 export const userService = {
-    login(email: string, password: string): Promise<ApiResponse<User>> {
-        return api.post<ApiResponse<User>>("/users/login", { email: email, password: password })
+    create(request: UserRequest): Promise<ApiResponse<User>> {
+        return api.post<ApiResponse<User>>("/users", request)
     }
 }
