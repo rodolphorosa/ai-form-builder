@@ -108,5 +108,20 @@
     "language": "Idioma",
     "preferred provider": "Provedor preferido",
     "preferred model": "Modelo preferido"
+  },
+
+  "Errors": {
+    "login failed": "Falha no login",
+    "user creation failed": "Falha ao criar conta",
+    "invalid email or password": "E-mail ou senha inválidos.",
+    "email alreay in use": "E-mail já está em uso.",
+
+    "access denied": "Acesso negado",
+    "permission to form denied": "Você não tem permissão para acessar esse formulário.",
+    "contact form owner": "Se você acredita que deveria ter acesso a esse formulário, entre em contato com o proprietário.",
+    "back to home": "Voltar à tela inicial",
+
+    "permissn to project denied": "Você não tem permissão para acessar esse projeto.",
+    "contat project owner": "Se você acredita que deveria ter acesso a esse projeto, entre com contato com o proprietário."
   }
 }

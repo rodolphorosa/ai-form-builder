@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Response
+from fastapi import APIRouter, Depends, Response, HTTPException
 from sqlalchemy.orm import Session
 
 from uuid import UUID
@@ -10,6 +10,8 @@ from src.services.auth import AuthService
 
 from src.schemas.requests import UserRequest
 from src.schemas.user import UserResponse
+
+from src.domain.exceptions.user import EmailAlreadyExistsException
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -27,11 +29,20 @@ def create_user(
 ):
     user_service = UserService(db)
 
-    user = user_service.create_user(
-        name=data.name, 
-        email=data.email, 
-        password=data.password
-    )
+    try:
+        user = user_service.create_user(
+            name=data.name, 
+            email=data.email, 
+            password=data.password
+        )
+    except EmailAlreadyExistsException:
+        raise HTTPException(
+            status_code=409,
+            detail={
+                "code": "EMAIL_ALREADY_IN_USE",
+                "message": "Email is already in use"
+            }
+        )
 
     auth_service = AuthService(db)
     

@@ -21,6 +21,9 @@ import cloneDeep from "lodash/cloneDeep"
 import { useAutosave } from "@/hooks/use-autosave"
 import { UpdateFormRequest } from "@/api/types"
 import { useRouter } from "@/i18n/navigation"
+import { ApiError } from "@/api/client"
+import { AccessDenied } from "./form/access-denied"
+import { Spinner } from "@/components/ui/spinner"
 
 interface BuilderProps {
 }
@@ -33,6 +36,8 @@ export const Builder = ({}: BuilderProps) => {
     const [projects, setProjects] = useState<Project[]>([])
     const [committedForm, setCommittedForm] = useState<Form | null>(null)
     const [workingForm, setWorkingForm] = useState<Form | null>(null)
+
+    const [accessDenied, setAccessDenied] = useState<boolean>(false)
 
     const params = useParams()
     const id = params.id as string
@@ -51,8 +56,17 @@ export const Builder = ({}: BuilderProps) => {
 
             setCommittedForm(response.data)
             setWorkingForm(response.data)
-        } catch (err) {
-            console.error(err)
+        } catch (error) {
+
+            if (error instanceof ApiError) {
+                if (error.code === "FORM_UNAUTHORIZED") {
+                    setAccessDenied(true)
+                }
+
+                if (error.status === 404) {
+                    return
+                }
+            }
         } finally {
             setLoading(false)
         }
@@ -226,6 +240,8 @@ export const Builder = ({}: BuilderProps) => {
 
     const undoDisabled = history.past.length == 0
     const redoDisabled = history.future.length == 0
+
+    if (accessDenied) return <AccessDenied />
 
     return (
         

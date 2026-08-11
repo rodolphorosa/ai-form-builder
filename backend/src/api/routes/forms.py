@@ -45,12 +45,18 @@ def get_form(
     except FormNotFound:
         raise HTTPException(
             status_code=404,
-            detail="Form not found"
+            detail={
+                "code": "FORM_NOT_FOUND",
+                "message": "Form not found"
+            }
         )
     except FormAccessDenied:
         raise HTTPException(
             status_code=403,
-            detail="Unauthorized"
+            detail={
+                "code": "FORM_UNAUTHORIZED",
+                "message": "Unauthorized"
+            }
         )
 
     return { "data": FormResponse.from_model(form) }

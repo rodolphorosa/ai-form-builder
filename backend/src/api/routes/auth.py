@@ -23,7 +23,10 @@ def login(data: LoginRequest, response: Response, db: Session = Depends(get_db))
     except Exception as e:
         raise HTTPException(
             status_code=401,
-            detail=str(e)
+            detail={
+                "code": "INVALID_EMAIL_OR_PASSWORD",
+                "message": "Invalid email or password"
+            }
         )
 
     user = result["user"]

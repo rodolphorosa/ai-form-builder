@@ -108,5 +108,20 @@
     "language": "Language",
     "preferred provider": "Preferred provider",
     "preferred model": "Preferred model"
+  },
+
+  "Errors": {
+    "login failed": "Failed to login",
+    "user creation failed": "Failed to create account",
+    "invalid email or password": "Invalid email or password.",
+    "email alreay in use": "The provided e-mail is already in use.",
+
+    "access denied": "Access denied",
+    "permission to form denied": "You do not have permission to access this form.",
+    "contact form owner": "If you believe you should have access to this form, contact its owner.",
+    "back to home": "Go back to home",
+
+    "permissn to project denied": "You do not have permission to access this project.",
+    "contat project owner": "If you believe you should have access to this project, contact its owner."
   }
 }

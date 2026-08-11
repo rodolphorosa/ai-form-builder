@@ -1,0 +1,127 @@
+{
+  "Common": {
+    "name": "Nom",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "pin": "Épingler",
+    "unpin": "Désépingler",
+    "rename": "Renommer",
+    "export": "Exporter",
+    "archive": "Archiver",
+    "delete": "Supprimer",
+    "duplicate": "Dupliquer",
+
+    "text": "Texte simple",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "phone": "Téléphone",
+    "url": "Lien",
+    "textarea": "Paragraphe",
+    "number": "Champ numérique",
+    "date": "Date",
+    "datetime": "Date et heure",
+    "select": "Liste déroulante",
+    "radio": "Bouton radio",
+    "checkbox": "Case à cocher",
+    "rating": "Évaluation",
+    "file": "Fichier",
+
+    "new question": "Nouvelle question",
+    "new section": "Nouvelle section",
+
+    "copy": "Copie",
+
+    "chat-create": "Décrivez le formulaire que vous souhaitez créer",
+    "chat-edit": "Décrivez une modification du formulaire",
+    "chat-default": "Décrivez ce que vous souhaitez",
+
+    "import schema": "Importer le schéma",
+
+    "updated": "Mis à jour",
+    "edited": "Modifié",
+
+    "move to project": "Déplacer vers le projet",
+
+    "saved": "Enregistré",
+    "unsaved": "Modifications en attente",
+    "saving": "Enregistrement...",
+    "error": "Erreur"
+  },
+
+  "Tree": {
+    "improve with ai": "Améliorer avec l’IA",
+    "edit": "Modifier",
+    "add item above": "Ajouter un élément au-dessus",
+    "add item below": "Ajouter un élément en dessous",
+    "add section below": "Ajouter une section en dessous",
+    "add item": "Ajouter un élément",
+    "duplicate": "Dupliquer",
+    "delete": "Supprimer",
+    "rename": "Renommer",
+
+    "account": "Compte",
+    "profile": "Profil",
+    "settings": "Paramètres",
+    "logout": "Se déconnecter",
+
+    "new project": "Nouveau projet",
+    "new form": "Nouveau formulaire",
+    "search": "Rechercher",
+    "projects": "Projets",
+    "recent": "Récents",
+    "move to project": "Déplacer vers le projet",
+    "pinned": "Épinglés",
+    "library": "Bibliothèque"
+  },
+
+  "Workspace": {
+    "create with ai": "Créer avec l’IA",
+    "blank": "Vide",
+    "import": "Importer",
+    "archived": "Archivés",
+    "trash": "Corbeille",
+    "file up": "Importer un fichier",
+    "image up": "Importer une image"
+  },
+
+  "Theme": {
+    "light": "Clair",
+    "dark": "Sombre",
+    "system": "Système"
+  },
+
+  "Languages": {
+    "pt": "Portugais",
+    "en": "Anglais",
+    "es": "Espagnol",
+    "fr": "Français",
+    "de": "Allemand"
+  },
+
+  "Settings": {
+    "account": "Compte",
+    "appearance": "Apparence",
+    "editor": "Éditeur",
+    "form": "Formulaire",
+    "ai": "IA",
+    "theme": "Thème",
+    "language": "Langue",
+    "preferred provider": "Fournisseur préféré",
+    "preferred model": "Modèle préféré"
+  },
+
+  "Errors": {
+    "login failed": "Échec de la connexion",
+    "user creation failed": "Échec de la création du compte",
+    "invalid email or password": "Adresse e-mail ou mot de passe invalide.",
+    "email alreay in use": "Cette adresse e-mail est déjà utilisée.",
+
+    "access denied": "Accès refusé",
+    "permission to form denied": "Vous n’avez pas l’autorisation d’accéder à ce formulaire.",
+    "contact its owner": "Si vous pensez devoir avoir accès à ce formulaire, contactez son propriétaire.",
+    "back to home": "Retour à l’accueil",
+
+    "permission to project denied": "Vous n’avez pas l’autorisation d’accéder à ce projet.",
+    "contact project owner": "Si vous pensez devoir avoir accès à ce projet, contactez son propriétaire."
+  }
+}

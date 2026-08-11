@@ -26,7 +26,10 @@ export const Appearance = () => {
 
     const languageOptions = [
         { value: "pt", label: languages("pt") },
-        { value: "en", label: languages("en") }
+        { value: "en", label: languages("en") },
+        { value: "de", label: languages("de") },
+        { value: "es", label: languages("es") },
+        { value: "fr", label: languages("fr") },
     ]
 
     const handleLanguageChange = (locale: string) => {

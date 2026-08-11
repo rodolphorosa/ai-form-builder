@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from src.repositories.user_settings_repository import UserSettingsRepository
 from src.repositories.user_repository import UserRepository
 from src.repositories.project_repository import ProjectRepository
+from src.domain.exceptions.user import EmailAlreadyExistsException
 
 from src.services.auth import AuthService
 
@@ -19,6 +20,11 @@ class UserService:
     def create_user(self, name: str, email: str, password: str):
         user_repository = UserRepository(self.db)
         project_repository = ProjectRepository(self.db)
+
+        user = user_repository.get_by_email(email=email)
+
+        if user != None:
+            raise EmailAlreadyExistsException()
 
         user = user_repository.create(
             name=name, 

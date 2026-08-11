@@ -1,5 +1,16 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 
+export class ApiError extends Error {
+    constructor(
+        message: string,
+        public readonly status: number,
+        public readonly code?: string
+    ) {
+        super(message)
+        this.name = "ApiError"
+    }
+}
+
 export class ApiClient {
     private readonly headers = { 
         'Accept': 'application/json',
@@ -52,11 +63,16 @@ export class ApiClient {
     }
 
     private async handleResponse<T>(response: Response): Promise<T> {
+        const data = await response.json()
+
         if (!response.ok) {
-            const error = await response.json()
-            throw new Error(error.detail)
+            throw new ApiError(
+                data.detail?.message ?? "An unexpected error occurred",
+                response.status,
+                data.detail?.code
+            )
         }
 
-        return response.json() as Promise<T>
+        return data as T
     }
 }

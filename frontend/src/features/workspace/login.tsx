@@ -15,6 +15,8 @@ import { userService } from "@/api/user.service"
 import { useRouter } from "@/i18n/navigation"
 import { useAuth } from "@/contexts/auth-context"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { ApiError } from "@/api/client"
+import { useTranslations } from "next-intl"
 
 
 const Prompt = () => {
@@ -255,6 +257,8 @@ const LoginPage = ({
     onCreateUser: () => void
     error?: string | null
 }) => {
+    const errors = useTranslations("Errors")
+
     return (
         <div className="flex flex-col gap-8 px-32 my-auto">
             <div className="flex flex-col gap-2">
@@ -304,9 +308,9 @@ const LoginPage = ({
                 {error && (
                     <Alert variant="destructive">
                         <AlertCircle />
-                        <AlertTitle>Login failed</AlertTitle>
+                        <AlertTitle>{errors("login failed")}</AlertTitle>
                         <AlertDescription>
-                            Invalid user or email.
+                            {error}
                         </AlertDescription>
                     </Alert>
                 )}
@@ -345,8 +349,10 @@ const CreatePage = ({
     onChangeConfirmation: (confirmation: string) => void
     onLogin: () => void
     onCreateUser: () => void
-    error?: string
+    error?: string | null
 }) => {
+    const errors = useTranslations("Errors")
+    
     return (
         <div className="flex flex-col gap-8 px-32 my-auto">
             <div className="flex flex-col gap-2">
@@ -425,6 +431,16 @@ const CreatePage = ({
                     </InputGroup>
                 </Field>
 
+                {error && (
+                    <Alert variant="destructive">
+                        <AlertCircle />
+                        <AlertTitle>{errors("user creation failed")}</AlertTitle>
+                        <AlertDescription>
+                            {error}
+                        </AlertDescription>
+                    </Alert>
+                )}
+
                 <Button 
                     className="p-6 cursor-pointer bg-indigo-400 hover:bg-indigo-400/25"
                     onClick={(e) => {
@@ -446,6 +462,8 @@ const CreatePage = ({
 type Step = "prompt" | "thinking" | "response" | "created"
 
 export const Login = () => {
+    const errors = useTranslations("Errors")
+    
     const router = useRouter()
     const { refreshUser } = useAuth()
     
@@ -466,10 +484,16 @@ export const Login = () => {
             await refreshUser()
             router.push("/")
 
-        } catch(err) {
-            console.log(err)
-            // @ts-ignore
-            setError(err)
+        } catch(error) {
+            if (error instanceof ApiError) {
+                if (error.code === "INVALID_EMAIL_OR_PASSWORD") {
+                    setError(errors("invalid email or password"))
+                }
+
+                if (error.status === 422) {
+                    return
+                }
+            }
         }
     }
 
@@ -483,8 +507,16 @@ export const Login = () => {
             await refreshUser()
             router.push("/")
 
-        } catch(err) {
-            console.log(err)
+        } catch(error) {
+            if (error instanceof ApiError) {
+                if (error.code === "EMAIL_ALREADY_IN_USE") {
+                    setError(errors("email alreay in use"))
+                }
+
+                if (error.status === 422) {
+                    return
+                }
+            }
         }
     }
 
@@ -561,6 +593,7 @@ export const Login = () => {
                         onChangeConfirmation={setConfirmation} 
                         onLogin={() => setMode("login")}
                         onCreateUser={onCreate}
+                        error={error}
                     />
                 )
             }
