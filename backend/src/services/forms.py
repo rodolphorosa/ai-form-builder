@@ -33,6 +33,7 @@ from src.schemas.schema import (
     IdRegistry
 )
 from src.llm.factory import ProviderType
+from src.database.models.user import User
 
 from uuid import uuid4
 
@@ -94,7 +95,7 @@ class FormService:
         return FormSchema(sections=sections)
 
 
-    def create_with_ai(self, data: AIFormRequest):
+    def create_with_ai(self, user: User, data: AIFormRequest):
         provider = get_llm_provider(data.provider, data.model)
         response = generate_form_schema(data.prompt, provider)
 
@@ -102,7 +103,7 @@ class FormService:
         conversation_repository = ConversationRepository(self.db)
         message_repository = MessageRepository(self.db)
 
-        default_project = project_reposoitory.get_default_project()
+        default_project = project_reposoitory.get_default_project(user=user)
 
         if not default_project:
             raise Exception("Default project not found")
@@ -163,10 +164,10 @@ class FormService:
         return form
 
 
-    def create_from_json(self, form: Form):
+    def create_from_json(self, user: User, form: Form):
         project_repository = ProjectRepository(self.db)
 
-        default_project = project_repository.get_default_project()
+        default_project = project_repository.get_default_project(user=user)
 
         if not default_project:
             raise Exception("Default project not found")
@@ -188,7 +189,7 @@ class FormService:
         return form
 
 
-    async def create_from_image(self, image: UploadFile, provider_type: ProviderType, model: str):
+    async def create_from_image(self, user: User, image: UploadFile, provider_type: ProviderType, model: str):
         provider = get_llm_provider(provider_type=provider_type, model=model)
 
         content_type = image.content_type
@@ -198,7 +199,7 @@ class FormService:
 
         project_reposoitory = ProjectRepository(self.db)
         
-        default_project = project_reposoitory.get_default_project()
+        default_project = project_reposoitory.get_default_project(user=user)
 
         if not default_project:
             raise Exception("Default project not found")

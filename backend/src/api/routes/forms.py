@@ -49,10 +49,14 @@ def update_form(id: UUID, data: UpdateFormRequest, db: Session = Depends(get_db)
 
 
 @router.post('/create_with_ai')
-def create_with_ai(data: AIFormRequest, db: Session = Depends(get_db)):
+def create_with_ai(
+    data: AIFormRequest, 
+    current_user: User = Depends(get_current_user), 
+    db: Session = Depends(get_db)
+):
     service = FormService(db)
 
-    result = service.create_with_ai(data)
+    result = service.create_with_ai(current_user, data)
 
     llm_response = result["response"]
     form = result["form"]
@@ -66,16 +70,24 @@ def create_with_ai(data: AIFormRequest, db: Session = Depends(get_db)):
 
 
 @router.post('/create_from_json')
-def create_from_json(data: JsonFormRequest, db: Session = Depends(get_db)):
+def create_from_json(
+    data: JsonFormRequest, 
+    current_user: User = Depends(get_current_user), 
+    db: Session = Depends(get_db)
+):
     service = FormService(db)
 
-    form = service.create_from_json(data.form)
+    form = service.create_from_json(current_user, data.form)
 
     return { "data": FormResponse.from_model(form) }
 
 
 @router.post('/create_blank')
-def create_blank(data: BlankFormRequest, db: Session = Depends(get_db)):
+def create_blank(
+    data: BlankFormRequest, 
+    current_user: User = Depends(get_current_user), 
+    db: Session = Depends(get_db)
+):
     service = FormService(db)
 
     form = service.create_blank(
@@ -92,11 +104,12 @@ async def create_from_image(
     image: UploadFile = File(...), 
     provider: ProviderType = ApiForm(...),
     model: str = ApiForm(...),
+    current_user: User = Depends(get_current_user), 
     db: Session = Depends(get_db)
 ):
     service = FormService(db)
 
-    result = await service.create_from_image(image, provider, model)
+    result = await service.create_from_image(current_user, image, provider, model)
 
     llm_response = result["response"]
 
@@ -132,6 +145,7 @@ def edit_form(data: AIEditRequest, db: Session = Depends(get_db)):
         }
     }
 
+
 @router.get('/{id}/conversation')
 def get_conversation(id: UUID, db: Session = Depends(get_db)):
     service = ChatService(db)
@@ -144,6 +158,7 @@ def get_conversation(id: UUID, db: Session = Depends(get_db)):
             "messages": [MessageResponse.from_model(message) for message in conversation["messages"]]
         }
     }
+
 
 @router.post('/{id}/conversation/messages')
 def send_message(

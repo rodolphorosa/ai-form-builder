@@ -23,10 +23,11 @@ class ProjectRepository:
         return project
 
 
-    def get_default_project(self) -> Project | None:
+    def get_default_project(self, user: User) -> Project | None:
         return (
             self.db.query(Project)
             .filter(Project.is_system == True)
+            .filter(Project.user_id == user.id)
             .first()
         )
     
