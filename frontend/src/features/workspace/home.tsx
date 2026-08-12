@@ -13,17 +13,18 @@ import { projectService } from "@/api/project.service"
 
 import { formatDistanceToNow } from "date-fns"
 import { ptBR } from "date-fns/locale"
-import { FormDropdown } from "./dropdown-menus/formOptions"
-import { ProjectDropdown } from "./dropdown-menus/projectOptions"
+import { FormDropdown } from "./dropdown-menus/form-options"
+import { ProjectDropdown } from "./dropdown-menus/project-options"
 import { CreateDialog } from "../dialogs/form"
 import { useRouter } from "@/i18n/navigation"
-import { FileDialog } from "../dialogs/fileUpload"
-import { ImageDialog } from "../dialogs/imageUpload"
+import { FileDialog } from "../dialogs/json-upload"
+import { ImageDialog } from "../dialogs/image-upload"
 import { ProjectCreate } from "../dialogs/project"
 import { UpdateFormRequest } from "@/api/types"
 import { userService } from "@/api/user.service"
 import { authService } from "@/api/auth.service"
 import { useAuth } from "@/contexts/auth-context"
+import { RenameForm } from "../dialogs/rename-form"
 
 
 interface CreationOption {
@@ -37,8 +38,6 @@ interface CreationOption {
 export const Workspace = () => {
     const router = useRouter()
     const { user, isLoading, isAuthenticated } = useAuth()
-
-    console.log(isLoading, isAuthenticated)
 
     useEffect(() => {
         if (!isLoading && !isAuthenticated) {
@@ -54,7 +53,9 @@ export const Workspace = () => {
     const [importOpen, setImportOpen] = useState<boolean>(false)
     const [importImageOpen, setImportImageOpen] = useState<boolean>(false)
     const [projectCreateOpen, setProjectCreateOpen] = useState<boolean>(false)
+    const [renameFormOpen, setRenameFormOpen] = useState<boolean>(false)
 
+    const [formToRename, setFormToRename] = useState<Form | null>(null)
     const [moveAction, setMoveAction] = useState<MoveAction | undefined>()
 
     const workspace = useTranslations("Workspace")
@@ -232,6 +233,9 @@ export const Workspace = () => {
             const patch: UpdateFormRequest = { projectId: project.id }
             await formService.update(moveAction!.form.id, patch)
 
+            getProjects()
+            getForms()
+
         } catch(err) {
             console.error(err)
 
@@ -245,6 +249,9 @@ export const Workspace = () => {
         try {
             const patch: UpdateFormRequest = { projectId: project.id }
             await formService.update(form.id, patch)
+
+            getProjects()
+            getForms()
         } catch(err) {
             console.error(err)
         }
@@ -257,11 +264,29 @@ export const Workspace = () => {
         
         try {
             const patch: UpdateFormRequest = {}
+            // @ts-ignore
             patch[attr] = value
 
             await formService.update(form.id, patch)
+            
+            getProjects()
+            getForms()
 
         } catch(err) {
+
+        } finally {
+
+        }
+    }
+
+    const duplicateForm = async (id: string) => {
+        try {
+            await formService.duplicate(id)
+
+            getProjects()
+            getForms()
+
+        } catch(error) {
 
         } finally {
 
@@ -365,12 +390,15 @@ export const Workspace = () => {
                             <FormDropdown 
                                 form={form}
                                 projects={projects}
-                                onRename={() => {}}
+                                onRename={(action) => {
+                                    setFormToRename(action.form)
+                                    setRenameFormOpen(true)
+                                }}
                                 onMove={(action) => onMoveForm(action)}
                                 onExport={() => {}}
                                 onPinUnpin={(action) => onUpdateForm(action)}
                                 onArchive={(action) => onUpdateForm(action)}
-                                onDuplicate={() => []}
+                                onDuplicate={(action) => duplicateForm(action.form.id)}
                                 onDelete={(action) => onUpdateForm(action)}
                             />
                         </div>
@@ -471,7 +499,22 @@ export const Workspace = () => {
                 <CreateDialog onCreate={onCreate} open={createOpen} onOpenChange={setCreateOpen} />
                 <FileDialog open={importOpen} onOpenChange={setImportOpen}/>
                 <ImageDialog open={importImageOpen} onOpenChange={setImportImageOpen} />
-                <ProjectCreate open={projectCreateOpen} onOpenChange={setProjectCreateOpen} onCreate={onCreateProject} />
+                <ProjectCreate 
+                    open={projectCreateOpen} 
+                    onOpenChange={setProjectCreateOpen} 
+                    onCreate={onCreateProject} 
+                />
+                <RenameForm 
+                    form={formToRename!} 
+                    open={renameFormOpen} 
+                    onOpenChange={setRenameFormOpen} 
+                    onSave={(params) => {
+                        updateForm(params)
+                        setFormToRename(null)
+                        setRenameFormOpen(false)
+                    }}
+                    onCancel={() => {}} 
+                />
             </div>
         </div>
     )

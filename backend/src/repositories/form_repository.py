@@ -56,6 +56,8 @@ class FormRepository:
             select(Form)
             .join(Project, Form.project_id == Project.id)
             .where(Project.user_id == user_id)
+            .where(Form.is_archived == False)
+            .where(Form.is_deleted == False)
         )
 
         result = self.db.execute(stmt)

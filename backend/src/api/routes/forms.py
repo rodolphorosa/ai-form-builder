@@ -169,6 +169,19 @@ def edit_form(data: AIEditRequest, db: Session = Depends(get_db)):
     }
 
 
+@router.post('/{id}/duplicate')
+def duplicate_form(
+    id: UUID, 
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    service = FormService(db)
+
+    form = service.duplicate_form(user=current_user, id=id)
+
+    return { "data": FormResponse.from_model(form) }
+
+
 @router.get('/{id}/conversation')
 def get_conversation(id: UUID, db: Session = Depends(get_db)):
     service = ChatService(db)

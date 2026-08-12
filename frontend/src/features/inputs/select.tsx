@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { EditableLabel } from "./common"
-import { OptionsEditor } from "../form/optionEditor"
+import { OptionsEditor } from "../form/option-editor"
 
 
 export const SelectInput: FC<InputProps> = ({item, editable, onChange}) => {

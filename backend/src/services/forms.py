@@ -336,3 +336,53 @@ class FormService:
         """
 
         return get_improvement_suggestions(prompt=prompt, provider=provider)
+
+
+    def duplicate_form(self, user: User, id: UUID):
+        form_repository = FormRepository(self.db)
+        project_repository = ProjectRepository(self.db)
+
+        form = form_repository.get_by_id(id)
+        project = project_repository.get_by_id(form.project_id)
+
+        if project.user_id != user.id:
+            raise FormAccessDenied()
+
+        sections_copy = []
+
+        form_schema = FormSchema.model_validate(form.schema)
+
+        for section in form_schema.sections:
+
+            items_copy = []
+
+            for item in section.items:
+                items_copy.append(
+                    Item(
+                        id=str(uuid4()),
+                        **item.model_dump(exclude={"id"})
+                    )
+                )
+
+            sections_copy.append(
+                Section(
+                    id=str(uuid4()),
+                    name=section.name,
+                    label=section.label,
+                    description=section.description,
+                    items=items_copy,
+                )
+            )
+
+        schema_copy = FormSchema(
+            sections=sections_copy
+        )
+
+        form_copy = form_repository.create(
+            name=form.name,
+            description=form.description,
+            schema=schema_copy.model_dump(),
+            project_id=project.id
+        )
+
+        return form_copy

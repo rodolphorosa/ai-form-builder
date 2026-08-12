@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Option } from "@/types/form"
 import { EditableLabel } from "./common"
-import { OptionsEditor } from "../form/optionEditor"
+import { OptionsEditor } from "../form/option-editor"
 
 
 export const RadioInput: FC<InputProps> = ({ item, editable, onChange }) => {

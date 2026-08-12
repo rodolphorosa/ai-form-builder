@@ -19,7 +19,7 @@ export class ApiClient {
 
     private readonly options: RequestInit = { credentials: "include", }
     
-    async post<T>(url: string, body: unknown): Promise<T> {
+    async post<T>(url: string, body?: unknown): Promise<T> {
         
         const response = await fetch(`${API_URL}${url}`, {
             ...this.options,

@@ -1,7 +1,7 @@
 import { Separator } from "@/components/ui/separator"
 import { Astroid, Bot, BriefcaseBusiness, Check, GraduationCap, Maximize, Minimize, ShoppingCart, Sparkles, X } from "lucide-react"
 import { RefObject, useEffect, useRef, useState } from "react"
-import { PromptArea } from "../promptArea"
+import { PromptArea } from "../prompt-area"
 import { Form, FormSchema } from "../../types/form"
 import { formService } from "../../api/form.service"
 import { cn } from "@/lib/utils"

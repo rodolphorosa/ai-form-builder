@@ -48,7 +48,7 @@ export const Appearance = () => {
                     <SelectTrigger className="w-fit border-0">
                         <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="w-fit bg-white">
+                    <SelectContent className="w-fit bg-white" side="bottom" align="start">
                         <SelectGroup>
                             {themeOptions?.map((theme) => (
                                 <SelectItem key={theme.value} value={theme.value}>
@@ -66,7 +66,7 @@ export const Appearance = () => {
                     <SelectTrigger className="w-fit border-0">
                         <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="w-fit bg-white">
+                    <SelectContent className="w-fit bg-white" side="bottom" align="start">
                         <SelectGroup>
                             {languageOptions.map((language) => (
                                 <SelectItem key={language.value} value={language.value}>

@@ -48,7 +48,7 @@ export const SettingsDialog = ({ open, onOpenChange }: SettingsProps) => {
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent showCloseButton={false} className="min-w-[540px] p-0">
+            <DialogContent showCloseButton={false} className="min-w-[48rem] p-0">
                 <div className="flex flex-col">
                     <div className="flex flex-row">
                         <div className="flex flex-col gap-4 p-2 border-r min-w-[150px]">

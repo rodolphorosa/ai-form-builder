@@ -128,9 +128,12 @@ export type FormUpdateAction =
     | { type: "unpin", form: Form }
     | { type: "archive", form: Form }
     | { type: "delete", form: Form }
+    | { type: "rename", form: Form }
+    | { type: "duplicate", form: Form }
 
 
 export type FormUpdateParams = 
     | { form: Form, attribute: "pinned", value: boolean }
     | { form: Form,  attribute: "archived", value: boolean }
     | { form: Form, attribute: "deleted", value: boolean }
+    | { form: Form, attribute: "name", value: string }

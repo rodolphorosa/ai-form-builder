@@ -27,6 +27,10 @@ export const formService = {
         return api.post<ApiResponse<{ message: string, form: Partial<Form> }>>("/forms/edit", request)
     },
 
+    duplicate(id: string): Promise<ApiResponse<Form>> {
+        return api.post<ApiResponse<Form>>(`/forms/${id}/duplicate/`)
+    },
+
     suggest(id: string, request: SuggestionRequest): Promise<ApiResponse<{ suggestions: Suggestion[] }>> {
         return api.post<ApiResponse<{ suggestions: Suggestion[] }>>(`/forms/${id}/suggestions/`, request)
     },

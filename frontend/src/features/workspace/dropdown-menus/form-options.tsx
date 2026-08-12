@@ -9,12 +9,12 @@ import { Form, FormUpdateAction, MoveAction, Project } from "@/types/form"
 interface Props {
     form: Form,
     projects: Project[]
-    onRename: () => void
+    onRename: (action: FormUpdateAction) => void
     onMove: (action: MoveAction) => void
     onExport: () => void
     onPinUnpin: (action: FormUpdateAction) => void
     onArchive: (action: FormUpdateAction) => void
-    onDuplicate: () => void
+    onDuplicate: (action: FormUpdateAction) => void
     onDelete: (action: FormUpdateAction) => void
 }
 
@@ -42,7 +42,12 @@ export const FormDropdown = ({
             )} />
             <DropdownMenuContent className="w-fit">
                 <DropdownMenuGroup>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem
+                        onClick={(e) => {
+                            e.preventDefault()
+                            onRename?.({ type: "rename", form: form })
+                        }}
+                    >
                         <Pencil className="h-4 w-4" />
                         <div className="text-sm font-medium truncate">
                             {common("rename")}
@@ -88,7 +93,7 @@ export const FormDropdown = ({
                                         <DropdownMenuLabel>Recentes</DropdownMenuLabel>
                                     </>
                                 )}
-                                {projects?.slice(0, 3).map(project => {
+                                {projects?.filter(project => project.id !== form.projectId ).slice(0, 3).map(project => {
                                     return (
                                         <DropdownMenuItem 
                                             key={project.id}
@@ -165,7 +170,12 @@ export const FormDropdown = ({
                             {common("archive")}
                         </div>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem
+                        onClick={(e) => {
+                            e.preventDefault()
+                            onDuplicate({ type: "duplicate", form: form })
+                        }}
+                    >
                         <Copy className="h-4 w-4 shrink-0" />
                         <div className="text-sm font-medium truncate">
                             {common("duplicate")}

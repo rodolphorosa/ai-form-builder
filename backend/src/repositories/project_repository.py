@@ -1,4 +1,4 @@
-from os import name
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 from sqlalchemy.dialects.postgresql import UUID
 
@@ -48,12 +48,14 @@ class ProjectRepository:
     
 
     def get_all(self, user: User) -> list[Project]:
-        return (
-            self.db.query(Project)
-            .filter(Project.user_id == user.id)
-            .filter(Project.is_deleted == False)
-            .all()
+        stmt = (
+            select(Project)
+            .where(Project.user_id == user.id)
+            .where(Project.is_deleted.is_(False))
+            .where(Project.is_archived.is_(False))
         )
+
+        return self.db.scalars(stmt).all()
     
 
     def get_archived(self) -> list[Project]:

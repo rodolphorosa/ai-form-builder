@@ -5,7 +5,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { EditableLabel, EditableText } from "./common"
 
 import { Option } from "@/types/form"
-import { OptionsEditor } from "../form/optionEditor"
+import { OptionsEditor } from "../form/option-editor"
 
 export const CheckboxInput: FC<InputProps> = ({ item, editable, onChange }) => {
 
