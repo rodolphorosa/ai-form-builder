@@ -9,13 +9,14 @@ import { Form, FormUpdateAction, MoveAction, Project } from "@/types/form"
 interface Props {
     form: Form,
     projects: Project[]
-    onRename: (action: FormUpdateAction) => void
+    onRename: (form: Form) => void
     onMove: (action: MoveAction) => void
     onExport: () => void
-    onPinUnpin: (action: FormUpdateAction) => void
-    onArchive: (action: FormUpdateAction) => void
-    onDuplicate: (action: FormUpdateAction) => void
-    onDelete: (action: FormUpdateAction) => void
+    onPinForm: (form: Form) => void
+    onUnpinForm: (form: Form) => void
+    onArchive: (form: Form) => void
+    onDuplicate: (form: Form) => void
+    onDelete: (form: Form) => void
 }
 
 
@@ -25,7 +26,8 @@ export const FormDropdown = ({
     onRename,
     onMove,
     onExport,
-    onPinUnpin,
+    onPinForm,
+    onUnpinForm,
     onArchive,
     onDuplicate,
     onDelete
@@ -45,7 +47,7 @@ export const FormDropdown = ({
                     <DropdownMenuItem
                         onClick={(e) => {
                             e.preventDefault()
-                            onRename?.({ type: "rename", form: form })
+                            onRename?.(form)
                         }}
                     >
                         <Pencil className="h-4 w-4" />
@@ -148,10 +150,7 @@ export const FormDropdown = ({
                     <DropdownMenuItem
                         onClick={(e) => {
                             e.preventDefault()
-                            onPinUnpin({ 
-                                type: form?.pinned ? "unpin" : "pin", 
-                                form: form
-                            })
+                            form?.pinned ? onUnpinForm(form) : onPinForm(form)
                         }}
                     >
                         <Pin />
@@ -162,7 +161,7 @@ export const FormDropdown = ({
                     <DropdownMenuItem
                         onClick={(e) => {
                             e.preventDefault()
-                            onArchive({ type: "archive", form: form })
+                            onArchive(form)
                         }}
                     >
                         <Archive />
@@ -173,7 +172,7 @@ export const FormDropdown = ({
                     <DropdownMenuItem
                         onClick={(e) => {
                             e.preventDefault()
-                            onDuplicate({ type: "duplicate", form: form })
+                            onDuplicate(form)
                         }}
                     >
                         <Copy className="h-4 w-4 shrink-0" />
@@ -188,7 +187,7 @@ export const FormDropdown = ({
                         variant="destructive"
                         onClick={(e) => {
                             e.preventDefault()
-                            onDelete({ type: "delete", form: form })
+                            onDelete(form)
                         }}
                     >
                         <Trash />

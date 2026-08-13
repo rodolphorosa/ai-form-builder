@@ -1,18 +1,15 @@
 "use client"
 
-import { Form, FormSchema, FormUpdateAction, FormUpdateParams, Item, MoveAction, Project } from "@/types/form"
+import { Form, FormSchema, Item, MoveAction, Project } from "@/types/form"
 import { useEffect, useState } from "react"
 import { Sidebar } from "./sidebar"
-import { Astroid, ChevronDown, EllipsisVertical, File, FilePlusCorner, FileUp, FolderOpen, Form as FormIcon, ImageUp, Import, SparkleIcon, SparklesIcon } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { useTranslations } from "next-intl"
+import { Astroid, ChevronDown, File, FileUp, ImageUp } from "lucide-react"
+import { useLocale, useTranslations } from "next-intl"
 import { cn } from "@/lib/utils"
-import { Link } from "@/i18n/navigation";
-import { formService } from "@/api/form.service"
-import { projectService } from "@/api/project.service"
+import { Link } from "@/i18n/navigation"
 
-import { formatDistanceToNow } from "date-fns"
-import { ptBR } from "date-fns/locale"
+import { formatDistanceToNow, Locale } from "date-fns"
+import { ptBR, enUS, de, es, fr } from "date-fns/locale"
 import { FormDropdown } from "./dropdown-menus/form-options"
 import { ProjectDropdown } from "./dropdown-menus/project-options"
 import { CreateDialog } from "../dialogs/form"
@@ -20,11 +17,10 @@ import { useRouter } from "@/i18n/navigation"
 import { FileDialog } from "../dialogs/json-upload"
 import { ImageDialog } from "../dialogs/image-upload"
 import { ProjectCreate } from "../dialogs/project"
-import { UpdateFormRequest } from "@/api/types"
-import { userService } from "@/api/user.service"
-import { authService } from "@/api/auth.service"
 import { useAuth } from "@/contexts/auth-context"
 import { RenameForm } from "../dialogs/rename-form"
+import { useWorkspace } from "@/contexts/workspace-provider"
+import useForms from "@/hooks/use-forms"
 
 
 interface CreationOption {
@@ -37,17 +33,29 @@ interface CreationOption {
 
 export const Workspace = () => {
     const router = useRouter()
-    const { user, isLoading, isAuthenticated } = useAuth()
+    const locale = useLocale()
+    
+    const { isLoading, isAuthenticated } = useAuth()
+
+    const { projects, forms } = useWorkspace()
+    const {
+        createForm,
+        renameForm,
+        moveToNewProject,
+        moveForm,
+        pinForm,
+        unPinForm,
+        archiveForm,
+        duplicateForm,
+        deleteForm,
+        exportForm
+    } = useForms()
 
     useEffect(() => {
         if (!isLoading && !isAuthenticated) {
             router.replace("/login")
         }
     }, [isLoading, isAuthenticated, router])
-    
-    
-    const [projects, setProjects] = useState<Project[]>([])
-    const [forms, setForms] = useState<Form[]>([])
 
     const [createOpen, setCreateOpen] = useState<boolean>(false)
     const [importOpen, setImportOpen] = useState<boolean>(false)
@@ -88,41 +96,7 @@ export const Workspace = () => {
         }
     ]
 
-    const getForms = async () => {
-        try {
-            const response = await formService.getAll()
-            setForms(sortByUpdate(response.data) as Form[])
-
-        } catch (err) {
-            console.log(err)
-        } finally {
-
-        }
-    }
-
-    const getProjects = async () => {
-        try {
-            const response = await projectService.getAll()
-            setProjects(sortByUpdate(response.data) as Project[])
-
-        } catch (err) {
-            console.log(err)
-        } finally {
-
-        }
-    }
-
-    useEffect(() => {
-        getForms()
-        getProjects()
-    }, [])
-
-
     const common = useTranslations("Common")
-
-    const sortByUpdate = (array: Form[] | Project[]): Form[] | Project[] => {
-        return array.sort((a, b) => b.updatedAt - a.updatedAt)
-    }
 
     const countItems = (schema: FormSchema) => {
         return schema.sections.reduce((acc, cur) => {
@@ -131,22 +105,26 @@ export const Workspace = () => {
     }
 
     const parseUpdateDate = (updatedAt: number) => {
+        const language: Locale = {
+            "pt": ptBR,
+            "en": enUS,
+            "de": de,
+            "es": es,
+            "fr": fr
+        }[locale] ?? ptBR
+
         return formatDistanceToNow(new Date(updatedAt), {
             addSuffix: true,
-            locale: ptBR,
+            locale: language,
         })
     }
 
     const onCreate = async (form: Partial<Form>) => {
         try {
-            const response = await formService.createBlank(form)
-            router.push(`/forms/${response.data.id}`)
-
+            const createdForm = await createForm(form)
+            router.push(`/forms/${createdForm.id}`)
         } catch(err) {
-            console.log(err)
-
-        } finally {
-
+            console.error(err)
         }
     }
 
@@ -221,109 +199,26 @@ export const Workspace = () => {
         }
 
         if (action.type == "project") {
-            moveForm(action.project, action.form)
+            moveForm(action.form, action.project)
         }
     }
 
     const onCreateProject = async (name: string, description: string) => {
         try {
-            const createResponse = await projectService.create(name, description)
-            const project = createResponse.data
-
-            const patch: UpdateFormRequest = { projectId: project.id }
-            await formService.update(moveAction!.form.id, patch)
-
-            getProjects()
-            getForms()
-
+            await moveToNewProject(name, description, moveAction!.form)
         } catch(err) {
             console.error(err)
-
         } finally {
             setProjectCreateOpen(false)
             setMoveAction(undefined)
         }
     }
 
-    const moveForm = async (project: Project, form: Form) => {
+    const onDuplicateForm = async (form: Form) => {
         try {
-            const patch: UpdateFormRequest = { projectId: project.id }
-            await formService.update(form.id, patch)
-
-            getProjects()
-            getForms()
-        } catch(err) {
-            console.error(err)
-        }
-    }
-
-    const updateForm = async (params: FormUpdateParams) => {
-        const attr = params.attribute
-        const value = params.value
-        const form = params.form
-        
-        try {
-            const patch: UpdateFormRequest = {}
-            // @ts-ignore
-            patch[attr] = value
-
-            await formService.update(form.id, patch)
-            
-            getProjects()
-            getForms()
-
-        } catch(err) {
-
-        } finally {
-
-        }
-    }
-
-    const duplicateForm = async (id: string) => {
-        try {
-            await formService.duplicate(id)
-
-            getProjects()
-            getForms()
-
+            await duplicateForm(form)
         } catch(error) {
-
-        } finally {
-
-        }
-    }
-
-    const onUpdateForm = (action: FormUpdateAction) => {
-        if (action.type == "pin") {
-            updateForm({
-                form: action.form, 
-                attribute: "pinned", 
-                value: true
-            })
-        }
-        
-        if (action.type == "unpin") {
-            updateForm({
-                form: action.form, 
-                attribute: "pinned", 
-                value: false
-            })
-        }
-        
-        if (action.type == "archive") {
-            updateForm({
-                form: action.form, 
-                attribute: "archived", 
-                value: true
-            })
-        }
-
-        if (action.type == "delete") {
-            updateForm({
-                form: action.form,
-                attribute: "deleted",
-                value: true
-            })
+            console.error(error)
         }
     }
 
@@ -390,16 +285,17 @@ export const Workspace = () => {
                             <FormDropdown 
                                 form={form}
                                 projects={projects}
-                                onRename={(action) => {
-                                    setFormToRename(action.form)
+                                onRename={(form) => {
+                                    setFormToRename(form)
                                     setRenameFormOpen(true)
                                 }}
                                 onMove={(action) => onMoveForm(action)}
                                 onExport={() => {}}
-                                onPinUnpin={(action) => onUpdateForm(action)}
-                                onArchive={(action) => onUpdateForm(action)}
-                                onDuplicate={(action) => duplicateForm(action.form.id)}
-                                onDelete={(action) => onUpdateForm(action)}
+                                onPinForm={(form) => pinForm(form)}
+                                onUnpinForm={(form) => unPinForm(form)}
+                                onArchive={(form) => archiveForm(form)}
+                                onDuplicate={(form) => onDuplicateForm(form)}
+                                onDelete={(form) => deleteForm(form)}
                             />
                         </div>
                     </div>
@@ -508,8 +404,8 @@ export const Workspace = () => {
                     form={formToRename!} 
                     open={renameFormOpen} 
                     onOpenChange={setRenameFormOpen} 
-                    onSave={(params) => {
-                        updateForm(params)
+                    onSave={(form, name) => {
+                        renameForm(form, name)
                         setFormToRename(null)
                         setRenameFormOpen(false)
                     }}

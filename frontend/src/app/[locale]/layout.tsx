@@ -10,6 +10,7 @@ import { AppSidebar } from "../../features/menus/sidebar";
 import {NextIntlClientProvider} from 'next-intl';
 import {getMessages} from 'next-intl/server';
 import { AuthProvider } from "@/contexts/auth-context";
+import { WorkspaceProvider } from "@/contexts/workspace-provider";
 
 const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
@@ -55,7 +56,9 @@ export default async function LocaleLayout({
             disableTransitionOnChange
           >
             <NextIntlClientProvider messages={messages}>
-              {children}
+              <WorkspaceProvider>
+                {children}
+              </WorkspaceProvider>
             </NextIntlClientProvider>
           </ThemeProvider>
         </AuthProvider>

@@ -15,7 +15,7 @@ export const RenameForm = ({
 }: { 
     form: Form
     open: boolean 
-    onSave: (updateParams: FormUpdateParams) => void
+    onSave: (form: Form, name: string) => void
     onCancel: () => void
     onOpenChange: (open: boolean) => void
 }) => {
@@ -38,11 +38,7 @@ export const RenameForm = ({
                         variant="outline"
                         onClick={(e) => {
                             e.preventDefault()
-                            onSave({
-                                form: form,
-                                attribute: "name",
-                                value: name
-                            })
+                            onSave(form, name)
                         }}
                     >
                         Save
