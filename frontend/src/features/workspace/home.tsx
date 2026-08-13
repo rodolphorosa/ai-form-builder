@@ -19,13 +19,15 @@ import { ImageDialog } from "../dialogs/image-upload"
 import { ProjectCreate } from "../dialogs/project"
 import { useAuth } from "@/contexts/auth-context"
 import { RenameForm } from "../dialogs/rename-form"
-import { useWorkspace } from "@/contexts/workspace-provider"
+import { useWorkspace } from "@/contexts/workspace-context"
 import useForms from "@/hooks/use-forms"
 import useProjects from "@/hooks/use-projects"
 import { RenameProject } from "../dialogs/rename-project"
+import React from "react"
 
 
 interface CreationOption {
+    key: string
     icon: React.ComponentType
     title: string
     description: string
@@ -83,6 +85,7 @@ export const Workspace = () => {
 
     const options: CreationOption[] = [
         {
+            key: "ai",
             icon: Astroid,
             title: workspace("create with ai"),
             description: workspace("create with ai / subtext"),
@@ -90,18 +93,21 @@ export const Workspace = () => {
             href: "/forms/new"
         },
         {
+            key: "blank",
             icon: File,
             title: workspace("blank"),
             description: workspace("blank / subtext"),
             action: () => setCreateOpen(true)
         },
         {
+            key: "file",
             icon: FileUp,
             title: workspace("file up"),
             description: workspace("file up / subtext"),
             action: () => setImportOpen(true)
         },
         {
+            key: "image",
             icon: ImageUp,
             title: workspace("image up"),
             description: workspace("image up / subtext"),
@@ -307,7 +313,7 @@ export const Workspace = () => {
                                     setRenameFormOpen(true)
                                 }}
                                 onMove={(action) => onMoveForm(action)}
-                                onExport={() => {}}
+                                onExport={(form, format) => exportForm(form, format)}
                                 onPin={(form) => pinForm(form)}
                                 onUnpin={(form) => unpinForm(form)}
                                 onArchive={(form) => archiveForm(form)}
@@ -373,7 +379,11 @@ export const Workspace = () => {
                 <div className="flex flex-col gap-2">
                     <div className="text-sm font-medium">Criar novo formulário</div>
                     <div className="flex flex-wrap gap-4 items-start content-start">
-                        {options.map(option => renderOptionCard(option))}
+                        {options.map(option => (
+                            <React.Fragment key={option.key}>
+                                {renderOptionCard(option)}
+                            </React.Fragment>
+                        ))}
                     </div>
                 </div>
                 <div className="flex flex-col gap-2 w-auto">
@@ -394,7 +404,11 @@ export const Workspace = () => {
                         )}
                     </div>
                     <div className="flex flex-wrap gap-4 items-start content-start ">
-                        {forms.slice(0, 4).map(form => renderFormCard(form))}
+                        {forms.slice(0, 4).map(form => (
+                            <React.Fragment key={form.id}>
+                                {renderFormCard(form)}
+                            </React.Fragment>
+                        ))}
                     </div>
                 </div>
                 <div className="flex flex-col gap-2 w-auto">
@@ -415,7 +429,11 @@ export const Workspace = () => {
                         )}
                     </div>
                     <div className="flex flex-wrap gap-4 items-start content-start ">
-                        {projects.slice(0, 4).map(project => renderProjectCard(project))}
+                        {projects.slice(0, 4).map(project => (
+                            <React.Fragment key={project.id}>
+                                {renderProjectCard(project)}
+                            </React.Fragment>
+                        ))}
                     </div>
                 </div>
                 <CreateDialog onCreate={onCreate} open={createOpen} onOpenChange={setCreateOpen} />

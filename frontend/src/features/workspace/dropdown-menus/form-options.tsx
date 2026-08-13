@@ -10,7 +10,7 @@ interface Props {
     projects: Project[]
     onRename: (form: Form) => void
     onMove: (action: MoveAction) => void
-    onExport: (form: Form) => void
+    onExport: (form: Form, format: "pdf" | "json") => void
     onPin: (form: Form) => void
     onUnpin: (form: Form) => void
     onArchive: (form: Form) => void
@@ -130,13 +130,23 @@ export const FormDropdown = ({
                         </DropdownMenuSubTrigger>
                         <DropdownMenuPortal>
                             <DropdownMenuSubContent>
-                                <DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={(e) => {
+                                        e.preventDefault()
+                                        onExport(form, "pdf")
+                                    }}
+                                >
                                     <FaRegFilePdf className="h-4 w-4 shrink-0" />
                                     <div className="text-sm font-medium truncate">
                                         PDF
                                     </div>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={(e) => {
+                                        e.preventDefault()
+                                        onExport(form, "json")
+                                    }}
+                                >
                                     <FileBraces className="h-4 w-4 shrink-0" />
                                     <div className="text-sm font-medium truncate">
                                         JSON

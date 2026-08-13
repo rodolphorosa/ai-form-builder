@@ -10,7 +10,7 @@ import { AppSidebar } from "../../features/menus/sidebar";
 import {NextIntlClientProvider} from 'next-intl';
 import {getMessages} from 'next-intl/server';
 import { AuthProvider } from "@/contexts/auth-context";
-import { WorkspaceProvider } from "@/contexts/workspace-provider";
+import { WorkspaceProvider } from "@/contexts/workspace-context";
 
 const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 

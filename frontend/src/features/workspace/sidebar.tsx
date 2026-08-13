@@ -18,6 +18,7 @@ import { SettingsDialog } from "../dialogs/settings/settings"
 import { useAuth } from "@/contexts/auth-context"
 import useForms from "@/hooks/use-forms"
 import useProjects from "@/hooks/use-projects"
+import React from "react"
 
 interface Props {
     forms: Form[]
@@ -160,8 +161,16 @@ export const Sidebar = ({ forms, projects }: Props) => {
                             </div>
                             <CollapsibleContent className="pt-0.5">
                                 <div className="flex flex-col gap-0.5">
-                                    {pinnedProjects.map(project => renderPinnedProject(project))}
-                                    {pinnedForms.map(form => renderRecent(form, true))}
+                                    {pinnedProjects.map(project => (
+                                        <React.Fragment key={project.id}>
+                                            {renderPinnedProject(project)}
+                                        </React.Fragment>
+                                    ))}
+                                    {pinnedForms.map(form => (
+                                        <React.Fragment key={form.id}>
+                                            {renderRecent(form, true)}
+                                        </React.Fragment>
+                                    ))}
                                 </div>
                             </CollapsibleContent>
                         </Collapsible>
@@ -172,7 +181,15 @@ export const Sidebar = ({ forms, projects }: Props) => {
                         </div>
                         <CollapsibleContent className="pt-0.5">
                             <div className="flex flex-col gap-0.5">
-                                {forms.filter(it => it.pinned == false).map(form => renderRecent(form))}
+                                {
+                                    forms
+                                    .filter(it => it.pinned == false)
+                                    .map(form => (
+                                        <React.Fragment key={form.id}>
+                                            {renderRecent(form)}
+                                        </React.Fragment>
+                                    ))
+                                }
                             </div>
                         </CollapsibleContent>
                     </Collapsible>

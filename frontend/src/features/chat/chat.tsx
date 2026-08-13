@@ -158,7 +158,7 @@ export const Chat = ({
             const { data } = await formService.createWithAI({
                 prompt: prompt,
                 provider: "openai",
-                model: "gpt-4.1-nano"
+                model: "gpt-5.6-luna"
             })
 
             onFormCreate(data.form)
@@ -188,7 +188,7 @@ export const Chat = ({
                 prompt: prompt,
                 form: form,
                 provider: "openai",
-                model: "gpt-4.1-nano"
+                model: "gpt-5.6-luna"
             })
 
             setMessages(prev => [

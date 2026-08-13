@@ -1,6 +1,6 @@
 import { projectService } from "@/api/project.service"
 import { UpdateProjectRequest } from "@/api/types"
-import { useWorkspace } from "@/contexts/workspace-provider"
+import { useWorkspace } from "@/contexts/workspace-context"
 import { Project } from "@/types/form"
 
 function useProjects() {

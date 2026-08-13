@@ -1,7 +1,8 @@
 import { formService } from "@/api/form.service"
 import { projectService } from "@/api/project.service"
 import { UpdateFormRequest } from "@/api/types"
-import { useWorkspace } from "@/contexts/workspace-provider"
+import { useWorkspace } from "@/contexts/workspace-context"
+import { downloadJson } from "@/features/form/utils"
 import { Form, Project } from "@/types/form"
 
 function useForms() {
@@ -57,8 +58,13 @@ function useForms() {
         await updateForm(form, { deleted: false })
     }
 
-    const exportForm = () => {
-        // TODO:
+    const exportForm = (form: Form, format: "pdf" | "json") => {
+        downloadJson({
+            id: form.id,
+            name: form.name,
+            description: form.description,
+            schema: form.schema
+        }, form.name)
     }
 
     const updateForm = async (form: Form, patch: UpdateFormRequest) => {

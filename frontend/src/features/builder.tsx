@@ -254,6 +254,7 @@ export const Builder = ({}: BuilderProps) => {
 
                     <div className="flex flex-col h-full w-full">
                         <Header 
+                            form={committedForm}
                             undo={undo} 
                             redo={redo} 
                             undoDisabled={undoDisabled} 
@@ -301,6 +302,7 @@ export const Builder = ({}: BuilderProps) => {
                     
                     <div className="flex flex-col h-full w-full">
                         <Header 
+                            form={committedForm}
                             undo={undo} 
                             redo={redo} 
                             undoDisabled={undoDisabled} 

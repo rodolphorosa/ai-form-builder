@@ -7,13 +7,15 @@ import { Archive, Copy, Download, EllipsisVertical, Eye, FileBraces, FolderInput
 import { useTheme } from "next-themes"
 import { useTranslations } from "next-intl";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Project } from "@/types/form"
+import { Form, Project } from "@/types/form"
 
 import { FaRegFilePdf } from "react-icons/fa";
 import { formatDistanceToNow } from "date-fns"
 import { ptBR } from "date-fns/locale"
+import useForms from "@/hooks/use-forms"
 
 interface HeaderProps {
+    form: Form | null
     undo: () => void
     redo: () => void
     undoDisabled: boolean
@@ -25,12 +27,22 @@ interface HeaderProps {
     status?: string
 }
 
-export const Header = ({ undo, redo, undoDisabled, redoDisabled, mode, toggleMode, projects, updatedAt, status }: HeaderProps) => {
+export const Header = ({ form, undo, redo, undoDisabled, redoDisabled, mode, toggleMode, projects, updatedAt, status }: HeaderProps) => {
     const i18nCanvas = useTranslations("Canvas")
     const i18nCommon = useTranslations("Common")
     const i18nForms = useTranslations("Forms")
 
     const { theme, setTheme } = useTheme()
+    const {
+        moveForm,
+        moveToNewProject,
+        pinForm,
+        unpinForm,
+        archiveForm,
+        deleteForm,
+        duplicateForm,
+        exportForm
+    } = useForms()
 
     const toggleTheme = () => {
         if (theme === "dark") {
@@ -129,13 +141,23 @@ export const Header = ({ undo, redo, undoDisabled, redoDisabled, mode, toggleMod
                                 </DropdownMenuSubTrigger>
                                 <DropdownMenuPortal>
                                     <DropdownMenuSubContent>
-                                        <DropdownMenuItem>
+                                        <DropdownMenuItem
+                                            onClick={(e) => {
+                                                e.preventDefault()
+                                                form && exportForm(form, "json")
+                                            }}
+                                        >
                                             <FaRegFilePdf className="h-4 w-4 shrink-0" />
                                             <div className="text-sm font-medium truncate">
                                                 PDF
                                             </div>
                                         </DropdownMenuItem>
-                                        <DropdownMenuItem>
+                                        <DropdownMenuItem
+                                            onClick={(e) => {
+                                                e.preventDefault()
+                                                form && exportForm(form, "pdf")
+                                            }}
+                                        >
                                             <FileBraces className="h-4 w-4 shrink-0" />
                                             <div className="text-sm font-medium truncate">
                                                 JSON

@@ -45,3 +45,19 @@ export function isObject(value: unknown): value is Record<string, unknown> {
 export function isArray(value: unknown): value is unknown[] {
     return Array.isArray(value)
 }
+
+export const downloadJson = (data: unknown, filename: string) => {
+    const json = JSON.stringify(data, null, 2)
+    const blob = new Blob([json], {
+        type: "application/json",
+    })
+
+    const url = URL.createObjectURL(blob)
+
+    const link = document.createElement("a")
+    link.href = url
+    link.download = filename
+    link.click()
+
+    URL.revokeObjectURL(url)
+}
