@@ -113,7 +113,7 @@ export const Canvas = ({ form, onPropertyChange }: CanvasProps) => {
     const [selectedSection, setSelectedSection] = useState<Section | null>(null)
     const [titleFocused, setTitleFocused] = useState<boolean>(false)
 
-    const common = useTranslations("Common")
+    const i18nCanvas = useTranslations("Canvas")
 
     const [itemsBySection, setItemsBySection] = useState<ItemsBySection>(() =>
         sectionsToRecord(form.schema.sections)
@@ -168,7 +168,7 @@ export const Canvas = ({ form, onPropertyChange }: CanvasProps) => {
         
         copy.id = randomId
         copy.name = isSystemGeneratedName(item.name) ? `field_${randomId.slice(0, 8)}` : `${item.name}_copy`
-        copy.label = `${item.label} (${common("copy")})`
+        copy.label = `${item.label} (${i18nCanvas("copy")})`
         
         return copy
     }
@@ -279,7 +279,7 @@ export const Canvas = ({ form, onPropertyChange }: CanvasProps) => {
                             const item: Item = {
                                 id: randomId,
                                 name: `field_${randomId.slice(0, 8)}`,
-                                label: common("new question"),
+                                label: i18nCanvas("new question"),
                                 required: false,
                                 disabled: false,
                                 type: "text"
@@ -289,7 +289,9 @@ export const Canvas = ({ form, onPropertyChange }: CanvasProps) => {
                         }}
                     >
                         <Plus className="h4 w-4 shrink-0" />
-                        <span>Adicionar campo nessa seção</span>
+                        <span>
+                            {i18nCanvas("add field in this section")}
+                        </span>
                     </Button>
                 </div>
             </div>
@@ -347,7 +349,7 @@ export const Canvas = ({ form, onPropertyChange }: CanvasProps) => {
                             const section: Section = {
                                 id: randomId,
                                 name: `section_${randomId.slice(0, 8)}`,
-                                label: common("new section"),
+                                label: i18nCanvas("new section"),
                                 items: []
                             }
 
@@ -355,7 +357,9 @@ export const Canvas = ({ form, onPropertyChange }: CanvasProps) => {
                         }}
                     >
                         <Layers className="h4 w-4 shrink-0" />
-                        <span>Adicionar seção</span>
+                        <span>
+                            {i18nCanvas("add section")}
+                        </span>
                     </Button>
                 </div>
             </div>

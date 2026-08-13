@@ -23,7 +23,6 @@ export const ProjectDropdown = ({
     onDelete
 }: Props) => {
     const common = useTranslations("Common")
-    const tree = useTranslations("Tree")
 
     return (
         <DropdownMenu>

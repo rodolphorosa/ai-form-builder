@@ -9,6 +9,7 @@ import { isSortable, useSortable } from "@dnd-kit/react/sortable"
 import { DragDropProvider } from "@dnd-kit/react"
 import { useEffect, useRef, useState } from "react"
 import { moveSortable } from "./utils"
+import { useTranslations } from "next-intl"
 
 const SortableOption = ({
     option,
@@ -85,6 +86,8 @@ export const OptionsEditor = ({
     onEdit?: (option: Option) => void
     onSort?: (sortedOptions: Option[]) => void
 }) => {
+    const i18nCanvas = useTranslations("Canvas")
+
     const [localOptions, setLocalOptions] = useState(options)
     const isDragging = useRef(false)
     const previousOptions = useRef(localOptions)
@@ -217,7 +220,7 @@ export const OptionsEditor = ({
                     }}
                 >
                     <Plus className="h-3 w-3 shrink-0" />
-                    Adicionar nova opção
+                    {i18nCanvas("add option")}
                 </Button>
             </div>
         </DragDropProvider>

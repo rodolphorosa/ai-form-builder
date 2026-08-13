@@ -142,6 +142,8 @@ const FakeLoader = ({ image }: { image: File }) => {
 export const ImageDialog = ({ open, onOpenChange }: DialogProps) => {
     const router = useRouter()
 
+    const i18nCommon = useTranslations("Common")
+
     const [image, setImage] = useState<File | null>(null)
     const [form, setForm] = useState<Form | null>(null)
     const [message, setMessage] = useState<string | null>(null)
@@ -213,13 +215,13 @@ export const ImageDialog = ({ open, onOpenChange }: DialogProps) => {
                 
                 {["idle", "ready", "loading"].includes(state) && (
                     <DialogFooter>
-                        <DialogClose render={<Button variant="secondary">Cancel</Button>} />
+                        <DialogClose render={<Button variant="secondary">{i18nCommon("cancel")}</Button>} />
                         <Button 
                             variant="outline" 
                             onClick={onCreateFromImage}
                             disabled={!image}
                         >
-                            Create form
+                            {i18nCommon("create form")}
                         </Button>
                     </DialogFooter>
                 )}

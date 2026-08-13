@@ -1,95 +1,131 @@
 {
   "Common": {
+    "form": "Form",
+    "project": "Project",
+    "create form": "Create form",
+    "create project": "Create project",
+
     "name": "Name",
+    "description": "Description",
     "save": "Save",
     "cancel": "Cancel",
+    "create": "Create",
     "pin": "Pin",
     "unpin": "Unpin",
     "rename": "Rename",
     "export": "Export",
     "archive": "Archive",
     "delete": "Delete",
-    "duplicate": "Duplicar",
+    "duplicate": "Duplicate",
 
-    "text": "Short text",
-    "email": "E-mail",
+    "recent": "Recent",
+
+    "text": "Plain text",
+    "email": "Email",
     "password": "Password",
     "phone": "Phone",
     "url": "Link",
-    "textarea": "Long text",
-    "number": "Numerical field",
+    "textarea": "Paragraph",
+    "number": "Number field",
     "date": "Date",
-    "datetime": "Date & hour",
-    "select": "Selection list",
-    "radio": "Option button",
-    "checkbox": "Select box",
+    "datetime": "Date and time",
+    "select": "Select",
+    "radio": "Radio button",
+    "checkbox": "Checkbox",
     "rating": "Rating",
     "file": "File",
 
-    "new question": "New question",
-    "new section": "New section",
-
     "copy": "Copy",
-    
-    "chat-create": "Describe the form you want",
-    "chat-edit": "Describe the changes you want to apply",
-    "chat-default": "Describe what you want",
-
-    "import schema": "Import schema",
 
     "updated": "Updated",
     "edited": "Edited",
-
-    "move to project": "Move to project",
-
-    "saved": "Saved",
-    "unsaved": "Pending changes",
-    "saving": "Saving...",
     "error": "Error"
   },
 
-  "Tree": {
-    "improve with ai": "Improve with AI",
-    "edit": "Edit",
-    "add item above": "Add item above",
-    "add item below": "Add item below",
-    "add section below": "Add section below",
-    "add item": "Add item",
-    "duplicate": "Duplicate",
-    "delete": "Delete",
-    "rename": "Raname",
+  "Projects": {
 
-    "account": "Account",
+  },
+
+  "Forms": {
+    "move to project": "Move to project",
+    "search projects": "Search projects",
+    "new project": "New project"
+  },
+
+  "Chat": {
+    "assitant": "AI Assistant",
+
+    "chat-create": "Describe the form you want",
+    "chat-edit": "Describe a change to the form",
+    "chat-default": "Describe what you want",
+
+    "create something incredible": "Let's create something incredible?",
+    "describe the form you need": "Describe the form you need and I'll help you create its structure.",
+    "try": "Try:",
+    "employee registration": "Create an employee registration form.",
+    "budget request": "Create a budget request form.",
+    "course enrollment": "Create a course enrollment form.",
+
+    "thinking": "Thinking...",
+    "creating": "Creating...",
+    "editing": "Editing...",
+    "processing": "Processing..."
+  },
+
+  "Canvas": {
+    "new question": "New question",
+    "new section": "New section",
+    "saved": "Saved",
+    "unsaved": "Pending changes",
+    "saving": "Saving...",
+    "add field in this section": "Add field to this section",
+    "add section": "Add section",
+    "add option": "Add new option",
+    "condition active": "Conditional logic active"
+  },
+
+  "Sidebar": {
+    "new form": "New form",
+    "home": "Home",
+    "search": "Search",
+    "library": "Library",
+    "projects": "Projects",
+    "archived": "Archived",
+    "trash": "Trash",
+    "pinned": "Pinned",
+    "recent": "Recent",
     "profile": "Profile",
     "settings": "Settings",
-    "logout": "Log out",
-
-    "new project": "New project",
-    "new form": "New form",
-    "search": "Search",
-    "projects": "Projects",
-    "recent": "Recent",
-    "move to project": "Move to project",
-    "pinned": "Pinned",
-    "library": "Library"
+    "logout": "Log out"
   },
 
   "Workspace": {
-    "create with ai": "Create with IA",
-    "blank": "Blank form",
-    "import": "Import",
-    "archived": "Arquivados",
-    "trash": "Lixeira",
+    "create with ai": "Create with AI",
+    "create with ai / subtext": "Describe what you need and AI will generate it for you.",
+
+    "blank": "Blank",
+    "blank / subtext": "Start from scratch with a blank form.",
+
     "file up": "Import file",
-    "image up": "Import image"
+    "file up / subtext": "Import a form from a JSON file.",
+
+    "image up": "Import image",
+    "image up / subtext": "Import a form from a photo or drawing.",
+
+    "create today": "What do you want to create today?",
+    "use AI to create": "Use AI to generate a form in seconds, start from scratch, or import an existing form.",
+
+    "keep on": "Continue where you left off",
+    "your recent projects": "Your recent projects",
+    "see more": "See more"
   },
 
-  "Theme": {
+  "Themes": {
     "light": "Light",
     "dark": "Dark",
     "system": "System"
   },
-  
+
   "Languages": {
     "pt": "Portuguese",
     "en": "English",
@@ -111,17 +147,17 @@
   },
 
   "Errors": {
-    "login failed": "Failed to login",
+    "login failed": "Login failed",
     "user creation failed": "Failed to create account",
     "invalid email or password": "Invalid email or password.",
-    "email alreay in use": "The provided e-mail is already in use.",
+    "email alreay in use": "Email is already in use.",
 
     "access denied": "Access denied",
-    "permission to form denied": "You do not have permission to access this form.",
-    "contact form owner": "If you believe you should have access to this form, contact its owner.",
-    "back to home": "Go back to home",
+    "permission to form denied": "You don't have permission to access this form.",
+    "contact form owner": "If you believe you should have access to this form, contact the owner.",
+    "back to home": "Back to home",
 
-    "permissn to project denied": "You do not have permission to access this project.",
-    "contat project owner": "If you believe you should have access to this project, contact its owner."
+    "permissn to project denied": "You don't have permission to access this project.",
+    "contat project owner": "If you believe you should have access to this project, contact the owner."
   }
 }

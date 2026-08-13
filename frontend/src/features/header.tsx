@@ -26,7 +26,9 @@ interface HeaderProps {
 }
 
 export const Header = ({ undo, redo, undoDisabled, redoDisabled, mode, toggleMode, projects, updatedAt, status }: HeaderProps) => {
-    const common = useTranslations("Common")
+    const i18nCanvas = useTranslations("Canvas")
+    const i18nCommon = useTranslations("Common")
+    const i18nForms = useTranslations("Forms")
 
     const { theme, setTheme } = useTheme()
 
@@ -51,7 +53,7 @@ export const Header = ({ undo, redo, undoDisabled, redoDisabled, mode, toggleMod
                 <span
                     className="text-xs font-normal"
                 >
-                    {status && common(status)} {updatedAt && parseUpdateDate(updatedAt)}
+                    {status && i18nCanvas(status)} {updatedAt && parseUpdateDate(updatedAt)}
                 </span>
                 <Button variant="ghost" size="icon" onClick={undo} disabled={undoDisabled}>
                     <Undo className="h-4 w-4" />
@@ -76,7 +78,7 @@ export const Header = ({ undo, redo, undoDisabled, redoDisabled, mode, toggleMod
                                 <DropdownMenuSubTrigger>
                                     <FolderInput />
                                     <div className="text-sm font-medium truncate">
-                                        {common("move to project")}
+                                        {i18nForms("move to project")}
                                     </div>
                                 </DropdownMenuSubTrigger>
                                 <DropdownMenuPortal>
@@ -84,7 +86,7 @@ export const Header = ({ undo, redo, undoDisabled, redoDisabled, mode, toggleMod
                                         <DropdownMenuItem>
                                             <FolderPlus className="h-4 w-4 shrink-0" />
                                             <div className="text-sm font-medium truncate">
-                                                Novo projeto
+                                                {i18nForms("new project")}
                                             </div>
                                         </DropdownMenuItem>
                                         {projects && projects.length > 0 && (
@@ -93,11 +95,13 @@ export const Header = ({ undo, redo, undoDisabled, redoDisabled, mode, toggleMod
                                                 <DropdownMenuItem>
                                                     <FolderSearch className="h-4 w-4 shrink-0" />
                                                     <div className="text-sm font-medium truncate">
-                                                        Buscar projetos
+                                                        {i18nForms("search projects")}
                                                     </div>
                                                 </DropdownMenuItem>
                                                 <DropdownMenuSeparator />
-                                                <DropdownMenuLabel>Recentes</DropdownMenuLabel>
+                                                <DropdownMenuLabel>
+                                                    {i18nCommon("recent")}
+                                                </DropdownMenuLabel>
                                             </>
                                         )}
                                         {projects?.slice(0, 3).map(project => {
@@ -120,7 +124,7 @@ export const Header = ({ undo, redo, undoDisabled, redoDisabled, mode, toggleMod
                                 <DropdownMenuSubTrigger>
                                     <Download className="h-4 w-4 shrink-0" />
                                     <div className="text-sm font-medium truncate">
-                                        {common("export")}
+                                        {i18nCommon("export")}
                                     </div>
                                 </DropdownMenuSubTrigger>
                                 <DropdownMenuPortal>
@@ -145,19 +149,19 @@ export const Header = ({ undo, redo, undoDisabled, redoDisabled, mode, toggleMod
                             <DropdownMenuItem>
                                 <Pin />
                                 <div className="text-sm font-medium truncate">
-                                    {common("pin")}
+                                    {i18nCommon("pin")}
                                 </div>
                             </DropdownMenuItem>
                             <DropdownMenuItem>
                                 <Archive />
                                 <div className="text-sm font-medium truncate">
-                                    {common("archive")}
+                                    {i18nCommon("archive")}
                                 </div>
                             </DropdownMenuItem>
                             <DropdownMenuItem>
                                 <Copy className="h-4 w-4 shrink-0" />
                                 <div className="text-sm font-medium truncate">
-                                    Duplicar
+                                    {i18nCommon("duplicate")}
                                 </div>
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
@@ -166,7 +170,7 @@ export const Header = ({ undo, redo, undoDisabled, redoDisabled, mode, toggleMod
                             <DropdownMenuItem variant="destructive">
                                 <Trash />
                                 <div className="text-sm font-medium truncate">
-                                    {common("delete")}
+                                    {i18nCommon("delete")}
                                 </div>
                             </DropdownMenuItem>
                         </DropdownMenuGroup>

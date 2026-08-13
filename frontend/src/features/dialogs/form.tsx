@@ -22,6 +22,7 @@ import { formService } from "@/api/form.service"
 import { Form, FormSchema, Option, Project } from "@/types/form"
 import { projectService } from "@/api/project.service"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useTranslations } from "next-intl"
 
 interface DialogProps {
     onCreate: (form: Partial<Form>) => void
@@ -30,6 +31,8 @@ interface DialogProps {
 }
 
 export const CreateDialog = ({ onCreate, open, onOpenChange }: DialogProps) => {
+    const i18nCommon = useTranslations("Common")
+    
     const [name, setName] = useState<string>("")
     const [description, setDescription] = useState<string>("")
 
@@ -76,21 +79,24 @@ export const CreateDialog = ({ onCreate, open, onOpenChange }: DialogProps) => {
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Create form</DialogTitle>
+                    <DialogTitle>
+                        {i18nCommon("create form")}
+                    </DialogTitle>
                 </DialogHeader>
                 <div className="flex flex-col gap-4">
                     <Field>
-                        <Label htmlFor="form-name">Name</Label>
+                        <Label htmlFor="form-name">
+                            {i18nCommon("name")}
+                        </Label>
                         <Input 
                             id="form-name" 
                             type="text" 
-                            placeholder="Name of the form"
                             onChange={e => setName(e.target.value)}
                         />
                     </Field>
                     <Field>
                         <Label htmlFor="form-description">
-                            Description
+                            {i18nCommon("description")}
                         </Label>
                         <div className="w-full self-end">
                             <Textarea 
@@ -99,7 +105,6 @@ export const CreateDialog = ({ onCreate, open, onOpenChange }: DialogProps) => {
                                 maxLength={200}
                                 value={description ?? ""}
                                 onChange={e => setDescription(e.target.value)}
-                                placeholder="Describe the form you want"
                             />
                         </div>
                         <div className="w-full mt-1 justify-end text-right text-xs text-muted-foreground self-end">
@@ -108,7 +113,7 @@ export const CreateDialog = ({ onCreate, open, onOpenChange }: DialogProps) => {
                     </Field>
                     <Field>
                         <Label>
-                            Project
+                            {i18nCommon("project")}
                         </Label>
                         <Select items={projectOptions} onValueChange={setSelectedProjectId}>
                             <SelectTrigger className="w-full">
@@ -127,8 +132,8 @@ export const CreateDialog = ({ onCreate, open, onOpenChange }: DialogProps) => {
                     </Field>
                 </div>
                 <DialogFooter>
-                    <DialogClose render={<Button variant="secondary">Cancel</Button>} />
-                    <Button variant="outline" disabled={!name || name.trim().length === 0} onClick={handleCreate}>Create</Button>
+                    <DialogClose render={<Button variant="secondary">{i18nCommon("cancel")}</Button>} />
+                    <Button variant="outline" disabled={!name || name.trim().length === 0} onClick={handleCreate}>{i18nCommon("create")}</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

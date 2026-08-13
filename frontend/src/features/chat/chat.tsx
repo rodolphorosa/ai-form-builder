@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { ChatMode } from "@/types/ai"
 import { Message } from "@/types/chat"
 import { TextMessage, ThinkingMessage } from "./messages"
+import { useTranslations } from "next-intl"
 
 interface ChatProps {
     mode: ChatMode
@@ -23,40 +24,48 @@ interface ChatProps {
 }
 
 const EmptyChat = ({ onCreate }: { onCreate?: (prompt: string) => void }) => {
+    const i18nChat = useTranslations("Chat")
+
     return (
         <div className="flex flex-col gap-4 text-sm m-auto">
             <div className="flex flex-col gap-1">
                 <div className="flex flex-row gap-2 items-center justify-center w-full">
                     <Sparkles className="h-4 w-4 shrink-0" />
-                    <span className="font-medium">Vamos criar algo incrível?</span>
+                    <span className="font-medium">
+                        {i18nChat("create something incredible")}
+                    </span>
                 </div>
                 <span className="text-center text-muted-foreground">
-                    Descreva o formulário que você precisa e eu vou ajudar a criar a estrutura.
+                    {i18nChat("describe the form you need")}
                 </span>
             </div>
             <div className="flex flex-col gap-2">
-                <span className="">Experimente:</span>
+                <span className="">
+                    {i18nChat("try")}
+                </span>
                 <div className="flex flex-col gap-1 text-muted-foreground">
                     <button 
                         className="flex flex-row gap-1 items-start text-left hover:text-foreground transition-colors cursor-pointer" 
-                        onClick={() => onCreate?.("Crie um formulário de cadastro de funcionários.")}
+                        onClick={() => onCreate?.(i18nChat("employee registration"))}
                     >
                         <BriefcaseBusiness className="h-4 w-4 shrink-0" />
-                        <span>Crie um formulário de cadastro de funcionários.</span>
+                        <span>
+                            {i18nChat("employee registration")}
+                        </span>
                     </button>
                     <button 
                         className="flex flex-row gap-1 items-start text-left hover:text-foreground transition-colors cursor-pointer"
-                        onClick={() => onCreate?.("Crie um formulário de pedido de orçamento.")}
+                        onClick={() => onCreate?.(i18nChat("budget request"))}
                     >
                         <ShoppingCart className="h-4 w-4 shrink-0" />
-                        Crie um formulário de pedido de orçamento.
+                        {i18nChat("budget request")}
                     </button>
                     <button 
                         className="flex flex-row gap-1 items-start text-left hover:text-foreground transition-colors cursor-pointer"
-                        onClick={() => onCreate?.("Crie um formulário de inscrição em um curso.")}
+                        onClick={() => onCreate?.(i18nChat("course enrollment"))}
                     >
                         <GraduationCap className="h-4 w-4 shrink-0" />
-                        Crie um formulário de inscrição em um curso.
+                        {i18nChat("course enrollment")}
                     </button>
                 </div>
             </div>
@@ -75,6 +84,8 @@ export const Chat = ({
     loading, 
     setLoading 
 }: ChatProps) => {
+    const i18nChat = useTranslations("Chat")
+    
     const [messages, setMessages] = useState<Message[]>([])
     
     const scrollRef = useRef<HTMLDivElement>(null)

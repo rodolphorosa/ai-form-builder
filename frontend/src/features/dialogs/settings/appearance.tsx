@@ -14,7 +14,7 @@ export const Appearance = () => {
     const router = useRouter()
     const pathname = usePathname()
 
-    const themes = useTranslations("Theme")
+    const themes = useTranslations("Themes")
     const languages = useTranslations("Languages")
     const settings = useTranslations("Settings")
 

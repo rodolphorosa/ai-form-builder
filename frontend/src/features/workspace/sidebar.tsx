@@ -47,8 +47,7 @@ export const Sidebar = ({ forms, projects }: Props) => {
         deleteProject
     } = useProjects()
 
-    const tree = useTranslations("Tree")
-    const workspace = useTranslations("Workspace")
+    const sidebari18n = useTranslations("Sidebar")
 
     const [hasScroll, setHasScroll] = useState(false)
     
@@ -123,7 +122,7 @@ export const Sidebar = ({ forms, projects }: Props) => {
                 </div>
                 <div className="flex flex-row py-2 px-3 gap-2 text-sm font-normal items-center hover:bg-muted rounded-sm cursor-pointer">
                     <SquarePen className="h-4 w-4" />
-                    {tree("new form")}
+                    {sidebari18n("new form")}
                 </div>
             </div>
             <div className="gap-2 h-[100%] overflow-hidden">
@@ -135,29 +134,29 @@ export const Sidebar = ({ forms, projects }: Props) => {
                         </div>
                         <div className="flex flex-row px-3 py-2 gap-2 text-sm font-normal items-center hover:bg-muted rounded-sm cursor-pointer">
                             <Search className="h-4 w-4" />
-                            {tree("search")}
+                            {sidebari18n("search")}
                         </div>
                         <div className="flex flex-row px-3 py-2 gap-2 text-sm font-normal items-center hover:bg-muted rounded-sm cursor-pointer">
                             <LibraryBig className="h-4 w-4" />
-                            {tree("library")}
+                            {sidebari18n("library")}
                         </div>
                         <div className="flex flex-row px-3 py-2 gap-2 text-sm font-normal items-center hover:bg-muted rounded-sm cursor-pointer">
                             <FolderOpen className="h-4 w-4" />
-                            {tree("projects")}
+                            {sidebari18n("projects")}
                         </div>
                         <div className="flex flex-row px-3 py-2 gap-2 text-sm font-normal items-center hover:bg-muted rounded-sm cursor-pointer">
                             <Archive className="h-4 w-4" />
-                            {workspace("archived")}
+                            {sidebari18n("archived")}
                         </div>
                         <div className="flex flex-row px-3 py-2 gap-2 text-sm font-normal items-center hover:bg-muted rounded-sm cursor-pointer">
                             <Trash2 className="h-4 w-4" />
-                            {workspace("trash")}
+                            {sidebari18n("trash")}
                         </div>
                     </div>
                     {(pinnedForms.length > 0 || pinnedProjects.length > 0) && (
                         <Collapsible key="pinned" open={pinnedOpen} className="flex flex-col">
                             <div className="px-3 py-2 text-sm font-medium" onClick={() => setPinnedOpen(!pinnedOpen)}>
-                                {tree("pinned")}
+                                {sidebari18n("pinned")}
                             </div>
                             <CollapsibleContent className="pt-0.5">
                                 <div className="flex flex-col gap-0.5">
@@ -169,7 +168,7 @@ export const Sidebar = ({ forms, projects }: Props) => {
                     )}
                     <Collapsible key="recent" open={recentOpen} className="flex flex-col">
                         <div className="px-3 py-2 text-sm font-medium" onClick={() => setRecentOpen(!recentOpen)}>
-                            {tree("recent")}
+                            {sidebari18n("recent")}
                         </div>
                         <CollapsibleContent className="pt-0.5">
                             <div className="flex flex-col gap-0.5">
@@ -215,18 +214,18 @@ export const Sidebar = ({ forms, projects }: Props) => {
                         <DropdownMenuGroup>
                             <DropdownMenuItem>
                                 <CircleUser className="h-4 w-4" />
-                                {tree("profile")}
+                                {sidebari18n("profile")}
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => setShowSettings(!showSettings)}>
                                 <Settings className="h-4 w-4" />
-                                {tree("settings")}
+                                {sidebari18n("settings")}
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
                             <DropdownMenuItem variant="destructive" onClick={logout}>
                                 <LogOut className="h-4 w-4" />
-                                {tree("logout")}
+                                {sidebari18n("logout")}
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                     </DropdownMenuContent>

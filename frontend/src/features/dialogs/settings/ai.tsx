@@ -39,7 +39,9 @@ export const AI = () => {
             </span>
             <Separator className="mt-4"/>
             <div className="flex flex-row p-2 items-center justify-between">
-                <span>Preferred provider</span>
+                <span>
+                    {settings("preferred provider")}
+                </span>
                 <Select items={providers} value={provider} onValueChange={(provider) => setProvider(provider ?? "openai")}>
                     <SelectTrigger className="w-fit border-0">
                         <SelectValue />
@@ -57,7 +59,9 @@ export const AI = () => {
             </div>
             <Separator />
             <div className="flex flex-row p-2 items-center justify-between">
-                <span>Preferred model</span>
+                <span>
+                    {settings("preferred model")}
+                </span>
                 <Select items={providers} value={model} onValueChange={(model) => setModel(model ?? "gpt-4.1-nano")}>
                     <SelectTrigger className="w-fit border-0">
                         <SelectValue />

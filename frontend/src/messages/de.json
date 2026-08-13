@@ -1,15 +1,24 @@
 {
   "Common": {
+    "form": "Formular",
+    "project": "Projekt",
+    "create form": "Formular erstellen",
+    "create project": "Projekt erstellen",
+
     "name": "Name",
+    "description": "Beschreibung",
     "save": "Speichern",
     "cancel": "Abbrechen",
+    "create": "Erstellen",
     "pin": "Anheften",
-    "unpin": "Lösen",
+    "unpin": "Loslösen",
     "rename": "Umbenennen",
     "export": "Exportieren",
     "archive": "Archivieren",
     "delete": "Löschen",
     "duplicate": "Duplizieren",
+
+    "recent": "Zuletzt verwendet",
 
     "text": "Einfacher Text",
     "email": "E-Mail",
@@ -17,7 +26,7 @@
     "phone": "Telefon",
     "url": "Link",
     "textarea": "Absatz",
-    "number": "Zahlenfeld",
+    "number": "Numerisches Feld",
     "date": "Datum",
     "datetime": "Datum und Uhrzeit",
     "select": "Auswahlliste",
@@ -26,65 +35,92 @@
     "rating": "Bewertung",
     "file": "Datei",
 
-    "new question": "Neue Frage",
-    "new section": "Neuer Abschnitt",
-
     "copy": "Kopie",
+
+    "updated": "Aktualisiert",
+    "edited": "Bearbeitet",
+    "error": "Fehler"
+  },
+
+  "Projects": {
+
+  },
+
+  "Forms": {
+    "move to project": "In Projekt verschieben",
+    "search projects": "Projekte suchen",
+    "new project": "Neues Projekt"
+  },
+
+  "Chat": {
+    "assitant": "KI-Assistent",
 
     "chat-create": "Beschreiben Sie das Formular, das Sie erstellen möchten",
     "chat-edit": "Beschreiben Sie eine Änderung am Formular",
     "chat-default": "Beschreiben Sie, was Sie möchten",
 
-    "import schema": "Schema importieren",
+    "create something incredible": "Lassen Sie uns etwas Unglaubliches schaffen?",
+    "describe the form you need": "Beschreiben Sie das Formular, das Sie benötigen, und ich helfe Ihnen dabei, die Struktur zu erstellen.",
+    "try": "Probieren Sie:",
+    "employee registration": "Erstellen Sie ein Formular zur Mitarbeiterregistrierung.",
+    "budget request": "Erstellen Sie ein Formular für eine Budgetanfrage.",
+    "course enrollment": "Erstellen Sie ein Formular zur Kursanmeldung.",
 
-    "updated": "Aktualisiert",
-    "edited": "Bearbeitet",
-
-    "move to project": "In Projekt verschieben",
-
-    "saved": "Gespeichert",
-    "unsaved": "Ausstehende Änderungen",
-    "saving": "Wird gespeichert...",
-    "error": "Fehler"
+    "thinking": "Denke nach...",
+    "creating": "Erstelle...",
+    "editing": "Bearbeite...",
+    "processing": "Verarbeite..."
   },
 
-  "Tree": {
-    "improve with ai": "Mit KI verbessern",
-    "edit": "Bearbeiten",
-    "add item above": "Element darüber hinzufügen",
-    "add item below": "Element darunter hinzufügen",
-    "add section below": "Abschnitt darunter hinzufügen",
-    "add item": "Element hinzufügen",
-    "duplicate": "Duplizieren",
-    "delete": "Löschen",
-    "rename": "Umbenennen",
+  "Canvas": {
+    "new question": "Neue Frage",
+    "new section": "Neuer Abschnitt",
+    "saved": "Gespeichert",
+    "unsaved": "Ausstehende Änderungen",
+    "saving": "Speichern...",
+    "add field in this section": "Feld zu diesem Abschnitt hinzufügen",
+    "add section": "Abschnitt hinzufügen",
+    "add option": "Neue Option hinzufügen",
+    "condition active": "Bedingte Logik aktiv"
+  },
 
-    "account": "Konto",
+  "Sidebar": {
+    "new form": "Neues Formular",
+    "home": "Startseite",
+    "search": "Suchen",
+    "library": "Bibliothek",
+    "projects": "Projekte",
+    "archived": "Archiviert",
+    "trash": "Papierkorb",
+    "pinned": "Angeheftet",
+    "recent": "Zuletzt verwendet",
     "profile": "Profil",
     "settings": "Einstellungen",
-    "logout": "Abmelden",
-
-    "new project": "Neues Projekt",
-    "new form": "Neues Formular",
-    "search": "Suchen",
-    "projects": "Projekte",
-    "recent": "Zuletzt verwendet",
-    "move to project": "In Projekt verschieben",
-    "pinned": "Angeheftet",
-    "library": "Bibliothek"
+    "logout": "Abmelden"
   },
 
   "Workspace": {
     "create with ai": "Mit KI erstellen",
+    "create with ai / subtext": "Beschreiben Sie, was Sie benötigen, und die KI erstellt es für Sie.",
+
     "blank": "Leer",
-    "import": "Importieren",
-    "archived": "Archiviert",
-    "trash": "Papierkorb",
+    "blank / subtext": "Beginnen Sie mit einem leeren Formular von Grund auf.",
+
     "file up": "Datei importieren",
-    "image up": "Bild importieren"
+    "file up / subtext": "Importieren Sie ein Formular aus einer JSON-Datei.",
+
+    "image up": "Bild importieren",
+    "image up / subtext": "Importieren Sie ein Formular aus einem Foto oder einer Zeichnung.",
+
+    "create today": "Was möchten Sie heute erstellen?",
+    "use AI to create": "Nutzen Sie die KI, um in wenigen Sekunden ein Formular zu erstellen, beginnen Sie von Grund auf oder importieren Sie ein vorhandenes Formular.",
+
+    "keep on": "Dort weitermachen, wo Sie aufgehört haben",
+    "your recent projects": "Ihre aktuellen Projekte",
+    "see more": "Mehr anzeigen"
   },
 
-  "Theme": {
+  "Themes": {
     "light": "Hell",
     "dark": "Dunkel",
     "system": "System"
@@ -114,14 +150,14 @@
     "login failed": "Anmeldung fehlgeschlagen",
     "user creation failed": "Konto konnte nicht erstellt werden",
     "invalid email or password": "Ungültige E-Mail-Adresse oder ungültiges Passwort.",
-    "email alreay in use": "E-Mail-Adresse wird bereits verwendet.",
+    "email alreay in use": "Die E-Mail-Adresse wird bereits verwendet.",
 
     "access denied": "Zugriff verweigert",
     "permission to form denied": "Sie haben keine Berechtigung, auf dieses Formular zuzugreifen.",
-    "contact form owner": "Wenn Sie glauben, dass Sie Zugriff haben sollten, wenden Sie sich an den Eigentümer des Formulars.",
-    "back to home": "Zur Startseite",
+    "contact form owner": "Wenn Sie der Meinung sind, dass Sie Zugriff auf dieses Formular haben sollten, wenden Sie sich an den Eigentümer.",
+    "back to home": "Zurück zur Startseite",
 
-    "permission to project denied": "Sie haben keine Berechtigung, auf dieses Projekt zuzugreifen.",
-    "contact project owner": "Wenn Sie glauben, dass Sie Zugriff auf dieses Projekt haben sollten, wenden Sie sich an den Eigentümer."
+    "permissn to project denied": "Sie haben keine Berechtigung, auf dieses Projekt zuzugreifen.",
+    "contat project owner": "Wenn Sie der Meinung sind, dass Sie Zugriff auf dieses Projekt haben sollten, wenden Sie sich an den Eigentümer."
   }
 }

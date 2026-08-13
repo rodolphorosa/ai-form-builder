@@ -85,26 +85,26 @@ export const Workspace = () => {
         {
             icon: Astroid,
             title: workspace("create with ai"),
-            description: "Descreva o que você precisa e a IA irá gerar para você",
+            description: workspace("create with ai / subtext"),
             action: () => {},
             href: "/forms/new"
         },
         {
             icon: File,
             title: workspace("blank"),
-            description: "Comece do zero com um formulário em branco.",
+            description: workspace("blank / subtext"),
             action: () => setCreateOpen(true)
         },
         {
             icon: FileUp,
             title: workspace("file up"),
-            description: "Importe um formulário a partir de um arquivo JSON.",
+            description: workspace("file up / subtext"),
             action: () => setImportOpen(true)
         },
         {
             icon: ImageUp,
             title: workspace("image up"),
-            description: "Importe um formulário a partir de uma foto ou desenho.",
+            description: workspace("image up / subtext"),
             action: () => setImportImageOpen(true)
         }
     ]
@@ -361,13 +361,13 @@ export const Workspace = () => {
         <div className="flex flex-row h-screen w-screen overflow-hidden">
             <Sidebar forms={forms} projects={projects} />
             <div className="flex flex-col p-8 gap-8 overflow-y-auto mx-auto">
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 max-w-[976px]">
                     <span className="text-2xl flex flex-row gap-2 items-center">
                         <Astroid className="text-indigo-600 fill-indigo-600/10" />
-                        O que você quer criar hoje?
+                        {workspace("create today")}
                     </span>
                     <span className="text-lg">
-                        Use a IA para gerar um formulário em segundos, comece do zero ou importe um formulário existente.
+                        {workspace("use AI to create")}
                     </span>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -384,10 +384,12 @@ export const Workspace = () => {
                             items-center justify-between 
                             text-sm font-medium"
                         >
-                        <span>Continue de onde parou</span>
+                        <span>
+                            {workspace("keep on")}
+                        </span>
                         {forms.length > 4 && (
                             <span className="text-muted-foreground cursor-pointer">
-                                Ver mais
+                                {workspace("see more")}
                             </span>
                         )}
                     </div>
@@ -403,10 +405,12 @@ export const Workspace = () => {
                             items-center justify-between 
                             text-sm font-medium"
                         >
-                        <span>Seus projetos recentes</span>
+                        <span>
+                            {workspace("your recent projects")}
+                        </span>
                         {projects.length > 4 && (
                             <span className="text-muted-foreground cursor-pointer">
-                                Ver mais
+                                {workspace("see more")}
                             </span>
                         )}
                     </div>

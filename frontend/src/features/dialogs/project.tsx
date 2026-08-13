@@ -16,7 +16,8 @@ interface DialogProps {
 }
 
 export const ProjectCreate = ({ open, onOpenChange, onCreate }: DialogProps) => {
-    const tree = useTranslations("Tree")
+    const i18nForms = useTranslations("Forms")
+    const i18nCommon = useTranslations("Common")
 
     const [name, setName] = useState<string>("")
     const [description, setDescription] = useState<string>("")
@@ -26,30 +27,31 @@ export const ProjectCreate = ({ open, onOpenChange, onCreate }: DialogProps) => 
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>
-                        {tree("new project")}
+                        {i18nForms("new project")}
                     </DialogTitle>
 
                 </DialogHeader>
 
                 <Field>
-                    <Label>Name:</Label>
+                    <Label>
+                        {i18nCommon("name")}:
+                    </Label>
                     <Input 
                         id="project-name"
                         type="text"
                         value={name ?? ""}
-                        placeholder="Name of the project"
                         onChange={e => setName(e.target.value)}
                     />
                 </Field>
 
                 <Field>
-                    <Label>Description:</Label>
+                    <Label>
+                        {i18nCommon("description")}:</Label>
                     <Textarea 
                         id="project-description"
                         maxLength={200}
                         value={description ?? ""}
                         onChange={e => setDescription(e.target.value)}
-                        placeholder="Describe the form you want"
                         className="min-h-12 max-h-48 resize-none overflow-y-auto"
                     />
                 </Field>

@@ -31,7 +31,7 @@ export const FormDropdown = ({
     onDelete
 }: Props) => {
     const common = useTranslations("Common")
-    const tree = useTranslations("Tree")
+    const formsi18n = useTranslations("Forms")
 
     return (
         <DropdownMenu>
@@ -59,7 +59,7 @@ export const FormDropdown = ({
                         <DropdownMenuSubTrigger>
                             <FolderInput />
                             <div className="text-sm font-medium truncate">
-                                {common("move to project")}
+                                {formsi18n("move to project")}
                             </div>
                         </DropdownMenuSubTrigger>
                         <DropdownMenuPortal>
@@ -72,7 +72,7 @@ export const FormDropdown = ({
                                 >
                                     <FolderPlus className="h-4 w-4 shrink-0" />
                                     <div className="text-sm font-medium truncate">
-                                        Novo projeto
+                                        {formsi18n("new project")}
                                     </div>
                                 </DropdownMenuItem>
                                 {projects && projects.length > 0 && (
@@ -86,11 +86,13 @@ export const FormDropdown = ({
                                         >
                                             <FolderSearch className="h-4 w-4 shrink-0" />
                                             <div className="text-sm font-medium truncate">
-                                                Buscar projetos
+                                                {formsi18n("search projects")}
                                             </div>
                                         </DropdownMenuItem>
                                         <DropdownMenuSeparator />
-                                        <DropdownMenuLabel>Recentes</DropdownMenuLabel>
+                                        <DropdownMenuLabel>
+                                            {common("recent")}
+                                        </DropdownMenuLabel>
                                     </>
                                 )}
                                 {projects?.filter(project => project.id !== form.projectId ).slice(0, 3).map(project => {

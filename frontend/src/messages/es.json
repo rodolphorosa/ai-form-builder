@@ -1,15 +1,24 @@
 {
   "Common": {
+    "form": "Formulario",
+    "project": "Proyecto",
+    "create form": "Crear formulario",
+    "create project": "Crear proyecto",
+
     "name": "Nombre",
+    "description": "Descripción",
     "save": "Guardar",
     "cancel": "Cancelar",
+    "create": "Crear",
     "pin": "Fijar",
     "unpin": "Desfijar",
-    "rename": "Cambiar nombre",
+    "rename": "Renombrar",
     "export": "Exportar",
     "archive": "Archivar",
     "delete": "Eliminar",
     "duplicate": "Duplicar",
+
+    "recent": "Recientes",
 
     "text": "Texto simple",
     "email": "Correo electrónico",
@@ -20,71 +29,98 @@
     "number": "Campo numérico",
     "date": "Fecha",
     "datetime": "Fecha y hora",
-    "select": "Lista desplegable",
+    "select": "Lista de selección",
     "radio": "Botón de opción",
     "checkbox": "Casilla de verificación",
-    "rating": "Valoración",
+    "rating": "Calificación",
     "file": "Archivo",
-
-    "new question": "Nueva pregunta",
-    "new section": "Nueva sección",
 
     "copy": "Copia",
 
-    "chat-create": "Describe el formulario que quieres crear",
-    "chat-edit": "Describe un cambio en el formulario",
-    "chat-default": "Describe lo que quieres",
-
-    "import schema": "Importar esquema",
-
     "updated": "Actualizado",
     "edited": "Editado",
-
-    "move to project": "Mover al proyecto",
-
-    "saved": "Guardado",
-    "unsaved": "Cambios pendientes",
-    "saving": "Guardando...",
     "error": "Error"
   },
 
-  "Tree": {
-    "improve with ai": "Mejorar con IA",
-    "edit": "Editar",
-    "add item above": "Añadir elemento arriba",
-    "add item below": "Añadir elemento abajo",
-    "add section below": "Añadir sección abajo",
-    "add item": "Añadir elemento",
-    "duplicate": "Duplicar",
-    "delete": "Eliminar",
-    "rename": "Cambiar nombre",
+  "Projects": {
 
-    "account": "Cuenta",
+  },
+
+  "Forms": {
+    "move to project": "Mover al proyecto",
+    "search projects": "Buscar proyectos",
+    "new project": "Nuevo proyecto"
+  },
+
+  "Chat": {
+    "assitant": "Asistente de IA",
+
+    "chat-create": "Describe el formulario que deseas",
+    "chat-edit": "Describe un cambio en el formulario",
+    "chat-default": "Describe lo que deseas",
+
+    "create something incredible": "¿Creamos algo increíble?",
+    "describe the form you need": "Describe el formulario que necesitas y te ayudaré a crear su estructura.",
+    "try": "Prueba:",
+    "employee registration": "Crea un formulario de registro de empleados.",
+    "budget request": "Crea un formulario de solicitud de presupuesto.",
+    "course enrollment": "Crea un formulario de inscripción a un curso.",
+
+    "thinking": "Pensando...",
+    "creating": "Creando...",
+    "editing": "Editando...",
+    "processing": "Procesando..."
+  },
+
+  "Canvas": {
+    "new question": "Nueva pregunta",
+    "new section": "Nueva sección",
+    "saved": "Guardado",
+    "unsaved": "Cambios pendientes",
+    "saving": "Guardando...",
+    "add field in this section": "Añadir campo a esta sección",
+    "add section": "Añadir sección",
+    "add option": "Añadir nueva opción",
+    "condition active": "Lógica condicional activa"
+  },
+
+  "Sidebar": {
+    "new form": "Nuevo formulario",
+    "home": "Inicio",
+    "search": "Buscar",
+    "library": "Biblioteca",
+    "projects": "Proyectos",
+    "archived": "Archivados",
+    "trash": "Papelera",
+    "pinned": "Fijados",
+    "recent": "Recientes",
     "profile": "Perfil",
     "settings": "Configuración",
-    "logout": "Cerrar sesión",
-
-    "new project": "Nuevo proyecto",
-    "new form": "Nuevo formulario",
-    "search": "Buscar",
-    "projects": "Proyectos",
-    "recent": "Recientes",
-    "move to project": "Mover al proyecto",
-    "pinned": "Fijados",
-    "library": "Biblioteca"
+    "logout": "Cerrar sesión"
   },
 
   "Workspace": {
     "create with ai": "Crear con IA",
+    "create with ai / subtext": "Describe lo que necesitas y la IA lo generará por ti.",
+
     "blank": "En blanco",
-    "import": "Importar",
-    "archived": "Archivados",
-    "trash": "Papelera",
+    "blank / subtext": "Comienza desde cero con un formulario en blanco.",
+
     "file up": "Importar archivo",
-    "image up": "Importar imagen"
+    "file up / subtext": "Importa un formulario desde un archivo JSON.",
+
+    "image up": "Importar imagen",
+    "image up / subtext": "Importa un formulario desde una foto o dibujo.",
+
+    "create today": "¿Qué quieres crear hoy?",
+    "use AI to create": "Usa la IA para generar un formulario en segundos, comienza desde cero o importa un formulario existente.",
+
+    "keep on": "Continúa donde lo dejaste",
+    "your recent projects": "Tus proyectos recientes",
+    "see more": "Ver más"
   },
 
-  "Theme": {
+  "Themes": {
     "light": "Claro",
     "dark": "Oscuro",
     "system": "Sistema"
@@ -113,15 +149,15 @@
   "Errors": {
     "login failed": "Error al iniciar sesión",
     "user creation failed": "Error al crear la cuenta",
-    "invalid email or password": "Correo electrónico o contraseña no válidos.",
+    "invalid email or password": "Correo electrónico o contraseña inválidos.",
     "email alreay in use": "El correo electrónico ya está en uso.",
 
     "access denied": "Acceso denegado",
     "permission to form denied": "No tienes permiso para acceder a este formulario.",
-    "contact form owner": "Si crees que deberías tener acceso, ponte en contacto con el propietario del formulario.",
+    "contact form owner": "Si crees que deberías tener acceso a este formulario, contacta con el propietario.",
     "back to home": "Volver al inicio",
 
-    "permission to project denied": "No tienes permiso para acceder a este proyecto.",
-    "contact project owner": "Si crees que deberías tener acceso a este proyecto, ponte en contacto con su propietario."
+    "permissn to project denied": "No tienes permiso para acceder a este proyecto.",
+    "contat project owner": "Si crees que deberías tener acceso a este proyecto, contacta con el propietario."
   }
 }

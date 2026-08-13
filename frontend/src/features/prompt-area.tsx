@@ -18,7 +18,7 @@ export const PromptArea = ({
 }: PromptAreaProps) => {
     const [prompt, setPrompt] = useState<string|null>(promptRef?.current?.value ?? "")
 
-    const t = useTranslations("Common")
+    const i18nChat = useTranslations("Chat")
 
     return (
         <div className="
@@ -40,30 +40,25 @@ export const PromptArea = ({
                     maxLength={2000}
                     value={prompt ?? ""}
                     onChange={e => setPrompt(e.target.value)}
-                    placeholder={t(placeholder ?? "chat-default")}
+                    placeholder={i18nChat(placeholder ?? "chat-default")}
                 />
             </div>
             <div className="w-full flex flex-row justify-between self-end">
-                <Button className="rounded-full bg-transparent" variant="ghost" size="icon">
-                    <Paperclip />
-                </Button>
-                <div className="flex flex-row gap-2">
-                    {/* <div className="mt-1 flex justify-end text-xs text-muted-foreground self-end">
-                        {prompt?.length}/2000
-                    </div> */}
-                    <Button 
-                        className="self-end rounded-full" 
-                        size="icon"
-                        onClick={() => {
-                            if(prompt && prompt.length > 0) {
-                                onChat(prompt)
-                                setPrompt("")
-                            }
-                        }}
-                    >
-                        <ArrowUp />
-                    </Button>
+                <div className="mt-1 flex justify-end text-xs text-muted-foreground self-end">
+                    {prompt?.length}/2000
                 </div>
+                <Button 
+                    className="self-end rounded-full" 
+                    size="icon"
+                    onClick={() => {
+                        if(prompt && prompt.length > 0) {
+                            onChat(prompt)
+                            setPrompt("")
+                        }
+                    }}
+                >
+                    <ArrowUp />
+                </Button>
             </div>
         </div>
     )

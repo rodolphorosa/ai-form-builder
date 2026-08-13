@@ -98,7 +98,7 @@ const TypeSelect = ({ type, onSelect }: { type: InputType, onSelect: (type: Inpu
 }
 
 export const EditableComponent = ({ item, selected, onChange, onDelete, onDuplicate, sections }: EditableProps) => {
-    const t = useTranslations("Tree")
+    const i18nCanvas = useTranslations("Canvas")
 
     const [suggestions, setSuggestions] = useState<Suggestion[]>([])
 
@@ -331,7 +331,7 @@ export const EditableComponent = ({ item, selected, onChange, onDelete, onDuplic
             />
             <div className="w-fit flex flex-row gap-1 p-2 items-center border rounded-sm text-xs font-normal bg-muted/50 cursor-pointer">
                 <GitBranch className="h-3 w-3 shrink-0" />
-                Lógica condicional ativa
+                {i18nCanvas("condition active")}
             </div>
             {suggestions.length > 0 && (
                 <Suggestions 

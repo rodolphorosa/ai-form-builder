@@ -1,8 +1,15 @@
 {
   "Common": {
+    "form": "Formulaire",
+    "project": "Projet",
+    "create form": "Créer un formulaire",
+    "create project": "Créer un projet",
+
     "name": "Nom",
+    "description": "Description",
     "save": "Enregistrer",
     "cancel": "Annuler",
+    "create": "Créer",
     "pin": "Épingler",
     "unpin": "Désépingler",
     "rename": "Renommer",
@@ -10,6 +17,8 @@
     "archive": "Archiver",
     "delete": "Supprimer",
     "duplicate": "Dupliquer",
+
+    "recent": "Récents",
 
     "text": "Texte simple",
     "email": "E-mail",
@@ -26,65 +35,92 @@
     "rating": "Évaluation",
     "file": "Fichier",
 
-    "new question": "Nouvelle question",
-    "new section": "Nouvelle section",
-
     "copy": "Copie",
-
-    "chat-create": "Décrivez le formulaire que vous souhaitez créer",
-    "chat-edit": "Décrivez une modification du formulaire",
-    "chat-default": "Décrivez ce que vous souhaitez",
-
-    "import schema": "Importer le schéma",
 
     "updated": "Mis à jour",
     "edited": "Modifié",
-
-    "move to project": "Déplacer vers le projet",
-
-    "saved": "Enregistré",
-    "unsaved": "Modifications en attente",
-    "saving": "Enregistrement...",
     "error": "Erreur"
   },
 
-  "Tree": {
-    "improve with ai": "Améliorer avec l’IA",
-    "edit": "Modifier",
-    "add item above": "Ajouter un élément au-dessus",
-    "add item below": "Ajouter un élément en dessous",
-    "add section below": "Ajouter une section en dessous",
-    "add item": "Ajouter un élément",
-    "duplicate": "Dupliquer",
-    "delete": "Supprimer",
-    "rename": "Renommer",
+  "Projects": {
 
-    "account": "Compte",
+  },
+
+  "Forms": {
+    "move to project": "Déplacer vers le projet",
+    "search projects": "Rechercher des projets",
+    "new project": "Nouveau projet"
+  },
+
+  "Chat": {
+    "assitant": "Assistant IA",
+
+    "chat-create": "Décrivez le formulaire que vous souhaitez",
+    "chat-edit": "Décrivez une modification du formulaire",
+    "chat-default": "Décrivez ce que vous souhaitez",
+
+    "create something incredible": "Créons quelque chose d'incroyable ?",
+    "describe the form you need": "Décrivez le formulaire dont vous avez besoin et je vous aiderai à créer sa structure.",
+    "try": "Essayez :",
+    "employee registration": "Créez un formulaire d'inscription des employés.",
+    "budget request": "Créez un formulaire de demande de budget.",
+    "course enrollment": "Créez un formulaire d'inscription à un cours.",
+
+    "thinking": "Réflexion...",
+    "creating": "Génération...",
+    "editing": "Modification...",
+    "processing": "Traitement..."
+  },
+
+  "Canvas": {
+    "new question": "Nouvelle question",
+    "new section": "Nouvelle section",
+    "saved": "Enregistré",
+    "unsaved": "Modifications en attente",
+    "saving": "Enregistrement...",
+    "add field in this section": "Ajouter un champ à cette section",
+    "add section": "Ajouter une section",
+    "add option": "Ajouter une nouvelle option",
+    "condition active": "Logique conditionnelle active"
+  },
+
+  "Sidebar": {
+    "new form": "Nouveau formulaire",
+    "home": "Accueil",
+    "search": "Rechercher",
+    "library": "Bibliothèque",
+    "projects": "Projets",
+    "archived": "Archivés",
+    "trash": "Corbeille",
+    "pinned": "Épinglés",
+    "recent": "Récents",
     "profile": "Profil",
     "settings": "Paramètres",
-    "logout": "Se déconnecter",
-
-    "new project": "Nouveau projet",
-    "new form": "Nouveau formulaire",
-    "search": "Rechercher",
-    "projects": "Projets",
-    "recent": "Récents",
-    "move to project": "Déplacer vers le projet",
-    "pinned": "Épinglés",
-    "library": "Bibliothèque"
+    "logout": "Se déconnecter"
   },
 
   "Workspace": {
-    "create with ai": "Créer avec l’IA",
-    "blank": "Vide",
-    "import": "Importer",
-    "archived": "Archivés",
-    "trash": "Corbeille",
+    "create with ai": "Créer avec l'IA",
+    "create with ai / subtext": "Décrivez ce dont vous avez besoin et l'IA le générera pour vous.",
+
+    "blank": "Vierge",
+    "blank / subtext": "Commencez de zéro avec un formulaire vierge.",
+
     "file up": "Importer un fichier",
-    "image up": "Importer une image"
+    "file up / subtext": "Importez un formulaire à partir d'un fichier JSON.",
+
+    "image up": "Importer une image",
+    "image up / subtext": "Importez un formulaire à partir d'une photo ou d'un dessin.",
+
+    "create today": "Que souhaitez-vous créer aujourd'hui ?",
+    "use AI to create": "Utilisez l'IA pour générer un formulaire en quelques secondes, commencez de zéro ou importez un formulaire existant.",
+
+    "keep on": "Reprenez là où vous vous êtes arrêté",
+    "your recent projects": "Vos projets récents",
+    "see more": "Voir plus"
   },
 
-  "Theme": {
+  "Themes": {
     "light": "Clair",
     "dark": "Sombre",
     "system": "Système"
@@ -113,15 +149,15 @@
   "Errors": {
     "login failed": "Échec de la connexion",
     "user creation failed": "Échec de la création du compte",
-    "invalid email or password": "Adresse e-mail ou mot de passe invalide.",
-    "email alreay in use": "Cette adresse e-mail est déjà utilisée.",
+    "invalid email or password": "E-mail ou mot de passe invalide.",
+    "email alreay in use": "L'adresse e-mail est déjà utilisée.",
 
     "access denied": "Accès refusé",
-    "permission to form denied": "Vous n’avez pas l’autorisation d’accéder à ce formulaire.",
-    "contact its owner": "Si vous pensez devoir avoir accès à ce formulaire, contactez son propriétaire.",
-    "back to home": "Retour à l’accueil",
+    "permission to form denied": "Vous n'avez pas l'autorisation d'accéder à ce formulaire.",
+    "contact form owner": "Si vous pensez que vous devriez avoir accès à ce formulaire, contactez son propriétaire.",
+    "back to home": "Retour à l'accueil",
 
-    "permission to project denied": "Vous n’avez pas l’autorisation d’accéder à ce projet.",
-    "contact project owner": "Si vous pensez devoir avoir accès à ce projet, contactez son propriétaire."
+    "permissn to project denied": "Vous n'avez pas l'autorisation d'accéder à ce projet.",
+    "contat project owner": "Si vous pensez que vous devriez avoir accès à ce projet, contactez son propriétaire."
   }
 }

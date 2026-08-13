@@ -84,7 +84,8 @@ function JsonImport({ file, onImport, failed, errorMessage }: JsonImportProps) {
 }
 
 export function FileDialog({ open, onOpenChange }: DialogProps) {
-    const workspace = useTranslations("Workspace")
+    const i18nWorkspace = useTranslations("Workspace")
+    const i18nCommon = useTranslations("Common")
 
     const [selectedFile, setSelectedFile] = useState<File | null>(null)
     const [form, setForm] = useState<Form | null>(null)
@@ -133,7 +134,7 @@ export function FileDialog({ open, onOpenChange }: DialogProps) {
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>{workspace("file up")}</DialogTitle>
+                    <DialogTitle>{i18nWorkspace("file up")}</DialogTitle>
                 </DialogHeader>
 
                 <JsonImport
@@ -144,14 +145,14 @@ export function FileDialog({ open, onOpenChange }: DialogProps) {
                 />
 
                 <DialogFooter>
-                    <DialogClose render={(<Button variant="secondary">Cancel</Button>)} />
+                    <DialogClose render={(<Button variant="secondary">{i18nCommon("cancel")}</Button>)} />
 
                     <Button
                         variant="outline"
                         disabled={!form}
                         onClick={handleCreate}
                     >
-                        Create
+                        {i18nCommon("create")}
                     </Button>
                 </DialogFooter>
             </DialogContent>

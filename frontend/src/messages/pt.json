@@ -1,8 +1,15 @@
 {
   "Common": {
+    "form": "Formulário",
+    "project": "Projeto",
+    "create form": "Criar formulário",
+    "create project": "Criar projeto",
+
     "name": "Nome",
+    "description": "Descrição",
     "save": "Salvar",
     "cancel": "Cancelar",
+    "create": "Criar",
     "pin": "Fixar",
     "unpin": "Desfixar",
     "rename": "Renomear",
@@ -10,6 +17,8 @@
     "archive": "Arquivar",
     "delete": "Excluir",
     "duplicate": "Duplicar",
+
+    "recent": "Recentes",
     
     "text": "Texto simples",
     "email": "E-mail",
@@ -26,65 +35,92 @@
     "rating": "Avaliação",
     "file": "Arquivo",
 
-    "new question": "Nova pergunta",
-    "new section": "Nova seção",
-
     "copy": "Cópia",
+    
+    "updated": "Atualizado",
+    "edited": "Editado",
+    "error": "Erro"
+  },
+
+  "Projects": {
+    
+  },
+
+  "Forms": {
+    "move to project": "Mover para projeto",
+    "search projects": "Buscar projetos",
+    "new project": "Novo projeto"
+  },
+
+  "Chat": {
+    "assitant": "AI Asssitant",
 
     "chat-create": "Descreva o formulário que você deseja",
     "chat-edit": "Descreva uma alteração no formulário",
     "chat-default": "Descreva o que você deseja",
-
-    "import schema": "Importar esquema",
     
-    "updated": "Atualizado",
-    "edited": "Editado",
+    "create something incredible": "Vamos criar algo incrível?",
+    "describe the form you need": "Descreve o formulário que você precisa e eu vou ajudar a criar a estrutura.",
+    "try": "Experimente:",
+    "employee registration": "Crie um formulário de cadastro de funcionários.",
+    "budget request": "Crie um formulário de pedido de orçamento.",
+    "course enrollment": "Crie um formulário de inscrição em um curso.",
 
-    "move to project": "Mover para projeto",
+    "thinking": "Pensando...",
+    "creating": "Gerando...",
+    "editing": "Editando...",
+    "processing": "Processando..."
+  },
 
+  "Canvas": {
+    "new question": "Nova pergunta",
+    "new section": "Nova seção",
     "saved": "Salvo",
     "unsaved": "Atualizações pendentes",
     "saving": "Salvando...",
-    "error": "Erro"
+    "add field in this section": "Adicionar campo nesse seção",
+    "add section": "Adicionar seção",
+    "add option": "Adicionar nova opção",
+    "condition active": "Lógica condicional ativa"
   },
 
-  "Tree": {
-    "improve with ai": "Aprimorar com IA",
-    "edit": "Editar",
-    "add item above": "Adicionar item acima",
-    "add item below": "Adicionar item abaixo",
-    "add section below": "Adicionar seção abaixo",
-    "add item": "Adicionar item",
-    "duplicate": "Duplicar",
-    "delete": "Excluir",
-    "rename": "Renomar",
-
-    "account": "Conta",
+  "Sidebar": {
+    "new form": "Novo formulário",
+    "home": "Home",
+    "search": "Pesquisar",
+    "library": "Biblioteca",
+    "projects": "Projetos",
+    "archived": "Arquivados",
+    "trash": "Lixeira",
+    "pinned": "Fixados",
+    "recent": "Recentes",
     "profile": "Perfil",
     "settings": "Configurações",
-    "logout": "Sair", 
-
-    "new project": "Novo projeto",
-    "new form": "Novo formulário",
-    "search": "Pesquisar",
-    "projects": "Projetos",
-    "recent": "Recentes",
-    "move to project": "Mover para projeto",
-    "pinned": "Fixados",
-    "library": "Biblioteca"
+    "logout": "Sair"
   },
 
   "Workspace": {
     "create with ai": "Criar com IA",
+    "create with ai / subtext": "Descreva o que você precisa e a IA irá gerar para você.",
+
     "blank": "Em branco",
-    "import": "Importar",
-    "archived": "Arquivados",
-    "trash": "Lixeira",
+    "blank / subtext": "Comece do zero com um formulário em branco.", 
+    
     "file up": "Importar arquivo",
-    "image up": "Importar imagem"
+    "file up / subtext": "Importe um formulário a partir de um arquivo JSON.",
+    
+    "image up": "Importar imagem",
+    "image up / subtext": "Importe um formulário a partir de uma foto ou desenho.",
+
+    "create today": "O que você quer criar hoje?",
+    "use AI to create": "Use a IA para gerar um formulário em segundos, comece do zero ou importe um formulário existente.",
+
+    "keep on": "Continue de onde parou",
+    "your recent projects":  "Seus projetos recentes",
+    "see more": "Ver mais"
   },
 
-  "Theme": {
+  "Themes": {
     "light": "Claro",
     "dark": "Escuro",
     "system": "Sistema"
