@@ -95,10 +95,12 @@ export type ProviderType = typeof ProviderTypes[keyof typeof ProviderTypes]
 export interface Project {
     id: string
     name: string
+    description?: string
     createdAt: number
     updatedAt: number
     pinned: boolean
     archived: boolean
+    deleted: boolean
 }
 
 export interface Form {

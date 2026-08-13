@@ -21,6 +21,8 @@ import { useAuth } from "@/contexts/auth-context"
 import { RenameForm } from "../dialogs/rename-form"
 import { useWorkspace } from "@/contexts/workspace-provider"
 import useForms from "@/hooks/use-forms"
+import useProjects from "@/hooks/use-projects"
+import { RenameProject } from "../dialogs/rename-project"
 
 
 interface CreationOption {
@@ -36,20 +38,28 @@ export const Workspace = () => {
     const locale = useLocale()
     
     const { isLoading, isAuthenticated } = useAuth()
-
     const { projects, forms } = useWorkspace()
+    
     const {
         createForm,
         renameForm,
         moveToNewProject,
         moveForm,
         pinForm,
-        unPinForm,
+        unpinForm,
         archiveForm,
         duplicateForm,
         deleteForm,
         exportForm
     } = useForms()
+    
+    const {
+        renameProject,
+        pinProject,
+        unpinProject,
+        archiveProject,
+        deleteProject
+    } = useProjects()
 
     useEffect(() => {
         if (!isLoading && !isAuthenticated) {
@@ -62,8 +72,11 @@ export const Workspace = () => {
     const [importImageOpen, setImportImageOpen] = useState<boolean>(false)
     const [projectCreateOpen, setProjectCreateOpen] = useState<boolean>(false)
     const [renameFormOpen, setRenameFormOpen] = useState<boolean>(false)
+    const [renameProjectOpen, setRenameProjectOpen] = useState<boolean>(false)
 
     const [formToRename, setFormToRename] = useState<Form | null>(null)
+    const [projectToRename, setProjectToRename] = useState<Project | null>(null)
+    
     const [moveAction, setMoveAction] = useState<MoveAction | undefined>()
 
     const workspace = useTranslations("Workspace")
@@ -73,7 +86,7 @@ export const Workspace = () => {
             icon: Astroid,
             title: workspace("create with ai"),
             description: "Descreva o que você precisa e a IA irá gerar para você",
-            action: () => console.log("criar com ia"),
+            action: () => {},
             href: "/forms/new"
         },
         {
@@ -198,6 +211,10 @@ export const Workspace = () => {
             setMoveAction(action)
         }
 
+        if (action.type == "search") {
+
+        }
+
         if (action.type == "project") {
             moveForm(action.form, action.project)
         }
@@ -291,8 +308,8 @@ export const Workspace = () => {
                                 }}
                                 onMove={(action) => onMoveForm(action)}
                                 onExport={() => {}}
-                                onPinForm={(form) => pinForm(form)}
-                                onUnpinForm={(form) => unPinForm(form)}
+                                onPin={(form) => pinForm(form)}
+                                onUnpin={(form) => unpinForm(form)}
                                 onArchive={(form) => archiveForm(form)}
                                 onDuplicate={(form) => onDuplicateForm(form)}
                                 onDelete={(form) => deleteForm(form)}
@@ -321,10 +338,15 @@ export const Workspace = () => {
                         </div>
                     </div>
                     <ProjectDropdown 
-                        onRename={() => {}}
-                        onPin={() => {}}
-                        onArchive={() => {}}
-                        onDelete={() => {}}
+                        project={project}
+                        onRename={(project) => {
+                            setProjectToRename(project)
+                            setRenameProjectOpen(true)
+                        }}
+                        onPin={(project) => pinProject(project)}
+                        onUnpin={(project) => unpinProject(project)}
+                        onArchive={(project) => archiveProject(project)}
+                        onDelete={(project) => deleteProject(project)}
                     />
                 </div>
             </div>
@@ -410,6 +432,17 @@ export const Workspace = () => {
                         setRenameFormOpen(false)
                     }}
                     onCancel={() => {}} 
+                />
+                <RenameProject 
+                    project={projectToRename!}
+                    open={renameProjectOpen}
+                    onOpenChange={setRenameProjectOpen}
+                    onSave={(project, name) => {
+                        renameProject(project, name)
+                        setProjectToRename(null)
+                        setRenameProjectOpen(false)
+                    }}
+                    onCancel={() => {}}
                 />
             </div>
         </div>

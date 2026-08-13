@@ -1,24 +1,22 @@
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuPortal, DropdownMenuSubContent, DropdownMenuSeparator, DropdownMenuLabel } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { EllipsisVertical, Pencil, FolderInput, FolderPlus, FolderSearch, FolderOpen, Download, FileBraces, Pin, Archive, Copy, Trash } from "lucide-react"
+import { EllipsisVertical, Pencil, FolderInput, FolderPlus, FolderSearch, FolderOpen, Download, FileBraces, Pin, Archive, Copy, Trash, PinOff } from "lucide-react"
 import { FaRegFilePdf } from "react-icons/fa"
 import { useTranslations } from "next-intl"
 import { Form, FormUpdateAction, MoveAction, Project } from "@/types/form"
-
 
 interface Props {
     form: Form,
     projects: Project[]
     onRename: (form: Form) => void
     onMove: (action: MoveAction) => void
-    onExport: () => void
-    onPinForm: (form: Form) => void
-    onUnpinForm: (form: Form) => void
+    onExport: (form: Form) => void
+    onPin: (form: Form) => void
+    onUnpin: (form: Form) => void
     onArchive: (form: Form) => void
     onDuplicate: (form: Form) => void
     onDelete: (form: Form) => void
 }
-
 
 export const FormDropdown = ({
     form,
@@ -26,8 +24,8 @@ export const FormDropdown = ({
     onRename,
     onMove,
     onExport,
-    onPinForm,
-    onUnpinForm,
+    onPin,
+    onUnpin,
     onArchive,
     onDuplicate,
     onDelete
@@ -150,10 +148,15 @@ export const FormDropdown = ({
                     <DropdownMenuItem
                         onClick={(e) => {
                             e.preventDefault()
-                            form?.pinned ? onUnpinForm(form) : onPinForm(form)
+                            form?.pinned ? onUnpin(form) : onPin(form)
                         }}
                     >
-                        <Pin />
+                        {form?.pinned && (
+                            <PinOff />
+                        )}
+                        {!form?.pinned && (
+                            <Pin />
+                        )}
                         <div className="text-sm font-medium truncate">
                             {form?.pinned ? common("unpin") : common("pin")}
                         </div>

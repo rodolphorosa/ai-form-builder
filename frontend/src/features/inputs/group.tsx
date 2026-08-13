@@ -6,8 +6,6 @@ import { itemStrategies } from "../registry"
 export const ItemGroup: FC<{group: Group}> = ({group}) => {
     const { id, label, description, items } = group
 
-    console.log(group)
-
     return (
         <div>
             { items.map((it, index) => {

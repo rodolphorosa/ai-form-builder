@@ -23,9 +23,6 @@ const FileImporter = ({ onImport, placeholder, file, maxSize, acceptedTypes }: F
     }
 
     const validateFile = (file: File) => {
-        console.log(file.type)
-        console.log(formatFileSize(maxSize))
-        console.log(formatFileSize(file.size))
         if (file.size > maxSize) return false
         if (!acceptedTypes.includes(file.type)) return false
         return true
@@ -75,10 +72,6 @@ const FileImporter = ({ onImport, placeholder, file, maxSize, acceptedTypes }: F
 
 export const FileInput: FC<InputProps> = ({ item, editable, onChange }) => {
     const [file, setFile] = useState<File | null>(null)
-
-    console.log(file)
-
-    console.log(item.validation)
 
     return (
         <div className="flex flex-col gap-1 w-full">

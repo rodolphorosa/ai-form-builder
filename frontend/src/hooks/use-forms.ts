@@ -4,7 +4,7 @@ import { UpdateFormRequest } from "@/api/types"
 import { useWorkspace } from "@/contexts/workspace-provider"
 import { Form, Project } from "@/types/form"
 
-function useForms<T>() {
+function useForms() {
     const { refreshForms, refreshProjects } = useWorkspace()
 
     const createForm = async (form: Partial<Form>): Promise<Form> => {
@@ -14,7 +14,7 @@ function useForms<T>() {
     }
     
     const renameForm = async (form: Form, name: string) => {
-        updateForm(form, { name: name })
+        await updateForm(form, { name })
     }
 
     const moveToNewProject = async (name: string, description: string | null, form: Form) => {
@@ -24,19 +24,23 @@ function useForms<T>() {
     }
 
     const moveForm = async (form: Form, project: Project) => {
-        updateForm(form, { projectId: project.id })
+        await updateForm(form, { projectId: project.id })
     }
 
     const pinForm = async (form: Form) => {
-        updateForm(form, { pinned: true })
+        await updateForm(form, { pinned: true })
     }
 
-    const unPinForm = async (form: Form) => {
-        updateForm(form, { pinned: false })
+    const unpinForm = async (form: Form) => {
+        await updateForm(form, { pinned: false })
     }
 
     const archiveForm = async (form: Form) => {
-        updateForm(form, { archived: true })
+        await updateForm(form, { archived: true })
+    }
+
+    const unarchiveForm = async (form: Form) => {
+        await updateForm(form, { archived: false })
     }
 
     const duplicateForm = async (form: Form): Promise<Form> => {
@@ -46,7 +50,11 @@ function useForms<T>() {
     }
 
     const deleteForm = async (form: Form) => {
-        updateForm(form, { deleted: true })
+        await updateForm(form, { deleted: true })
+    }
+
+    const restoreForm = async (form: Form) => {
+        await updateForm(form, { deleted: false })
     }
 
     const exportForm = () => {
@@ -59,7 +67,7 @@ function useForms<T>() {
             await refreshProjects()
             await refreshForms()
         } catch (error) {
-            // do something
+            throw error
         } finally {
             // do something
         }
@@ -71,10 +79,12 @@ function useForms<T>() {
         moveToNewProject,
         moveForm,
         pinForm,
-        unPinForm,
+        unpinForm,
         archiveForm,
+        unarchiveForm,
         duplicateForm,
         deleteForm,
+        restoreForm,
         exportForm
     }
 

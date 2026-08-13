@@ -24,6 +24,14 @@ class ProjectRepository:
         return project
 
 
+    def save(self, project: Project) -> Project:
+        self.db.add(project)
+        self.db.commit()
+        self.db.refresh(project)
+
+        return project
+
+
     def create_user_default_project(self, user: User) -> Project:
         project = Project(
             name="My forms",

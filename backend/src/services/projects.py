@@ -10,7 +10,7 @@ from src.llm.services import generate_form_schema, edit_form_schema, generate_fr
 from src.repositories.form_repository import FormRepository
 from src.repositories.project_repository import ProjectRepository
 from src.api.deps import get_llm_provider
-from src.schemas.requests import AIEditRequest, AIFormRequest, UpdateFormRequest
+from src.schemas.requests import AIEditRequest, AIFormRequest, UpdateFormRequest, UpdateProjectRequest
 from src.schemas.schema import (
     Form, 
     FormSchema, 
@@ -42,3 +42,17 @@ class ProjectService:
     def get_by_user(self, user: User):
         repository = ProjectRepository(self.db)
         return repository.get_all(user=user)
+
+
+    def update(self, id: UUID, request: UpdateProjectRequest):
+        repository = ProjectRepository(self.db)
+        project = repository.get_by_id(id)
+
+        updates = request.model_dump(exclude_unset=True)
+
+        for field, value in updates.items():
+            setattr(project, field, value)
+
+        project.updated_at = datetime.now(timezone.utc)
+
+        return repository.save(project)

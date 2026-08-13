@@ -16,6 +16,8 @@ import { ProjectDropdown } from "./dropdown-menus/project-options"
 import { cn } from "@/lib/utils"
 import { SettingsDialog } from "../dialogs/settings/settings"
 import { useAuth } from "@/contexts/auth-context"
+import useForms from "@/hooks/use-forms"
+import useProjects from "@/hooks/use-projects"
 
 interface Props {
     forms: Form[]
@@ -25,8 +27,27 @@ interface Props {
 export const Sidebar = ({ forms, projects }: Props) => {
     const { user, logout } = useAuth()
 
+    const {
+        renameForm,
+        moveForm,
+        moveToNewProject,
+        pinForm,
+        unpinForm,
+        archiveForm,
+        deleteForm,
+        duplicateForm,
+        exportForm
+    } = useForms()
+
+    const {
+        renameProject,
+        pinProject,
+        unpinProject,
+        archiveProject,
+        deleteProject
+    } = useProjects()
+
     const tree = useTranslations("Tree")
-    const common = useTranslations("Common")
     const workspace = useTranslations("Workspace")
 
     const [hasScroll, setHasScroll] = useState(false)
@@ -52,12 +73,13 @@ export const Sidebar = ({ forms, projects }: Props) => {
                         form={form}
                         projects={projects}
                         onRename={() => {}}
-                        onMove={() => []}
+                        onMove={() => {}}
                         onExport={() => {}}
-                        onPinUnpin={() => {}}
-                        onArchive={() => {}}
-                        onDuplicate={() => []}
-                        onDelete={() => {}}
+                        onPin={pinForm}
+                        onUnpin={unpinForm}
+                        onArchive={archiveForm}
+                        onDuplicate={duplicateForm}
+                        onDelete={deleteForm}
                     />
                 </div>
             </Link>
@@ -73,10 +95,12 @@ export const Sidebar = ({ forms, projects }: Props) => {
                         <span className="truncate">{project.name}</span>
                     </div>
                     <ProjectDropdown 
+                        project={project}
                         onRename={() => {}}
-                        onPin={() => {}}
-                        onArchive={() => {}}
-                        onDelete={() => {}}
+                        onPin={pinProject}
+                        onUnpin={unpinProject}
+                        onArchive={archiveProject}
+                        onDelete={deleteProject}
                     />
                 </div>
             </Link>

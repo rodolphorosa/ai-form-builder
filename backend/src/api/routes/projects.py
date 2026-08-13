@@ -1,10 +1,12 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
+from uuid import UUID
+
 from src.database.session import get_db
 from src.database.models.user import User
 from src.schemas.project import ProjectResponse
-from src.schemas.requests import ProjectRequest
+from src.schemas.requests import ProjectRequest, UpdateProjectRequest
 from src.services.projects import ProjectService
 
 from src.api.deps import get_current_user
@@ -34,5 +36,18 @@ def create(
     service = ProjectService(db)
 
     project = service.create(current_user, data.name, data.description)
+
+    return { "data": ProjectResponse.from_model(project) }
+
+
+@router.patch('/{id}')
+def update(
+    id: UUID,
+    data: UpdateProjectRequest,
+    db: Session = Depends(get_db)
+):
+    service = ProjectService(db)
+
+    project = service.update(id=id, request=data)
 
     return { "data": ProjectResponse.from_model(project) }

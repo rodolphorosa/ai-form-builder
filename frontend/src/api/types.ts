@@ -31,3 +31,5 @@ export interface ApiResponse<T> {
 export type ApiFormResponse = ApiResponse<FormResponse>
 
 export type UpdateFormRequest = Partial<Pick<Form, "name" | "description" | "schema" | "projectId" | "pinned" | "archived" | "deleted">>
+
+export type UpdateProjectRequest = Partial<Pick<Project, "name" | "description" | "pinned" | "archived" | "deleted">>

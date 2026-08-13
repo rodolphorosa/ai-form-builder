@@ -46,6 +46,14 @@ class UpdateFormRequest(BaseModel):
     is_deleted: bool | None = Field(None, alias="deleted")
 
 
+class UpdateProjectRequest(BaseModel):
+    name: str | None = None
+    description: str | None = None
+    is_pinned: bool | None = Field(None, alias="pinned")
+    is_archived: bool | None = Field(None, alias="archived")
+    is_deleted: bool | None = Field(None, alias="deleted")
+
+
 class ProjectRequest(BaseModel):
     name: str
     description: str | None = None

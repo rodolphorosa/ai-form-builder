@@ -35,9 +35,6 @@ const SettingsOption = ({ title, Icon, onSelect, active }: {
 
 export const SettingsDialog = ({ open, onOpenChange }: SettingsProps) => {
     const [activeMenu, setActiveMenu] = useState<string>("appearance")
-
-    console.log(activeMenu)
-
     const settingsOptions: { title: string, icon: React.ComponentType }[] = [
         { title: "appearance", icon: Palette },
         { title: "editor", icon: Wrench },
