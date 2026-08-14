@@ -1,7 +1,9 @@
 {
   "Common": {
     "form": "Form",
+    "forms": "Forms",
     "project": "Project",
+    "projects": "Projects",
     "create form": "Create form",
     "create project": "Create project",
 
@@ -17,6 +19,8 @@
     "archive": "Archive",
     "delete": "Delete",
     "duplicate": "Duplicate",
+    "unarchive": "Unarchive",
+    "restore": "Restore",
 
     "recent": "Recent",
 
@@ -43,7 +47,7 @@
   },
 
   "Projects": {
-
+    "search projects": "Search projects"
   },
 
   "Forms": {
@@ -117,7 +121,9 @@
 
     "keep on": "Continue where you left off",
     "your recent projects": "Your recent projects",
-    "see more": "See more"
+    "see more": "See more",
+
+    "all projects": "All projects"
   },
 
   "Themes": {

@@ -44,6 +44,11 @@ class ProjectService:
         return repository.get_all(user=user)
 
 
+    def get_archived(self, user: User):
+        repository = ProjectRepository(self.db)
+        return repository.get_archived(user_id=user.id)
+
+
     def update(self, id: UUID, request: UpdateProjectRequest):
         repository = ProjectRepository(self.db)
         project = repository.get_by_id(id)

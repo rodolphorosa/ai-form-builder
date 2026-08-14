@@ -43,6 +43,10 @@ export const formService = {
         return api.get<ApiResponse<Form>>(`/forms/${id}`)
     },
 
+    getArchived(): Promise<ApiResponse<Form[]>> {
+        return api.get<ApiResponse<Form[]>>("/forms/archived")
+    },
+
     update(id: string, form: UpdateFormRequest): Promise<ApiResponse<Form>> {
         return api.patch<ApiResponse<Form>>(`/forms/${id}`, form)
     },

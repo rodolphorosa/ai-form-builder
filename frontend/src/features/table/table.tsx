@@ -1,5 +1,9 @@
-import { Project } from "@/types/form"
-import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table"
+import { 
+    ColumnDef, 
+    flexRender, 
+    getCoreRowModel, 
+    useReactTable 
+} from "@tanstack/react-table"
 import {
   Table,
   TableBody,
@@ -8,68 +12,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Archive, Ellipsis, Pencil, Pin, Trash } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  onRowClick?: (row: unknown) => void
 }
 
-export const columns: ColumnDef<Project>[] = [
-    {
-        accessorKey: "name",
-        header: "Name"
-    },
-    {
-        accessorKey: "createdAt",
-        header: "Data de criação"
-    },
-    {
-        accessorKey: "updatedAt",
-        header: "Modificado"
-    },
-    {
-        id: "actions",
-        cell: ({ row }) => {
-            const project = row.original
-
-            return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger render={<Button size="icon" variant="ghost"><Ellipsis className="h-4 w-4" /></Button>} />
-                    <DropdownMenuContent>
-                        <DropdownMenuGroup>
-                            <DropdownMenuItem className="text-sm font-medium">
-                                <Pencil className="h-4 w-4" />
-                                Rename
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="text-sm font-medium">
-                                <Pin className="h-4 w-4" />
-                                Fixar projeto
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="text-sm font-medium">
-                                <Archive className="h-4 w-4" />
-                                Arquivar
-                            </DropdownMenuItem>
-                        </DropdownMenuGroup>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuGroup>
-                            <DropdownMenuItem variant="destructive" className="text-sm font-medium">
-                                <Trash className="h-4 w-4" />
-                                Excluir
-                            </DropdownMenuItem>
-                        </DropdownMenuGroup>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            )
-        }
-    }
-]
-
-export function DataTable<TData, TValue>({
+function DataTable<TData, TValue>({
     columns,
     data,
+    onRowClick
 }: DataTableProps<TData, TValue>) {
     const table = useReactTable({
         data,
@@ -78,11 +32,13 @@ export function DataTable<TData, TValue>({
     })
 
     return (
-        <div className="overflow-hidden rounded-md border">
+        <div className="flex flex-1 w-full overflow-hidden rounded-md border">
             <Table>
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
-                        <TableRow key={headerGroup.id}>
+                        <TableRow 
+                            key={headerGroup.id}
+                        >
                             {headerGroup.headers.map((header) => {
                                 return (
                                 <TableHead 
@@ -107,6 +63,13 @@ export function DataTable<TData, TValue>({
                         <TableRow
                             key={row.id}
                             data-state={row.getIsSelected() && "selected"}
+                            className={cn(
+                                onRowClick && "cursor-pointer",
+                                row.id == "actions" && "max-w-12"
+                            )}
+                            onClick={(e) => {
+                                onRowClick?.(row.original)
+                            }}
                         >
                             {row.getVisibleCells().map((cell) => (
                                 <TableCell 
@@ -131,3 +94,5 @@ export function DataTable<TData, TValue>({
         </div>
     )
 }
+
+export default DataTable

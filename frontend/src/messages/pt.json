@@ -1,7 +1,9 @@
 {
   "Common": {
     "form": "Formulário",
+    "forms": "Formulários",
     "project": "Projeto",
+    "projects": "Projetos",
     "create form": "Criar formulário",
     "create project": "Criar projeto",
 
@@ -17,6 +19,8 @@
     "archive": "Arquivar",
     "delete": "Excluir",
     "duplicate": "Duplicar",
+    "unarchive": "Desarquivar",
+    "restore": "Restaurar",
 
     "recent": "Recentes",
     
@@ -43,7 +47,7 @@
   },
 
   "Projects": {
-    
+    "search projects": "Pesquisar projetos"
   },
 
   "Forms": {
@@ -117,7 +121,9 @@
 
     "keep on": "Continue de onde parou",
     "your recent projects":  "Seus projetos recentes",
-    "see more": "Ver mais"
+    "see more": "Ver mais",
+
+    "all projects": "Todos os projetos"
   },
 
   "Themes": {

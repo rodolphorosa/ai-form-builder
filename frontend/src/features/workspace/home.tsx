@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import { Sidebar } from "./sidebar"
 import { Astroid, ChevronDown, File, FileUp, ImageUp } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
-import { cn } from "@/lib/utils"
+import { cn, parseUpdateDate } from "@/lib/utils"
 import { Link } from "@/i18n/navigation"
 
 import { formatDistanceToNow, Locale } from "date-fns"
@@ -24,6 +24,10 @@ import useForms from "@/hooks/use-forms"
 import useProjects from "@/hooks/use-projects"
 import { RenameProject } from "../dialogs/rename-project"
 import React from "react"
+import ArchivedProjects from "./archived-projects"
+import ArchivedForms from "./archived-forms"
+import { Projects } from "./projects"
+import ProjectPage from "./project-detail"
 
 
 interface CreationOption {
@@ -123,20 +127,7 @@ export const Workspace = () => {
         }, 0)
     }
 
-    const parseUpdateDate = (updatedAt: number) => {
-        const language: Locale = {
-            "pt": ptBR,
-            "en": enUS,
-            "de": de,
-            "es": es,
-            "fr": fr
-        }[locale] ?? ptBR
-
-        return formatDistanceToNow(new Date(updatedAt), {
-            addSuffix: true,
-            locale: language,
-        })
-    }
+    
 
     const onCreate = async (form: Partial<Form>) => {
         try {
@@ -302,7 +293,7 @@ export const Workspace = () => {
                                 </div>
                                 
                                 <div className="text-xs font-normal text-muted-foreground self-start truncate">
-                                    {common("edited")} {parseUpdateDate(form.updatedAt)}
+                                    {common("edited")} {parseUpdateDate(form.updatedAt, locale)}
                                 </div>
                             </div>
                             <FormDropdown 
@@ -340,7 +331,7 @@ export const Workspace = () => {
                             3 formulários
                         </div>
                         <div className="text-xs font-normal text-muted-foreground self-start truncate">
-                            {common("updated")} {parseUpdateDate(project.updatedAt)}
+                            {common("updated")} {parseUpdateDate(project.updatedAt, locale)}
                         </div>
                     </div>
                     <ProjectDropdown 
@@ -366,8 +357,8 @@ export const Workspace = () => {
     return (
         <div className="flex flex-row h-screen w-screen overflow-hidden">
             <Sidebar forms={forms} projects={projects} />
-            <div className="flex flex-col p-8 gap-8 overflow-y-auto mx-auto">
-                <div className="flex flex-col gap-2 max-w-[976px]">
+            <div className="flex flex-col p-8 gap-8 overflow-y-auto w-full">
+                {/* <div className="flex flex-col gap-2 max-w-[976px]">
                     <span className="text-2xl flex flex-row gap-2 items-center">
                         <Astroid className="text-indigo-600 fill-indigo-600/10" />
                         {workspace("create today")}
@@ -466,6 +457,10 @@ export const Workspace = () => {
                     }}
                     onCancel={() => {}}
                 />
+                <ArchivedProjects />
+                <ArchivedForms /> */}
+                <Projects />
+                <ProjectPage />
             </div>
         </div>
     )

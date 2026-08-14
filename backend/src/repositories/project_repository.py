@@ -66,9 +66,10 @@ class ProjectRepository:
         return self.db.scalars(stmt).all()
     
 
-    def get_archived(self) -> list[Project]:
+    def get_archived(self, user_id: UUID) -> list[Project]:
         return (
             self.db.query(Project)
+            .filter(Project.user_id == user_id)
             .filter(Project.is_archived == True)
             .all()
         )

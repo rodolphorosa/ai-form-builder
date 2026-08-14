@@ -43,7 +43,7 @@ function useProjects() {
             await projectService.update(project.id, patch)
             await refreshProjects()
 
-            // when project is deleted, its forms will also be deleted
+            // when project is deleted or archive, its forms will also be deleted or archived
             await refreshForms()
         } catch(error) {
             throw error

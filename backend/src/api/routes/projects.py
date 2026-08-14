@@ -27,6 +27,20 @@ def get_projects(
     }
 
 
+@router.get('archived')
+def get_archived(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    service = ProjectService(db)
+
+    projects = service.get_archived(user=current_user)
+
+    return { 
+        "data": [ProjectResponse.from_model(project) for project in projects]
+    }
+
+
 @router.post('')
 def create(
     data: ProjectRequest, 

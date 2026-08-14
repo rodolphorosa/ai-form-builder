@@ -296,6 +296,12 @@ class FormService:
         return { "message": message, "title": title, "description": description, "schema": form_schema }
 
 
+    def get_archived(self, user: User):
+        repository = FormRepository(self.db)
+
+        return repository.get_archived(user_id=user.id)
+
+
     def get_form(self, user: User, id: UUID):
         form_repository = FormRepository(self.db)
         project_reposity = ProjectRepository(self.db)

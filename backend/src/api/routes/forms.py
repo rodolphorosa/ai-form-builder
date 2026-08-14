@@ -32,6 +32,18 @@ def get_forms(current_user: User = Depends(get_current_user), db: Session = Depe
     return { "data": [FormResponse.from_model(f) for f in forms] }
 
 
+@router.get('/archived')
+def get_archived(
+    current_user: User = Depends(get_current_user), 
+    db: Session = Depends(get_db)
+):
+    service = FormService(db)
+
+    forms = service.get_archived(user=current_user)
+
+    return { "data": [FormResponse.from_model(form) for form in forms] }
+
+
 @router.get('/{id}')
 def get_form(
     id: UUID, 
