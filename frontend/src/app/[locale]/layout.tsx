@@ -4,13 +4,13 @@ import "../globals.css";
 
 import { ThemeProvider } from "../../features/theme-provider";
 import { cn } from "@/lib/utils";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "../../features/menus/sidebar";
+import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 
 import {NextIntlClientProvider} from 'next-intl';
 import {getMessages} from 'next-intl/server';
 import { AuthProvider } from "@/contexts/auth-context";
 import { WorkspaceProvider } from "@/contexts/workspace-context";
+import AppSidebar from "@/features/menus/app-sidebar";
 
 const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
@@ -57,7 +57,14 @@ export default async function LocaleLayout({
           >
             <NextIntlClientProvider messages={messages}>
               <WorkspaceProvider>
-                {children}
+                <SidebarProvider>
+                  <AppSidebar />
+                  <SidebarInset>
+                    <main>
+                      {children}
+                    </main>
+                  </SidebarInset>
+                </SidebarProvider>
               </WorkspaceProvider>
             </NextIntlClientProvider>
           </ThemeProvider>

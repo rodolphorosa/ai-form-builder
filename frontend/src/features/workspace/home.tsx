@@ -28,6 +28,7 @@ import ArchivedProjects from "./archived-projects"
 import ArchivedForms from "./archived-forms"
 import { Projects } from "./projects"
 import ProjectPage from "./project-detail"
+import { SidebarTrigger } from "@/components/ui/sidebar"
 
 
 interface CreationOption {
@@ -355,10 +356,10 @@ export const Workspace = () => {
     }
 
     return (
-        <div className="flex flex-row h-screen w-screen overflow-hidden">
-            <Sidebar forms={forms} projects={projects} />
+        <div className="flex flex-row h-screen w-full overflow-hidden">
+            {/* <Sidebar forms={forms} projects={projects} /> */}
             <div className="flex flex-col p-8 gap-8 overflow-y-auto w-full">
-                {/* <div className="flex flex-col gap-2 max-w-[976px]">
+                <div className="flex flex-col gap-2 max-w-[976px]">
                     <span className="text-2xl flex flex-row gap-2 items-center">
                         <Astroid className="text-indigo-600 fill-indigo-600/10" />
                         {workspace("create today")}
@@ -457,10 +458,10 @@ export const Workspace = () => {
                     }}
                     onCancel={() => {}}
                 />
-                <ArchivedProjects />
-                <ArchivedForms /> */}
-                <Projects />
-                <ProjectPage />
+                {/* <ArchivedProjects /> */}
+                {/* <ArchivedForms /> */}
+                {/* <Projects /> */}
+                {/* <ProjectPage /> */}
             </div>
         </div>
     )
