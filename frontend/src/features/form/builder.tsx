@@ -1,14 +1,10 @@
 "use client"
 
 import { FC, useEffect, useRef, useState, useTransition } from "react"
-import { Form, FormSchema, Item, Path, Project, SectionItem } from "../types/form"
-import { FormRenderer } from "./form/form"
-import { Header } from "./header"
-import { TreeMenu } from "./menus/tree"
-import { Chat } from "./chat/chat"
-import { FormSkeleton } from "./form/skeleton"
+import { FormRenderer } from "./form"
+import { FormSkeleton } from "./skeleton"
 import { ChatMode } from "@/types/ai"
-import { Canvas } from "./form/canvas"
+import { Canvas } from "./canvas"
 import { FormHistory } from "@/types/builder"
 
 import { useParams } from "next/navigation"
@@ -16,14 +12,16 @@ import { formService } from "@/api/form.service"
 import { projectService } from "@/api/project.service"
 
 import {set, isEqual} from "lodash"
-import { PropertyPath } from "lodash"
 import cloneDeep from "lodash/cloneDeep"
 import { useAutosave } from "@/hooks/use-autosave"
 import { UpdateFormRequest } from "@/api/types"
 import { useRouter } from "@/i18n/navigation"
 import { ApiError } from "@/api/client"
-import { AccessDenied } from "./form/access-denied"
-import { Spinner } from "@/components/ui/spinner"
+import { FormAccessDenied } from "./form-access-denied"
+import { Form, FormSchema, Item, Path, Project } from "@/types/form"
+import { Header } from "./header"
+import { Chat } from "../chat/chat"
+import AppContentWrapper from "../common/app-content-wrapper"
 
 interface BuilderProps {
 }
@@ -241,16 +239,13 @@ export const Builder = ({}: BuilderProps) => {
     const undoDisabled = history.past.length == 0
     const redoDisabled = history.future.length == 0
 
-    if (accessDenied) return <AccessDenied />
+    if (accessDenied) return <FormAccessDenied />
 
     return (
         
-        <div className="flex flex-row h-screen overflow-hidden">
+        <AppContentWrapper>
             { isChatExpanded ? (
                 <>
-                    {/* <div className="h-full w-150">
-                        <TreeMenu schema={workingForm?.schema ?? {} as FormSchema} selectItem={setSelectedItem} selectedItem={selectedItem}/>
-                    </div> */}
 
                     <div className="flex flex-col h-full w-full">
                         <Header 
@@ -296,9 +291,6 @@ export const Builder = ({}: BuilderProps) => {
                 </>
             ) : (
                 <>
-                    {/* <div className="h-full w-100">
-                        <TreeMenu schema={workingForm?.schema ?? {} as FormSchema} selectItem={setSelectedItem} selectedItem={selectedItem}/>
-                    </div> */}
                     
                     <div className="flex flex-col h-full w-full">
                         <Header 
@@ -343,6 +335,6 @@ export const Builder = ({}: BuilderProps) => {
                     </div>
                 </>
             )}
-        </div>
+        </AppContentWrapper>
     )
 }

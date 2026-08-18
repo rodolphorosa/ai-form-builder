@@ -13,9 +13,10 @@ class ProjectResponse(BaseModel):
     pinned: bool
     archived: bool
     deleted: bool
+    formCount: int
 
     @classmethod
-    def from_model(cls, project: Project) -> "ProjectResponse":
+    def from_model(cls, project: Project, form_count: int = 0) -> "ProjectResponse":
         return cls(
             id=project.id,
             name=project.name,
@@ -25,4 +26,5 @@ class ProjectResponse(BaseModel):
             pinned=project.is_pinned,
             archived=project.is_archived,
             deleted=project.is_deleted,
+            formCount=form_count
         )

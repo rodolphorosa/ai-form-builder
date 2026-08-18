@@ -1,3 +1,5 @@
+"use client"
+
 import { useWorkspace } from "@/contexts/workspace-context"
 import DataTable from "../table/table"
 import { ColumnDef } from "@tanstack/react-table"

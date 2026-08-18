@@ -1,8 +1,9 @@
-from sqlalchemy import select
+from sqlalchemy import select, func
 from sqlalchemy.orm import Session
 from sqlalchemy.dialects.postgresql import UUID
 
 from src.database.models.project import Project
+from src.database.models.form import Form
 from src.database.models.user import User
 
 class ProjectRepository:
@@ -57,22 +58,45 @@ class ProjectRepository:
 
     def get_all(self, user: User) -> list[Project]:
         stmt = (
-            select(Project)
+            select(
+                Project,
+                func.count(Form.id).label("form_count")
+            )
+            .outerjoin(
+                Form, 
+                (Form.project_id == Project.id) & 
+                (Form.is_deleted == False)
+            )
             .where(Project.user_id == user.id)
-            .where(Project.is_deleted.is_(False))
-            .where(Project.is_archived.is_(False))
+            .where(Project.is_archived == False)
+            .where(Project.is_deleted == False)
+            .group_by(Project.id)
         )
 
-        return self.db.scalars(stmt).all()
+        result = self.db.execute(stmt)
+
+        return result.all()
     
 
-    def get_archived(self, user_id: UUID) -> list[Project]:
-        return (
-            self.db.query(Project)
-            .filter(Project.user_id == user_id)
-            .filter(Project.is_archived == True)
-            .all()
+    def get_archived(self, user_id: UUID) -> list[tuple[Project, int]]:
+        stmt = (
+            select(
+                Project,
+                func.count(Form.id).label("form_count")
+            )
+            .outerjoin(
+                Form, 
+                (Form.project_id == Project.id) & 
+                (Form.is_deleted == False)
+            )
+            .where(Project.user_id == user_id)
+            .where(Project.is_archived == True)
+            .group_by(Project.id)
         )
+
+        result = self.db.execute(stmt)
+
+        return result.all()
     
 
     def get_deleted(self) -> list[Project]:

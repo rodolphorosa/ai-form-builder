@@ -56,16 +56,7 @@ export default async function LocaleLayout({
             disableTransitionOnChange
           >
             <NextIntlClientProvider messages={messages}>
-              <WorkspaceProvider>
-                <SidebarProvider>
-                  <AppSidebar />
-                  <SidebarInset>
-                    <main>
-                      {children}
-                    </main>
-                  </SidebarInset>
-                </SidebarProvider>
-              </WorkspaceProvider>
+              {children}
             </NextIntlClientProvider>
           </ThemeProvider>
         </AuthProvider>

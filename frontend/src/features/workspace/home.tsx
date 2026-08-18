@@ -29,6 +29,7 @@ import ArchivedForms from "./archived-forms"
 import { Projects } from "./projects"
 import ProjectPage from "./project-detail"
 import { SidebarTrigger } from "@/components/ui/sidebar"
+import AppContentWrapper from "../common/app-content-wrapper"
 
 
 interface CreationOption {
@@ -86,36 +87,37 @@ export const Workspace = () => {
     
     const [moveAction, setMoveAction] = useState<MoveAction | undefined>()
 
-    const workspace = useTranslations("Workspace")
+    const i18nWorkspace = useTranslations("Workspace")
+    const i18nCommon = useTranslations("Common")
 
     const options: CreationOption[] = [
         {
             key: "ai",
             icon: Astroid,
-            title: workspace("create with ai"),
-            description: workspace("create with ai / subtext"),
+            title: i18nWorkspace("create with ai"),
+            description: i18nWorkspace("create with ai / subtext"),
             action: () => {},
             href: "/forms/new"
         },
         {
             key: "blank",
             icon: File,
-            title: workspace("blank"),
-            description: workspace("blank / subtext"),
+            title: i18nWorkspace("blank"),
+            description: i18nWorkspace("blank / subtext"),
             action: () => setCreateOpen(true)
         },
         {
             key: "file",
             icon: FileUp,
-            title: workspace("file up"),
-            description: workspace("file up / subtext"),
+            title: i18nWorkspace("file up"),
+            description: i18nWorkspace("file up / subtext"),
             action: () => setImportOpen(true)
         },
         {
             key: "image",
             icon: ImageUp,
-            title: workspace("image up"),
-            description: workspace("image up / subtext"),
+            title: i18nWorkspace("image up"),
+            description: i18nWorkspace("image up / subtext"),
             action: () => setImportImageOpen(true)
         }
     ]
@@ -128,8 +130,6 @@ export const Workspace = () => {
         }, 0)
     }
 
-    
-
     const onCreate = async (form: Partial<Form>) => {
         try {
             const createdForm = await createForm(form)
@@ -138,7 +138,6 @@ export const Workspace = () => {
             console.error(err)
         }
     }
-
     
     const renderOptionCard = (option: CreationOption) => {
         const IconComponent = option.icon as React.ComponentType<{ className?: string }>
@@ -320,6 +319,8 @@ export const Workspace = () => {
     }
 
     const renderProjectCard = (project: Project) => {
+        const formCount = project.formCount
+        
         return (
             <div className="flex flex-col justify-between p-3 gap-4 border rounded-lg shadow-sm h-fit w-[240px] bg-card">
                 <div className="flex flex-row gap-4 justify-between">
@@ -329,7 +330,13 @@ export const Workspace = () => {
                         </div>
 
                         <div className="text-xs text-muted-foreground truncate">
-                            3 formulários
+                            {
+                                formCount ? (
+                                    formCount > 1? 
+                                    `${formCount} ${i18nCommon("forms")}` : 
+                                    `${formCount} ${i18nCommon("form")}`
+                                ) : "Sem formulários"
+                            }
                         </div>
                         <div className="text-xs font-normal text-muted-foreground self-start truncate">
                             {common("updated")} {parseUpdateDate(project.updatedAt, locale)}
@@ -356,16 +363,15 @@ export const Workspace = () => {
     }
 
     return (
-        <div className="flex flex-row h-screen w-full overflow-hidden">
-            {/* <Sidebar forms={forms} projects={projects} /> */}
-            <div className="flex flex-col p-8 gap-8 overflow-y-auto w-full">
+        <AppContentWrapper>
+            <div className="flex flex-col p-8 gap-8 overflow-y-auto w-fit mx-auto">
                 <div className="flex flex-col gap-2 max-w-[976px]">
                     <span className="text-2xl flex flex-row gap-2 items-center">
                         <Astroid className="text-indigo-600 fill-indigo-600/10" />
-                        {workspace("create today")}
+                        {i18nWorkspace("create today")}
                     </span>
                     <span className="text-lg">
-                        {workspace("use AI to create")}
+                        {i18nWorkspace("use AI to create")}
                     </span>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -387,11 +393,11 @@ export const Workspace = () => {
                             text-sm font-medium"
                         >
                         <span>
-                            {workspace("keep on")}
+                            {i18nWorkspace("keep on")}
                         </span>
                         {forms.length > 4 && (
                             <span className="text-muted-foreground cursor-pointer">
-                                {workspace("see more")}
+                                {i18nWorkspace("see more")}
                             </span>
                         )}
                     </div>
@@ -412,11 +418,11 @@ export const Workspace = () => {
                             text-sm font-medium"
                         >
                         <span>
-                            {workspace("your recent projects")}
+                            {i18nWorkspace("your recent projects")}
                         </span>
                         {projects.length > 4 && (
                             <span className="text-muted-foreground cursor-pointer">
-                                {workspace("see more")}
+                                {i18nWorkspace("see more")}
                             </span>
                         )}
                     </div>
@@ -463,6 +469,6 @@ export const Workspace = () => {
                 {/* <Projects /> */}
                 {/* <ProjectPage /> */}
             </div>
-        </div>
+        </AppContentWrapper>
     )
 }

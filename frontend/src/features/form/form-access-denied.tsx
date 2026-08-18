@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button"
 import { ArrowLeft, LockKeyhole } from "lucide-react"
 import { useTranslations } from "next-intl"
 
-export const AccessDenied = () => {
+export const FormAccessDenied = () => {
     const errors = useTranslations("Errors")
     return (
         <div className="flex h-screen w-screen bg-muted">

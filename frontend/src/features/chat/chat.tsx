@@ -1,7 +1,7 @@
 import { Separator } from "@/components/ui/separator"
 import { Astroid, Bot, BriefcaseBusiness, Check, GraduationCap, Maximize, Minimize, ShoppingCart, Sparkles, X } from "lucide-react"
 import { RefObject, useEffect, useRef, useState } from "react"
-import { PromptArea } from "../prompt-area"
+import { PromptArea } from "./prompt-area"
 import { Form, FormSchema } from "../../types/form"
 import { formService } from "../../api/form.service"
 import { cn } from "@/lib/utils"
@@ -10,6 +10,7 @@ import { ChatMode } from "@/types/ai"
 import { Message } from "@/types/chat"
 import { TextMessage, ThinkingMessage } from "./messages"
 import { useTranslations } from "next-intl"
+import { Spinner } from "@/components/ui/spinner"
 
 interface ChatProps {
     mode: ChatMode
@@ -87,20 +88,22 @@ export const Chat = ({
     const i18nChat = useTranslations("Chat")
     
     const [messages, setMessages] = useState<Message[]>([])
+
+    const [fetching, setFetching] = useState<boolean>(false)
     
     const scrollRef = useRef<HTMLDivElement>(null)
 
     const getConversation = async () => {
+        setFetching(true)
         try {
-            
             if(!form) return
             
             const response = await formService.getConversation(form?.id)
-
             setMessages(response.data.messages)
-        
         } catch(err) {
 
+        } finally {
+            setFetching(false)
         }
     }
 
@@ -276,7 +279,7 @@ export const Chat = ({
                         {loading && renderMessage({
                             id: crypto.randomUUID(),
                             role: "assistant",
-                            content: form ? "Editing your form..." : "Creating form...",
+                            content: i18nChat('processing'),
                             type: "thinking"
                         })}
                         <div ref={scrollRef} />
@@ -329,7 +332,7 @@ export const Chat = ({
                 <div className="h-full flex flex-col border-l bg-card overflow-hidden">
                     {renderChatHeader()}
                     <Separator />
-                    {chat}
+                    {fetching ? <Spinner className="m-auto" /> : chat}
                 </div>
             )
         }
@@ -339,7 +342,7 @@ export const Chat = ({
                 <div className="h-full flex flex-col overflow-hidden">
                     {renderChatHeader()}
                     <Separator />
-                    {chat}
+                    {fetching ? <Spinner className="m-auto" /> : chat}
                 </div>
             </div>
         )

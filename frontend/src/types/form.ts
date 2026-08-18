@@ -101,6 +101,7 @@ export interface Project {
     pinned: boolean
     archived: boolean
     deleted: boolean
+    formCount?: number
 }
 
 export interface Form {

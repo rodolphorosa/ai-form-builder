@@ -20,25 +20,33 @@ def get_projects(
 ):
     service = ProjectService(db)
 
-    projects = service.get_by_user(user=current_user)
+    result = service.get_by_user(user=current_user)
     
     return { 
-        "data": [ProjectResponse.from_model(project) for project in projects]
+        "data": [ProjectResponse.from_model(project, count) for project, count in result]
     }
 
 
-@router.get('archived')
+@router.get('/archived')
 def get_archived(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     service = ProjectService(db)
 
-    projects = service.get_archived(user=current_user)
+    result = service.get_archived(user=current_user)
 
     return { 
-        "data": [ProjectResponse.from_model(project) for project in projects]
+        "data": [ProjectResponse.from_model(project, count) for project, count in result]
     }
+
+
+@router.get('/{id}')
+def get_project(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    service = ProjectService(db)
 
 
 @router.post('')

@@ -6,6 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuAction, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarTrigger, useSidebar } from "@/components/ui/sidebar"
 import { useAuth } from "@/contexts/auth-context"
 import { useWorkspace } from "@/contexts/workspace-context"
+import { Link, useRouter } from "@/i18n/navigation"
 import { Archive, Astroid, ChevronDown, ChevronsUpDown, CircleUser, FileText, FolderClosed, Home, LibraryBig, LogOut, Pin, Search, Settings, Trash2, User } from "lucide-react"
 import { useTranslations } from "next-intl"
 import React, { useState } from "react"
@@ -13,7 +14,8 @@ import React, { useState } from "react"
 interface MenuOption {
     icon: React.ComponentType
     title: string
-    action: () => void
+    action?: () => void
+    href: string
 }
 
 function AppSidebar () {
@@ -24,37 +26,44 @@ function AppSidebar () {
 
     const { forms, projects } = useWorkspace()
     const { user, logout } = useAuth()
+    const router = useRouter()
 
     const menuOptions: MenuOption[] = [
         {
             icon: Home,
             title: "Home",
-            action: () => {}
+            action: () => {},
+            href: '/'
         },
         {
             icon: Search,
             title: i18nSidebar("search"),
-            action: () => {}
+            action: () => {},
+            href: '/search'
         },
         {
             icon: LibraryBig,
             title: i18nSidebar("library"),
-            action: () => {}
+            action: () => {},
+            href: '/libray'
         },
         {
             icon: FolderClosed,
             title: i18nSidebar("projects"),
-            action: () => {}
+            action: () => {},
+            href: '/projects'
         },
         {
             icon: Archive,
             title: i18nSidebar("archived"),
-            action: () => {}
+            action: () => {},
+            href: '/archived'
         },
         {
             icon: Trash2,
             title: i18nSidebar("trash"),
-            action: () => {}
+            action: () => {},
+            href: '/trash'
         },
     ]
     const pinnedForms = forms.filter(it => it.pinned == true)
@@ -67,7 +76,7 @@ function AppSidebar () {
                     <SidebarMenuItem className="flex flex-row items-center justify-between">
                         <SidebarMenuButton onClick={() => setOpen(true)} className="flex-1">
                             <Astroid />
-                            Smart Form Builder
+                            <span className="font-semibold">Smart Form Builder</span>
                         </SidebarMenuButton>
                         <SidebarTrigger className="group-data-[collapsible=icon]:hidden shrink-0" />
                     </SidebarMenuItem>
@@ -81,12 +90,19 @@ function AppSidebar () {
                                 const IconComponent = option.icon as React.ComponentType<{ className?: string }>
 
                                 return (
-                                    <SidebarMenuItem>
-                                        <SidebarMenuButton>
-                                            <IconComponent className="h-5 w-5 shrink-0" />
-                                            {option.title}
-                                        </SidebarMenuButton>
-                                    </SidebarMenuItem>
+                                    <Link
+                                        key={option.title}
+                                        href={option.href}
+                                    >
+                                        <SidebarMenuItem>
+                                            <SidebarMenuButton
+                                                tooltip={option.title}
+                                            >
+                                                <IconComponent className="h-5 w-5 shrink-0" />
+                                                {option.title}
+                                            </SidebarMenuButton>
+                                        </SidebarMenuItem>
+                                    </Link>
                                 )
                             })}
                         </SidebarMenu>
@@ -111,19 +127,21 @@ function AppSidebar () {
                                             {pinnedProjects.map(project => (
                                                 <div 
                                                     key={project.id}
-                                                    className="flex flex-row gap-2 p-2 items-center rounded-lg hover:bg-muted"
+                                                    className="flex flex-row gap-2 p-2 items-center rounded-lg cursor-pointer hover:bg-muted"
                                                 >
                                                     <FolderClosed className="h-4 w-4 shrink-0"/>
                                                     <span className="truncate">{project.name}</span>
                                                 </div>
                                             ))}
                                             {pinnedForms.map(form => (
-                                                <div
-                                                    key={form.id}
-                                                    className="flex flex-row gap-2 p-2 items-center rounded-lg hover:bg-muted"
+                                                <Link
+                                                    key={`pinned-${form.id}`}
+                                                    href={`/forms/${form.id}`}
                                                 >
-                                                    <span className="truncate">{form.name}</span>
-                                                </div>
+                                                    <div className="flex flex-row gap-2 p-2 items-center rounded-lg cursor-pointer hover:bg-muted">
+                                                        <span className="truncate">{form.name}</span>
+                                                    </div>
+                                                </Link>
                                             ))}
                                         </div>
                                     </CollapsibleContent>
@@ -143,12 +161,14 @@ function AppSidebar () {
                                     <CollapsibleContent>
                                         <div className="flex flex-col">
                                             {forms.map(form => (
-                                                <div
-                                                    key={form.id}
-                                                    className="flex p-2 items-center rounded-lg hover:bg-muted"
+                                                <Link 
+                                                    key={`recent-${form.id}`}
+                                                    href={`/forms/${form.id}`}
                                                 >
-                                                    <span className="truncate">{form.name}</span>
-                                                </div>
+                                                    <div className="flex p-2 items-center rounded-lg cursor-pointer hover:bg-muted">
+                                                        <span className="truncate">{form.name}</span>
+                                                    </div>
+                                                </Link>
                                             ))}
                                         </div>
                                     </CollapsibleContent>

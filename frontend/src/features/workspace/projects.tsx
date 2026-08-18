@@ -14,12 +14,9 @@ import { ColumnDef } from "@tanstack/react-table"
 import DataTable from "../table/table"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
 import { parseUpdateDate } from "@/lib/utils"
+import AppContentWrapper from "../common/app-content-wrapper"
 
-interface ProjectsPros {
-
-}
-
-export const Projects = ({}: ProjectsPros) => {
+export function Projects () {
     const i18nCommon = useTranslations("Common")
     const i18nWorkspace = useTranslations("Workspace")
     const i18nForms = useTranslations("Forms")
@@ -143,34 +140,36 @@ export const Projects = ({}: ProjectsPros) => {
     ]
     
     return (
-        <div className="w-full flex flex-col gap-8">
-            <div className="flex flex-row justify-between items-center">
-                <div className="text-2xl font-normal">
-                    {i18nCommon("projects")}
+        <AppContentWrapper>
+            <div className="w-[1072px] h-fit flex flex-col p-8 gap-8 mx-auto">
+                <div className="flex flex-row justify-between items-center">
+                    <div className="text-2xl font-normal">
+                        {i18nCommon("projects")}
+                    </div>
+                    <div className="flex flex-row gap-1">
+                        <InputGroup className="max-w-xs">
+                            <InputGroupInput 
+                                type="text"
+                                placeholder={i18nProjects("search projects")}
+                            />
+                            <InputGroupAddon align="inline-start">
+                                <Search className="h-4 w-4 shrink-0" />
+                            </InputGroupAddon>
+                        </InputGroup>
+                        <Button 
+                            variant="ghost"
+                            size="default"
+                        >
+                            {i18nForms("new project")}
+                        </Button>
+                    </div>
                 </div>
-                <div className="flex flex-row gap-1">
-                    <InputGroup className="max-w-xs">
-                        <InputGroupInput 
-                            type="text"
-                            placeholder={i18nProjects("search projects")}
-                        />
-                        <InputGroupAddon align="inline-start">
-                            <Search className="h-4 w-4 shrink-0" />
-                        </InputGroupAddon>
-                    </InputGroup>
-                    <Button 
-                        variant="ghost"
-                        size="default"
-                    >
-                        {i18nForms("new project")}
-                    </Button>
-                </div>
+                <DataTable 
+                    columns={columns} 
+                    data={projects} 
+                    onRowClick={(row) => console.log(row)}
+                />
             </div>
-            <DataTable 
-                columns={columns} 
-                data={projects} 
-                onRowClick={(row) => console.log(row)}
-            />
-        </div>
+        </AppContentWrapper>
     )
 }
