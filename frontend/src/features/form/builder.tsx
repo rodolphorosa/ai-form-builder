@@ -22,12 +22,14 @@ import { Form, FormSchema, Item, Path, Project } from "@/types/form"
 import { Header } from "./header"
 import { Chat } from "../chat/chat"
 import AppContentWrapper from "../common/app-content-wrapper"
+import { useWorkspace } from "@/contexts/workspace-context"
 
 interface BuilderProps {
 }
 
 export const Builder = ({}: BuilderProps) => {
     const router = useRouter()
+    const { refreshForms, refreshProjects } = useWorkspace()
 
     const [isPending, startTransition] = useTransition()
 
@@ -81,6 +83,9 @@ export const Builder = ({}: BuilderProps) => {
             const response = await formService.update(form.id, createFormPatch())
             setCommittedForm(response.data)
             setWorkingForm(response.data)
+
+            refreshForms()
+            refreshProjects()
         }
     })
 

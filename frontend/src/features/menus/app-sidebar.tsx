@@ -26,6 +26,7 @@ import {
     SidebarMenuButton, 
     SidebarMenuItem, 
     SidebarMenuSkeleton, 
+    SidebarSeparator, 
     SidebarTrigger, 
     useSidebar 
 } from "@/components/ui/sidebar"
@@ -42,6 +43,8 @@ import {
     Home, 
     LibraryBig, 
     LogOut, 
+    Pin, 
+    PinOff, 
     Search, 
     Settings, 
     Trash2, 
@@ -53,6 +56,9 @@ import { FormDropdown } from "../workspace/dropdown-menus/form-options"
 import { ProjectDropdown } from "../workspace/dropdown-menus/project-options"
 import useForms from "@/hooks/use-forms"
 import useProjects from "@/hooks/use-projects"
+import { Button } from "@/components/ui/button"
+import DeleteForm from "../dialogs/delete-form"
+import { Form } from "@/types/form"
 
 interface MenuOption {
     icon: React.ComponentType
@@ -70,6 +76,12 @@ function AppSidebar () {
     const { forms, projects } = useWorkspace()
     const { user, logout } = useAuth()
     const router = useRouter()
+
+    const [openItemId, setOpenItemId] = useState<string | null>()
+    const [hoverItemId, setHoverItemId] = useState<string | null>()
+
+    const [deleteFormOpen, setDeleteFormOpen] = useState<boolean>(false)
+    const [formToDelete, setFormToDelete] = useState<Form | null>(null)
 
     const {
         renameForm,
@@ -108,7 +120,7 @@ function AppSidebar () {
             icon: LibraryBig,
             title: i18nSidebar("library"),
             action: () => {},
-            href: '/libray'
+            href: '/library'
         },
         {
             icon: FolderClosed,
@@ -192,19 +204,35 @@ function AppSidebar () {
                                                     key={`pinned-${project.id}`}
                                                     href={`/projects/${project.id}`}
                                                 >
-                                                    <div className="w-full group/pinned flex flex-row items-center rounded-lg justify-between hover:bg-muted cursor-pointer">
+                                                    <div 
+                                                        className="w-full group/pinned flex flex-row items-center rounded-lg justify-between hover:bg-muted cursor-pointer"
+                                                        onMouseEnter={() => setHoverItemId(project.id)}
+                                                        onMouseLeave={() => setHoverItemId(null)}
+                                                    >
                                                         <div className="flex flex-row gap-1 items-center truncate py-2 pl-2">
                                                             <FolderClosed className="h-4 w-4 shrink-0"/>
                                                             <span className="truncate">{project.name}</span>
                                                         </div>
-                                                        <ProjectDropdown 
-                                                            project={project}
-                                                            onRename={() => {}}
-                                                            onPin={(project) => pinProject(project)}
-                                                            onUnpin={(project) => unpinProject(project)}
-                                                            onArchive={(project) => archiveProject(project)}
-                                                            onDelete={(project) => deleteProject(project)}
-                                                        />
+                                                        {project.id == hoverItemId && (
+                                                            <div className="flex flex-row items-center">
+                                                                <PinOff 
+                                                                    className="h-3 w-3 shrink-0 rotate-30 mx-1 text-muted-foreground hover:text-foreground" 
+                                                                    onClick={(e) => {
+                                                                        e.preventDefault()
+                                                                        unpinProject(project)
+                                                                    }}
+                                                                />
+                                                                <ProjectDropdown 
+                                                                    project={project}
+                                                                    onRename={() => {}}
+                                                                    onPin={(project) => pinProject(project)}
+                                                                    onUnpin={(project) => unpinProject(project)}
+                                                                    onArchive={(project) => archiveProject(project)}
+                                                                    onDelete={(project) => deleteProject(project)}
+                                                                    className="text-muted-foreground hover:text-foreground"
+                                                                />
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 </Link>
                                             ))}
@@ -213,24 +241,42 @@ function AppSidebar () {
                                                     key={`pinned-${form.id}`}
                                                     href={`/forms/${form.id}`}
                                                 >
-                                                    <div className="w-full group/pinned flex flex-row items-center rounded-lg justify-between hover:bg-muted cursor-pointer">
+                                                    <div 
+                                                        className="w-full group/pinned flex flex-row items-center rounded-lg justify-between hover:bg-muted cursor-pointer"
+                                                        onMouseEnter={() => setHoverItemId(form.id)}
+                                                        onMouseLeave={() => setHoverItemId(null)}
+                                                    >
                                                         <div className="truncate py-2 pl-2">
                                                             <span className="truncate">{form.name}</span>
                                                         </div>
-                                                        <FormDropdown 
-                                                            form={form}
-                                                            projects={projects}
-                                                            onRename={() => {}}
-                                                            onExport={(form, format) => exportForm(form, format)}
-                                                            onPin={(form) => pinForm(form)}
-                                                            onUnpin={(form) => unpinForm(form)}
-                                                            onArchive={(form) => archiveForm(form)}
-                                                            onDelete={(form) => deleteForm(form)}
-                                                            onDuplicate={(form) => duplicateForm(form)}
-                                                            onMove={() => {}}
-                                                        />
+                                                        {form.id == hoverItemId && (
+                                                            <div className="flex flex-row items-center">
+                                                                <PinOff 
+                                                                    className="h-3 w-3 shrink-0 rotate-30 mx-1 text-muted-foreground hover:text-foreground" 
+                                                                    onClick={(e) => {
+                                                                        e.preventDefault()
+                                                                        unpinForm(form)
+                                                                    }}
+                                                                />
+                                                                <FormDropdown 
+                                                                    form={form}
+                                                                    projects={projects}
+                                                                    onRename={() => {}}
+                                                                    onExport={(form, format) => exportForm(form, format)}
+                                                                    onPin={(form) => pinForm(form)}
+                                                                    onUnpin={(form) => unpinForm(form)}
+                                                                    onArchive={(form) => archiveForm(form)}
+                                                                    onDelete={(form) => {
+                                                                        setFormToDelete(form)
+                                                                        setDeleteFormOpen(true)
+                                                                    }}
+                                                                    onDuplicate={(form) => duplicateForm(form)}
+                                                                    onMove={() => {}}
+                                                                    className="text-muted-foreground hover:text-foreground"
+                                                                />
+                                                            </div>
+                                                        )}
                                                     </div>
-                                                    
                                                 </Link>
                                             ))}
                                         </div>
@@ -255,26 +301,45 @@ function AppSidebar () {
                                                     key={`recent-${form.id}`}
                                                     href={`/forms/${form.id}`}
                                                 >
-                                                    <div className="w-full group/recent flex flex-row items-center rounded-lg justify-between hover:bg-muted cursor-pointer">
+                                                    <div 
+                                                        className="w-full group/recent flex flex-row items-center rounded-lg justify-between hover:bg-muted cursor-pointer"
+                                                        onMouseEnter={() => setHoverItemId(form.id)}
+                                                        onMouseLeave={() => setHoverItemId(null)}
+                                                    >
                                                         <div className="truncate py-2 pl-2">
                                                             <span className="truncate">{form.name}</span>
                                                         </div>
-                                                        <FormDropdown 
-                                                            form={form}
-                                                            projects={projects}
-                                                            onRename={() => {}}
-                                                            onExport={(form, format) => exportForm(form, format)}
-                                                            onPin={(form) => pinForm(form)}
-                                                            onUnpin={(form) => unpinForm(form)}
-                                                            onArchive={(form) => archiveForm(form)}
-                                                            onDelete={(form) => deleteForm(form)}
-                                                            onDuplicate={(form) => duplicateForm(form)}
-                                                            onMove={() => {}}
-                                                        />
+                                                        {form.id === hoverItemId && (
+                                                            <div className="flex flex-row items-center">
+                                                                <Pin 
+                                                                    className="h-3 w-3 shrink-0 rotate-30 mx-1 text-muted-foreground hover:text-foreground" 
+                                                                    onClick={(e) => {
+                                                                        e.preventDefault()
+                                                                        pinForm(form)
+                                                                    }}
+                                                                />
+                                                                <FormDropdown 
+                                                                    form={form}
+                                                                    projects={projects}
+                                                                    onRename={() => {}}
+                                                                    onExport={(form, format) => exportForm(form, format)}
+                                                                    onPin={(form) => pinForm(form)}
+                                                                    onUnpin={(form) => unpinForm(form)}
+                                                                    onArchive={(form) => archiveForm(form)}
+                                                                    onDelete={(form) => {
+                                                                        setFormToDelete(form)
+                                                                        setDeleteFormOpen(true)
+                                                                    }}
+                                                                    onDuplicate={(form) => duplicateForm(form)}
+                                                                    onMove={() => {}}
+                                                                    className="text-muted-foreground hover:text-foreground"
+                                                                />
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 </Link>
                                             ))}
-                                            {Array.from({ length: 5}).map((_, index) => (
+                                            {Array.from({ length: 3 }).map((_, index) => (
                                                 <SidebarMenuSkeleton />
                                             ))}
                                         </div>
@@ -348,6 +413,17 @@ function AppSidebar () {
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarFooter>
+            {formToDelete && (
+                <DeleteForm 
+                    form={formToDelete} 
+                    open={deleteFormOpen} 
+                    onOpenChange={setDeleteFormOpen} 
+                    onDelete={(form) => {
+                        deleteForm(form)
+                        setFormToDelete(null)
+                    }}
+                />
+            )}
         </Sidebar>
     )
 }
