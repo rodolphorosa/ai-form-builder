@@ -1,15 +1,58 @@
 "use client"
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuAction, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarTrigger, useSidebar } from "@/components/ui/sidebar"
+import { 
+    Collapsible, 
+    CollapsibleContent, 
+    CollapsibleTrigger 
+} from "@/components/ui/collapsible"
+import { 
+    DropdownMenu, 
+    DropdownMenuContent, 
+    DropdownMenuGroup, 
+    DropdownMenuItem, 
+    DropdownMenuSeparator, 
+    DropdownMenuTrigger 
+} from "@/components/ui/dropdown-menu"
+import { 
+    Sidebar, 
+    SidebarContent, 
+    SidebarFooter, 
+    SidebarGroup, 
+    SidebarGroupContent, 
+    SidebarGroupLabel, 
+    SidebarHeader, 
+    SidebarMenu, 
+    SidebarMenuButton, 
+    SidebarMenuItem, 
+    SidebarMenuSkeleton, 
+    SidebarTrigger, 
+    useSidebar 
+} from "@/components/ui/sidebar"
 import { useAuth } from "@/contexts/auth-context"
 import { useWorkspace } from "@/contexts/workspace-context"
 import { Link, useRouter } from "@/i18n/navigation"
-import { Archive, Astroid, ChevronDown, ChevronsUpDown, CircleUser, FileText, FolderClosed, Home, LibraryBig, LogOut, Pin, Search, Settings, Trash2, User } from "lucide-react"
+import { 
+    Archive, 
+    Astroid, 
+    ChevronDown, 
+    ChevronsUpDown, 
+    CircleUser, 
+    FolderClosed, 
+    Home, 
+    LibraryBig, 
+    LogOut, 
+    Search, 
+    Settings, 
+    Trash2, 
+    User 
+} from "lucide-react"
 import { useTranslations } from "next-intl"
 import React, { useState } from "react"
+import { FormDropdown } from "../workspace/dropdown-menus/form-options"
+import { ProjectDropdown } from "../workspace/dropdown-menus/project-options"
+import useForms from "@/hooks/use-forms"
+import useProjects from "@/hooks/use-projects"
 
 interface MenuOption {
     icon: React.ComponentType
@@ -27,6 +70,26 @@ function AppSidebar () {
     const { forms, projects } = useWorkspace()
     const { user, logout } = useAuth()
     const router = useRouter()
+
+    const {
+        renameForm,
+        moveForm,
+        moveToNewProject,
+        exportForm,
+        pinForm,
+        unpinForm,
+        archiveForm,
+        duplicateForm,
+        deleteForm
+    } = useForms()
+    
+    const {
+        renameProject,
+        pinProject,
+        unpinProject,
+        archiveProject,
+        deleteProject
+    } = useProjects()
 
     const menuOptions: MenuOption[] = [
         {
@@ -125,22 +188,49 @@ function AppSidebar () {
                                     <CollapsibleContent>
                                         <div className="flex flex-col">
                                             {pinnedProjects.map(project => (
-                                                <div 
-                                                    key={project.id}
-                                                    className="flex flex-row gap-2 p-2 items-center rounded-lg cursor-pointer hover:bg-muted"
+                                                <Link
+                                                    key={`pinned-${project.id}`}
+                                                    href={`/projects/${project.id}`}
                                                 >
-                                                    <FolderClosed className="h-4 w-4 shrink-0"/>
-                                                    <span className="truncate">{project.name}</span>
-                                                </div>
+                                                    <div className="w-full group/pinned flex flex-row items-center rounded-lg justify-between hover:bg-muted cursor-pointer">
+                                                        <div className="flex flex-row gap-1 items-center truncate py-2 pl-2">
+                                                            <FolderClosed className="h-4 w-4 shrink-0"/>
+                                                            <span className="truncate">{project.name}</span>
+                                                        </div>
+                                                        <ProjectDropdown 
+                                                            project={project}
+                                                            onRename={() => {}}
+                                                            onPin={(project) => pinProject(project)}
+                                                            onUnpin={(project) => unpinProject(project)}
+                                                            onArchive={(project) => archiveProject(project)}
+                                                            onDelete={(project) => deleteProject(project)}
+                                                        />
+                                                    </div>
+                                                </Link>
                                             ))}
                                             {pinnedForms.map(form => (
                                                 <Link
                                                     key={`pinned-${form.id}`}
                                                     href={`/forms/${form.id}`}
                                                 >
-                                                    <div className="flex flex-row gap-2 p-2 items-center rounded-lg cursor-pointer hover:bg-muted">
-                                                        <span className="truncate">{form.name}</span>
+                                                    <div className="w-full group/pinned flex flex-row items-center rounded-lg justify-between hover:bg-muted cursor-pointer">
+                                                        <div className="truncate py-2 pl-2">
+                                                            <span className="truncate">{form.name}</span>
+                                                        </div>
+                                                        <FormDropdown 
+                                                            form={form}
+                                                            projects={projects}
+                                                            onRename={() => {}}
+                                                            onExport={(form, format) => exportForm(form, format)}
+                                                            onPin={(form) => pinForm(form)}
+                                                            onUnpin={(form) => unpinForm(form)}
+                                                            onArchive={(form) => archiveForm(form)}
+                                                            onDelete={(form) => deleteForm(form)}
+                                                            onDuplicate={(form) => duplicateForm(form)}
+                                                            onMove={() => {}}
+                                                        />
                                                     </div>
+                                                    
                                                 </Link>
                                             ))}
                                         </div>
@@ -160,15 +250,32 @@ function AppSidebar () {
                                     </SidebarGroupLabel>
                                     <CollapsibleContent>
                                         <div className="flex flex-col">
-                                            {forms.map(form => (
+                                            {forms.filter(it => !it.pinned).map(form => (
                                                 <Link 
                                                     key={`recent-${form.id}`}
                                                     href={`/forms/${form.id}`}
                                                 >
-                                                    <div className="flex p-2 items-center rounded-lg cursor-pointer hover:bg-muted">
-                                                        <span className="truncate">{form.name}</span>
+                                                    <div className="w-full group/recent flex flex-row items-center rounded-lg justify-between hover:bg-muted cursor-pointer">
+                                                        <div className="truncate py-2 pl-2">
+                                                            <span className="truncate">{form.name}</span>
+                                                        </div>
+                                                        <FormDropdown 
+                                                            form={form}
+                                                            projects={projects}
+                                                            onRename={() => {}}
+                                                            onExport={(form, format) => exportForm(form, format)}
+                                                            onPin={(form) => pinForm(form)}
+                                                            onUnpin={(form) => unpinForm(form)}
+                                                            onArchive={(form) => archiveForm(form)}
+                                                            onDelete={(form) => deleteForm(form)}
+                                                            onDuplicate={(form) => duplicateForm(form)}
+                                                            onMove={() => {}}
+                                                        />
                                                     </div>
                                                 </Link>
+                                            ))}
+                                            {Array.from({ length: 5}).map((_, index) => (
+                                                <SidebarMenuSkeleton />
                                             ))}
                                         </div>
                                     </CollapsibleContent>

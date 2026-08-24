@@ -16,6 +16,7 @@ interface Props {
     onArchive: (form: Form) => void
     onDuplicate: (form: Form) => void
     onDelete: (form: Form) => void
+    className?: string
 }
 
 export const FormDropdown = ({
@@ -28,7 +29,8 @@ export const FormDropdown = ({
     onUnpin,
     onArchive,
     onDuplicate,
-    onDelete
+    onDelete,
+    className
 }: Props) => {
     const common = useTranslations("Common")
     const formsi18n = useTranslations("Forms")
@@ -36,7 +38,12 @@ export const FormDropdown = ({
     return (
         <DropdownMenu>
             <DropdownMenuTrigger render={(
-                <Button size="icon" variant="ghost" onClick={(e) => e.preventDefault()}>
+                <Button 
+                    size="xs" 
+                    variant="ghost" 
+                    onClick={(e) => e.preventDefault()}
+                    className={className}
+                >
                     <EllipsisVertical className="h-4 w-4" />
                 </Button>
             )} />
@@ -45,7 +52,7 @@ export const FormDropdown = ({
                     <DropdownMenuItem
                         onClick={(e) => {
                             e.preventDefault()
-                            onRename?.(form)
+                            onRename(form)
                         }}
                     >
                         <Pencil className="h-4 w-4" />

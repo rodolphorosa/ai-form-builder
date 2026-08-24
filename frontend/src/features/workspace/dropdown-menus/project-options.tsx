@@ -12,6 +12,7 @@ interface Props {
     onUnpin: (project: Project) => void
     onArchive: (project: Project) => void
     onDelete: (project: Project) => void
+    className?: string
 }
 
 export const ProjectDropdown = ({
@@ -20,14 +21,20 @@ export const ProjectDropdown = ({
     onPin,
     onUnpin,
     onArchive,
-    onDelete
+    onDelete,
+    className
 }: Props) => {
     const common = useTranslations("Common")
 
     return (
         <DropdownMenu>
             <DropdownMenuTrigger render={(
-                <Button size="icon" variant="ghost" onClick={(e) => e.preventDefault()}>
+                <Button 
+                    size="xs" 
+                    variant="ghost" 
+                    onClick={(e) => e.preventDefault()}
+                    className={className}
+                >
                     <EllipsisVertical className="h-4 w-4" />
                 </Button>
             )} />
