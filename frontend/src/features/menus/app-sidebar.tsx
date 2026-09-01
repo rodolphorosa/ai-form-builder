@@ -59,6 +59,7 @@ import useProjects from "@/hooks/use-projects"
 import { Button } from "@/components/ui/button"
 import DeleteForm from "../dialogs/delete-form"
 import { Form } from "@/types/form"
+import { SettingsDialog } from "../dialogs/settings/settings"
 
 interface MenuOption {
     icon: React.ComponentType
@@ -82,6 +83,8 @@ function AppSidebar () {
 
     const [deleteFormOpen, setDeleteFormOpen] = useState<boolean>(false)
     const [formToDelete, setFormToDelete] = useState<Form | null>(null)
+
+    const [settingsOpen, setSettingsOpen] = useState<boolean>(false)
 
     const {
         renameForm,
@@ -396,7 +399,12 @@ function AppSidebar () {
                                         <CircleUser className="h-4 w-4 shrink-0" />
                                         {i18nSidebar("profile")}
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => {}}>
+                                    <DropdownMenuItem 
+                                        onClick={(e) => {
+                                            e.preventDefault()
+                                            setSettingsOpen(true)
+                                        }}
+                                    >
                                         <Settings className="h-4 w-4 shrink-0" />
                                         {i18nSidebar("settings")}
                                     </DropdownMenuItem>
@@ -424,6 +432,7 @@ function AppSidebar () {
                     }}
                 />
             )}
+            <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
         </Sidebar>
     )
 }

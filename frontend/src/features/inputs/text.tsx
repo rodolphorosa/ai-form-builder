@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input"
 import { InputProps } from "@/types/inputs"
 import { cn } from "@/lib/utils"
 
-export const TextInput: FC<InputProps> = ( {item, editable, onChange, onChangeLabel }) => {
+export const TextInput: FC<InputProps> = ({ item, editable, onChange, onChangeLabel }) => {
     return (
         <div className="flex flex-col gap-1">
             <EditableLabel 
