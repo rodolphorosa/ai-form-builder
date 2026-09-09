@@ -416,14 +416,16 @@ export const Workspace = () => {
                             flex flex-row 
                             items-center justify-between 
                             text-sm font-medium"
-                        >
+                    >
                         <span>
                             {i18nWorkspace("your recent projects")}
                         </span>
                         {projects.length > 4 && (
-                            <span className="text-muted-foreground cursor-pointer">
-                                {i18nWorkspace("see more")}
-                            </span>
+                            <Link href="/projects">
+                                <span className="text-muted-foreground cursor-pointer">
+                                    {i18nWorkspace("see more")}
+                                </span>
+                            </Link>
                         )}
                     </div>
                     <div className="flex flex-wrap gap-4 items-start content-start ">
@@ -464,10 +466,6 @@ export const Workspace = () => {
                     }}
                     onCancel={() => {}}
                 />
-                {/* <ArchivedProjects /> */}
-                {/* <ArchivedForms /> */}
-                {/* <Projects /> */}
-                {/* <ProjectPage /> */}
             </div>
         </AppContentWrapper>
     )

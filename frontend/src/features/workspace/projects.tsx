@@ -45,6 +45,8 @@ export function Projects () {
             cell: ({ row }) => {
                 const project = row.original
 
+                const formCount = project.formCount
+
                 return (
                     <div className="flex flex-row gap-2 items-center">
                         <div className="p-2 bg-indigo-400/25 text-indigo-400 rounded-sm">
@@ -55,7 +57,13 @@ export function Projects () {
                                 {project.name}
                             </span>
                             <span className="text-xs text-muted-foreground">
-                                8 formulários
+                                {
+                                    formCount ? (
+                                        formCount > 1? 
+                                        `${formCount} ${i18nCommon("forms")}` : 
+                                        `${formCount} ${i18nCommon("form")}`
+                                    ) : "Sem formulários"
+                                }
                             </span>
                         </div>
                     </div>

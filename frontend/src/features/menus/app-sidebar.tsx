@@ -58,8 +58,11 @@ import useForms from "@/hooks/use-forms"
 import useProjects from "@/hooks/use-projects"
 import { Button } from "@/components/ui/button"
 import DeleteForm from "../dialogs/delete-form"
-import { Form } from "@/types/form"
+import { Form, MoveAction, Project } from "@/types/form"
 import { SettingsDialog } from "../dialogs/settings/settings"
+import { ProjectCreate } from "../dialogs/project"
+import { RenameForm } from "../dialogs/rename-form"
+import { RenameProject } from "../dialogs/rename-project"
 
 interface MenuOption {
     icon: React.ComponentType
@@ -81,10 +84,19 @@ function AppSidebar () {
     const [openItemId, setOpenItemId] = useState<string | null>()
     const [hoverItemId, setHoverItemId] = useState<string | null>()
 
+    const [projectCreateOpen, setProjectCreateOpen] = useState<boolean>(false)
+    const [renameFormOpen, setRenameFormOpen] = useState<boolean>(false)
+    const [renameProjectOpen, setRenameProjectOpen] = useState<boolean>(false)
+
+    const [formToRename, setFormToRename] = useState<Form | null>(null)
+    const [projectToRename, setProjectToRename] = useState<Project | null>(null)
+
     const [deleteFormOpen, setDeleteFormOpen] = useState<boolean>(false)
     const [formToDelete, setFormToDelete] = useState<Form | null>(null)
 
     const [settingsOpen, setSettingsOpen] = useState<boolean>(false)
+
+    const [moveAction, setMoveAction] = useState<MoveAction | undefined>()
 
     const {
         renameForm,
@@ -146,6 +158,32 @@ function AppSidebar () {
     ]
     const pinnedForms = forms.filter(it => it.pinned == true)
     const pinnedProjects = projects.filter(it => it.pinned == true)
+
+    const onMoveForm = (action: MoveAction) => {
+        if (action.type == "create") {
+            setProjectCreateOpen(true)
+            setMoveAction(action)
+        }
+
+        if (action.type == "search") {
+
+        }
+
+        if (action.type == "project") {
+            moveForm(action.form, action.project)
+        }
+    }
+
+    const onCreateProject = async (name: string, description: string) => {
+        try {
+            await moveToNewProject(name, description, moveAction!.form)
+        } catch(err) {
+            console.error(err)
+        } finally {
+            setProjectCreateOpen(false)
+            setMoveAction(undefined)
+        }
+    }
     
     return (
         <Sidebar variant="inset" collapsible="icon">
@@ -264,7 +302,10 @@ function AppSidebar () {
                                                                 <FormDropdown 
                                                                     form={form}
                                                                     projects={projects}
-                                                                    onRename={() => {}}
+                                                                    onRename={(form) => {
+                                                                        setFormToRename(form)
+                                                                        setRenameFormOpen(true)
+                                                                    }}
                                                                     onExport={(form, format) => exportForm(form, format)}
                                                                     onPin={(form) => pinForm(form)}
                                                                     onUnpin={(form) => unpinForm(form)}
@@ -274,7 +315,7 @@ function AppSidebar () {
                                                                         setDeleteFormOpen(true)
                                                                     }}
                                                                     onDuplicate={(form) => duplicateForm(form)}
-                                                                    onMove={() => {}}
+                                                                    onMove={(action) => onMoveForm(action)}
                                                                     className="text-muted-foreground hover:text-foreground"
                                                                 />
                                                             </div>
@@ -324,7 +365,11 @@ function AppSidebar () {
                                                                 <FormDropdown 
                                                                     form={form}
                                                                     projects={projects}
-                                                                    onRename={() => {}}
+                                                                    onRename={(form) => {
+                                                                        setFormToRename(form)
+                                                                        setRenameFormOpen(true)
+                                                                    }}
+                                                                    onMove={(action) => onMoveForm(action)}
                                                                     onExport={(form, format) => exportForm(form, format)}
                                                                     onPin={(form) => pinForm(form)}
                                                                     onUnpin={(form) => unpinForm(form)}
@@ -334,7 +379,6 @@ function AppSidebar () {
                                                                         setDeleteFormOpen(true)
                                                                     }}
                                                                     onDuplicate={(form) => duplicateForm(form)}
-                                                                    onMove={() => {}}
                                                                     className="text-muted-foreground hover:text-foreground"
                                                                 />
                                                             </div>
@@ -433,6 +477,33 @@ function AppSidebar () {
                 />
             )}
             <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
+            <ProjectCreate 
+                open={projectCreateOpen} 
+                onOpenChange={setProjectCreateOpen} 
+                onCreate={onCreateProject} 
+            />
+            <RenameForm 
+                form={formToRename!} 
+                open={renameFormOpen} 
+                onOpenChange={setRenameFormOpen} 
+                onSave={(form, name) => {
+                    renameForm(form, name)
+                    setFormToRename(null)
+                    setRenameFormOpen(false)
+                }}
+                onCancel={() => {}} 
+            />
+            <RenameProject 
+                project={projectToRename!}
+                open={renameProjectOpen}
+                onOpenChange={setRenameProjectOpen}
+                onSave={(project, name) => {
+                    renameProject(project, name)
+                    setProjectToRename(null)
+                    setRenameProjectOpen(false)
+                }}
+                onCancel={() => {}}
+            />
         </Sidebar>
     )
 }
