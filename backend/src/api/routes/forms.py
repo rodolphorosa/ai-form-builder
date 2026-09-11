@@ -41,7 +41,7 @@ def get_archived(
 
     forms = service.get_archived(user=current_user)
 
-    return { "data": [FormResponse.from_model(form) for form in forms] }
+    return { "data": [FormResponse.from_model(form=form, project_name=project_name) for form, project_name in forms] }
 
 
 @router.get('/{id}')

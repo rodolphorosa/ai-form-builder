@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react"
 import { ChevronDown, ChevronUp, Copy, GripVertical, Layers, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { EditableText } from "../inputs/common"
-import { EditableComponent } from "./editable"
+import { EditableComponent } from "./editable-input"
 import { Separator } from "@/components/ui/separator"
 import { useSortable } from "@dnd-kit/react/sortable"
 import { DragDropProvider, useDroppable } from "@dnd-kit/react"
@@ -31,6 +31,7 @@ const SortableItem = ({
     onPropertyChange,
     onDelete,
     onDuplicate,
+    onMove,
     itemRef,
 }: {
     item: Item
@@ -43,6 +44,7 @@ const SortableItem = ({
     onPropertyChange: (path: Path, value: unknown) => void
     onDelete: () => void
     onDuplicate: () => void
+    onMove: (toSection: Section) => void
     itemRef?: (el: HTMLDivElement | null) => void
 }) => {
     const { ref, handleRef } = useSortable({
@@ -80,6 +82,7 @@ const SortableItem = ({
                 onChange={(path, value) => onPropertyChange([...basePath, ...path], value)}
                 onDelete={onDelete}
                 onDuplicate={onDuplicate}
+                onMove={onMove}
             />
         </div>
     )
@@ -259,6 +262,20 @@ export const Canvas = ({ form, onPropertyChange }: CanvasProps) => {
                                 onPropertyChange(
                                     [...basePath, "items"],
                                     [...items, copy]
+                                )
+                            }}
+                            onMove={(toSection) => {
+                                const fromCopy = structuredClone(section)
+                                const toCopy = structuredClone(toSection)
+
+                                fromCopy.items = fromCopy.items.filter(it => it.id !== item.id)
+                                toCopy.items = [...toCopy.items, item]
+
+                                onPropertyChange(
+                                    ["schema", "sections"],
+                                    form.schema.sections.map(
+                                        (section) => section.id === fromCopy.id ? fromCopy : section.id === toCopy.id ? toCopy : section
+                                    )
                                 )
                             }}
                             itemRef={(el) => {

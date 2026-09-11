@@ -110,6 +110,7 @@ export interface Form {
     description?: string
     schema: FormSchema
     projectId: string
+    projectName?: string
     createdAt: number
     updatedAt: number
     pinned: boolean

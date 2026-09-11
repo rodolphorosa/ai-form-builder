@@ -38,7 +38,7 @@ class FormRepository:
 
     def get_archived(self, user_id: UUID) -> list[Form]:
         stmt = (
-            select(Form)
+            select(Form, Project.name)
             .join(Project, Form.project_id == Project.id)
             .where(Project.user_id == user_id)
             .where(Form.is_archived == True)
@@ -47,7 +47,7 @@ class FormRepository:
         )
 
         result = self.db.execute(stmt)
-        forms = result.scalars().all()
+        forms = result.all()
 
         return forms
     

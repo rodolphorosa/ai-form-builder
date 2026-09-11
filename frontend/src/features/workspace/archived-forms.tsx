@@ -57,7 +57,7 @@ function ArchivedForms () {
                                 {form.name}
                             </span>
                             <span className="text-xs text-muted-foreground">
-                                {i18nCommon("project")}: {form.projectId}
+                                {i18nCommon("project")}: {form.projectName}
                             </span>
                         </div>
                     </div>

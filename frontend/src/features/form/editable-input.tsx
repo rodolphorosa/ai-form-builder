@@ -23,6 +23,7 @@ interface EditableProps {
     onChange: (path: Path, value: unknown) => void
     onDelete: () => void
     onDuplicate: () => void
+    onMove: (toSection: Section) => void
     sections?: Section[]
 }
 
@@ -97,7 +98,15 @@ const TypeSelect = ({ type, onSelect }: { type: InputType, onSelect: (type: Inpu
     )
 }
 
-export const EditableComponent = ({ item, selected, onChange, onDelete, onDuplicate, sections }: EditableProps) => {
+export const EditableComponent = ({ 
+    item, 
+    selected, 
+    onChange, 
+    onDelete, 
+    onDuplicate, 
+    onMove, 
+    sections 
+}: EditableProps) => {
     const i18nCanvas = useTranslations("Canvas")
 
     const [suggestions, setSuggestions] = useState<Suggestion[]>([])
@@ -274,7 +283,15 @@ export const EditableComponent = ({ item, selected, onChange, onDelete, onDuplic
                                         Mover para
                                     </DropdownMenuLabel>
                                     {sections?.map(section => (
-                                        <DropdownMenuItem className="text-xs">
+                                        <DropdownMenuItem 
+                                            className="text-xs"
+                                            onClick={(e) => {
+                                                e.preventDefault()
+                                                e.stopPropagation()
+
+                                                onMove(section)
+                                            }}
+                                        >
                                             <Layers className="h-3 w-3 shrink-0" />
                                             {section.label}
                                         </DropdownMenuItem>
