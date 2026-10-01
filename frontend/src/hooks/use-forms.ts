@@ -6,7 +6,7 @@ import { downloadJson } from "@/features/form/utils"
 import { Form, Project } from "@/types/form"
 
 function useForms() {
-    const { refreshForms, refreshProjects } = useWorkspace()
+    const { refreshForms, refreshProjects, refreshArchivedForms } = useWorkspace()
 
     const createForm = async (form: Partial<Form>): Promise<Form> => {
         const response = await formService.createBlank(form)
@@ -38,10 +38,12 @@ function useForms() {
 
     const archiveForm = async (form: Form) => {
         await updateForm(form, { archived: true })
+        await refreshArchivedForms()
     }
 
     const unarchiveForm = async (form: Form) => {
         await updateForm(form, { archived: false })
+        await refreshArchivedForms()
     }
 
     const duplicateForm = async (form: Form): Promise<Form> => {

@@ -2,14 +2,10 @@
 
 import { Form, FormSchema, Item, MoveAction, Project } from "@/types/form"
 import { useEffect, useState } from "react"
-import { Sidebar } from "./sidebar"
 import { Astroid, ChevronDown, File, FileUp, ImageUp } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { cn, parseUpdateDate } from "@/lib/utils"
 import { Link } from "@/i18n/navigation"
-
-import { formatDistanceToNow, Locale } from "date-fns"
-import { ptBR, enUS, de, es, fr } from "date-fns/locale"
 import { FormDropdown } from "./dropdown-menus/form-options"
 import { ProjectDropdown } from "./dropdown-menus/project-options"
 import { CreateDialog } from "../dialogs/form"
@@ -24,11 +20,6 @@ import useForms from "@/hooks/use-forms"
 import useProjects from "@/hooks/use-projects"
 import { RenameProject } from "../dialogs/rename-project"
 import React from "react"
-import ArchivedProjects from "./archived-projects"
-import ArchivedForms from "./archived-forms"
-import { Projects } from "./projects"
-import ProjectPage from "./project-detail"
-import { SidebarTrigger } from "@/components/ui/sidebar"
 import AppContentWrapper from "../common/app-content-wrapper"
 
 

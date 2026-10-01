@@ -18,10 +18,13 @@ import {
 import { Button } from "@/components/ui/button"
 import { projectService } from "@/api/project.service"
 import { useEffect, useState } from "react"
+import useProjects from "@/hooks/use-projects"
 
 function ArchivedProjects () {
     const locale = useLocale()
     const i18nCommon = useTranslations("Common")
+
+    const { unarchiveProject, deleteProject } = useProjects()
     
     const [projects, setProjects] = useState<Project[]>([])
 
@@ -91,7 +94,18 @@ function ArchivedProjects () {
                         />
                         <DropdownMenuContent className="w-fit">
                             <DropdownMenuGroup>
-                                <DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={e => {
+                                        e.preventDefault()
+                                        unarchiveProject(project)
+                                        .then(() => {
+                                            getProjects()
+                                        })
+                                        .catch(error => {
+                                            console.error(error)
+                                        })
+                                    }}
+                                >
                                     <ArchiveX className="h-4 w-4 shrink-0" />
                                     {i18nCommon("unarchive")}
                                 </DropdownMenuItem>

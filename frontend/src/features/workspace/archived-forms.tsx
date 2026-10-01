@@ -24,21 +24,7 @@ function ArchivedForms () {
     const locale = useLocale()
     const i18nCommon = useTranslations("Common")
     const { unarchiveForm, deleteForm } = useForms()
-
-    const [forms, setForms] = useState<Form[]>([])
-
-    useEffect(() => {
-        getForms()
-    }, [])
-
-    const getForms = async () => {
-        try {
-            const response = await formService.getArchived()
-            setForms(response.data)
-        } catch (error) {
-            console.error(error)
-        }
-    }
+    const { archivedForms, refreshArchivedForms, refreshForms } = useWorkspace()
 
     const columns: ColumnDef<Form>[] = [
         {
@@ -90,7 +76,8 @@ function ArchivedForms () {
                                         e.preventDefault()
                                         unarchiveForm(form)
                                         .then(() => {
-                                            getForms()
+                                            refreshArchivedForms()
+                                            refreshForms()
                                         })
                                     }}
                                 >
@@ -106,7 +93,8 @@ function ArchivedForms () {
                                         e.preventDefault()
                                         deleteForm(form)
                                         .then(() => {
-                                            getForms()
+                                            refreshArchivedForms()
+                                            refreshForms()
                                         })
                                     }}
                                 >
@@ -124,7 +112,7 @@ function ArchivedForms () {
 
     return (
         <div className="bg-card">
-            <DataTable columns={columns} data={forms} />
+            <DataTable columns={columns} data={archivedForms} />
         </div>
     )
 }

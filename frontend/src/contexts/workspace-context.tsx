@@ -9,8 +9,12 @@ import { useAuth } from "./auth-context";
 interface WorkspaceContextType {
     projects: Project[]
     forms: Form[]
+    archivedProjects: Project[]
+    archivedForms: Form[]
     refreshProjects: () => Promise<void>
     refreshForms: () => Promise<void>
+    refreshArchivedProjects: () => Promise<void>
+    refreshArchivedForms: () => Promise<void>
 }
 
 const WorkspaceContext = createContext<WorkspaceContextType | undefined>(undefined)
@@ -19,6 +23,9 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
     const { user } = useAuth()
     const [projects, setProjects] = useState<Project[]>([])
     const [forms, setForms] = useState<Form[]>([])
+
+    const [archivedProjects, setArchivedProjects] = useState<Project[]>([])
+    const [archivedForms, setArchivedForms] = useState<Form[]>([])
 
     const sortByUpdate = <T extends Form | Project>(array: T[]): T[] => {
         return array.sort((a, b) => b.updatedAt - a.updatedAt)
@@ -46,6 +53,24 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
         }
     }
 
+    const refreshArchivedProjects = async () => {
+        try {
+            const response = await projectService.getArchived()
+            setArchivedProjects(sortByUpdate([...response.data]))
+        } catch {
+            console.error("Error loading archived projects.")
+        }
+    }
+
+    const refreshArchivedForms = async () => {
+        try {
+            const response = await formService.getArchived()
+            setArchivedForms(sortByUpdate([...response.data]))
+        } catch {
+            console.error("Error loading archived forms.")
+        }
+    }
+
     useEffect(() => {
         if (!user) {
             setProjects([])
@@ -55,6 +80,8 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
 
         refreshProjects()
         refreshForms()
+        refreshArchivedProjects()
+        refreshArchivedForms()
     }, [user])
 
     return (
@@ -62,8 +89,12 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
             value={{
                 projects,
                 forms,
+                archivedProjects,
+                archivedForms,
                 refreshProjects,
-                refreshForms
+                refreshForms,
+                refreshArchivedProjects,
+                refreshArchivedForms
             }}
         >
             {children}
