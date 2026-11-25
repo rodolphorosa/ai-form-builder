@@ -19,12 +19,15 @@ import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
 import { formService } from "@/api/form.service"
 import useForms from "@/hooks/use-forms"
+import { useRouter } from "@/i18n/navigation"
 
 function ArchivedForms () {
     const locale = useLocale()
     const i18nCommon = useTranslations("Common")
     const { unarchiveForm, deleteForm } = useForms()
     const { archivedForms, refreshArchivedForms, refreshForms } = useWorkspace()
+
+    const router = useRouter()
 
     const columns: ColumnDef<Form>[] = [
         {
@@ -64,7 +67,13 @@ function ArchivedForms () {
                     <DropdownMenu>
                         <DropdownMenuTrigger 
                             render={
-                                <Button variant="ghost" size="icon">
+                                <Button 
+                                    variant="ghost" 
+                                    size="icon"
+                                    onClick={(e) => e.stopPropagation()}
+                                    // onPointerDown={(e) => e.stopPropagation()}
+                                    className="w-8 h-8"
+                                >
                                     <Ellipsis className="h-4 w-4 shrink-0" />
                                 </Button>
                             }
@@ -73,7 +82,7 @@ function ArchivedForms () {
                             <DropdownMenuGroup>
                                 <DropdownMenuItem
                                     onClick={(e) => {
-                                        e.preventDefault()
+                                        e.stopPropagation()
                                         unarchiveForm(form)
                                         .then(() => {
                                             refreshArchivedForms()
@@ -90,7 +99,7 @@ function ArchivedForms () {
                                 <DropdownMenuItem 
                                     variant="destructive"
                                     onClick={(e) => {
-                                        e.preventDefault()
+                                        e.stopPropagation()
                                         deleteForm(form)
                                         .then(() => {
                                             refreshArchivedForms()
@@ -110,9 +119,14 @@ function ArchivedForms () {
     ]
 
 
+    const onFormClick = (row: unknown): void => {
+        const form = row as Form
+        router.push(`/forms/${form.id}`)
+    }
+
     return (
         <div className="bg-card">
-            <DataTable columns={columns} data={archivedForms} />
+            <DataTable columns={columns} data={archivedForms} onRowClick={onFormClick} />
         </div>
     )
 }

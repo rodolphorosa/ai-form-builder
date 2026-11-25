@@ -87,7 +87,12 @@ function ArchivedProjects () {
                     <DropdownMenu>
                         <DropdownMenuTrigger 
                             render={
-                                <Button variant="ghost" size="icon">
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={(e) => e.stopPropagation()}
+                                    onPointerDown={(e) => e.stopPropagation()}
+                                >
                                     <Ellipsis className="h-4 w-4 shrink-0" />
                                 </Button>
                             }
