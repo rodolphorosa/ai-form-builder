@@ -21,6 +21,7 @@ import useProjects from "@/hooks/use-projects"
 import { RenameProject } from "../dialogs/rename-project"
 import React from "react"
 import AppContentWrapper from "../common/app-content-wrapper"
+import CreateBlankForm from "../forms/create-blank-form"
 
 
 interface CreationOption {
@@ -368,11 +369,12 @@ export const Workspace = () => {
                 <div className="flex flex-col gap-2">
                     <div className="text-sm font-medium">Criar novo formulário</div>
                     <div className="flex flex-wrap gap-4 items-start content-start">
-                        {options.map(option => (
+                        {/* {options.map(option => (
                             <React.Fragment key={option.key}>
                                 {renderOptionCard(option)}
                             </React.Fragment>
-                        ))}
+                        ))} */}
+                        <CreateBlankForm />
                     </div>
                 </div>
                 <div className="flex flex-col gap-2 w-auto">
