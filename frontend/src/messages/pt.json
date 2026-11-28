@@ -46,7 +46,10 @@
     
     "updated": "Atualizado",
     "edited": "Editado",
-    "error": "Erro"
+    "error": "Erro",
+
+    "close": "Fechar",
+    "open form": "Abrir formulário" 
   },
 
   "Projects": {
@@ -56,7 +59,15 @@
   "Forms": {
     "move to project": "Mover para projeto",
     "search projects": "Buscar projetos",
-    "new project": "Novo projeto"
+    "new project": "Novo projeto",
+
+    "preparing image": "Preparando imagem",
+    "analysing content": "Analisando conteúdo",
+    "identifying sections and fields": "Idenfiticando seções e campos",
+    "generating form structure": "Gerando estrutura do formulário",
+    "concluding": "Finalizando",
+
+    "form successfully created": "Formulário criado com sucesso."
   },
 
   "Chat": {

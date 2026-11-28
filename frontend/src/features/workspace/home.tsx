@@ -22,6 +22,8 @@ import { RenameProject } from "../dialogs/rename-project"
 import React from "react"
 import AppContentWrapper from "../common/app-content-wrapper"
 import CreateBlankForm from "../forms/create-blank-form"
+import CreateWithAi from "../forms/create-with-ai"
+import CreateFromImage from "../forms/create-from-image"
 
 
 interface CreationOption {
@@ -374,7 +376,9 @@ export const Workspace = () => {
                                 {renderOptionCard(option)}
                             </React.Fragment>
                         ))} */}
+                        <CreateWithAi />
                         <CreateBlankForm />
+                        <CreateFromImage />
                     </div>
                 </div>
                 <div className="flex flex-col gap-2 w-auto">

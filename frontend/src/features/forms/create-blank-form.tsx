@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea"
 import ProjectSelect from "./project-select"
 import useForms from "@/hooks/use-forms"
 import { useRouter } from "@/i18n/navigation"
+import CreateFormTrigger from "./create-form-trigger"
 
 export default function CreateBlankForm() {
     const [open, setOpen] = useState(false)
@@ -49,29 +50,13 @@ export default function CreateBlankForm() {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger render={
-                <button
-                    className="
-                        flex 
-                        flex-row 
-                        p-3 
-                        gap-4 
-                        border 
-                        rounded-lg 
-                        shadow-sm 
-                        bg-card 
-                        items-center 
-                        h-fit 
-                        w-[240px] 
-                        cursor-pointer
-                        text-left
-                    "
-                >
+                <CreateFormTrigger role="button">
                     <CreateFormCard 
                         icon={File}
                         title={i18nWorkspace("blank")}
                         description={i18nWorkspace("blank / subtext")}
                     />
-                </button>
+                </CreateFormTrigger>
             }/>
             
             <DialogContent>
